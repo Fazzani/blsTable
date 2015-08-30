@@ -1,5 +1,6 @@
-'use strict';
-app.service('blsTableServices', function($log, localStorageService) {
+(function (angular) {
+    'use strict';
+angular.module("bls_components").service('blsTableServices', function ($log, localStorageService) {
     Array.prototype.swap = function(new_index, old_index) {
             if (new_index >= this.length) {
                 var k = new_index - this.length;
@@ -55,3 +56,4 @@ app.service('blsTableServices', function($log, localStorageService) {
         }
     }
 });
+})(window.angular);

@@ -1,5 +1,5 @@
 ﻿(function (angular) {
-    app.directive('blsRowChild', ['$log', '$compile', '$templateCache', '$timeout', function($log, $compile, $templateCache, $timeout) {
+    angular.module("bls_components").directive('blsRowChild', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
     this.link = function(scope, element, attrs, ctrls, transclude) {
         $log.debug('    Link => blsRows');
         var me = this;

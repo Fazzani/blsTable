@@ -1,5 +1,6 @@
 ﻿(function (angular) {
-    app.directive('dynamic', ['$compile', function($compile) { //compile dynamic html
+    'use strict';
+    angular.module("bls_components").directive('dynamic', ['$compile', function ($compile) { //compile dynamic html
     return {
         restrict: 'A',
         replace: true,

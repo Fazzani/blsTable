@@ -1,4 +1,4 @@
-app.directive('blsToolBar', [function() {
+angular.module("bls_components").directive('blsToolBar', [function () {
     // Runs during compile
     return {
         priority: 2,

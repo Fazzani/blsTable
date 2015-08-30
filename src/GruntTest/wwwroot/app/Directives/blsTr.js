@@ -1,6 +1,6 @@
 (function(angular) {
     'use strict';
-    app.directive("blsTr", function($compile, $templateRequest, $templateCache, $log) {
+    angular.module("bls_components").directive("blsTr", function ($compile, $templateRequest, $templateCache, $log) {
         var link = {
             post: function(scope, element, attrs, ctrls) {
                 var blsTrCtrl = ctrls[1];

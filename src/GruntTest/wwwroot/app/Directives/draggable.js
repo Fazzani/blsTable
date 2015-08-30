@@ -2,7 +2,7 @@
 // http://litutech.blogspot.fr/2014/02/an-angular-table-directive-having.html
 //
 //---------------------------------------------------------------------------
-app.directive('draggable', function () {
+angular.module("bls_components").directive('draggable', function () {
     return {
         link: function (scope, elem, attr) {
             elem.attr("draggable", true);

@@ -1,5 +1,5 @@
 (function (angular) {
-    app.directive('blsHeader', ['$log', '$compile', '$templateCache', '$timeout', 'localStorageService', function ($log, $compile, $templateCache, $timeout, localStorageService) {
+    angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$templateCache', '$timeout', 'localStorageService', function ($log, $compile, $templateCache, $timeout, localStorageService) {
         this.link = {
             pre: function (scope, element, attrs, ctrls) {
                 scope.$on('blsDataGrid_initedEvent', function (e) {

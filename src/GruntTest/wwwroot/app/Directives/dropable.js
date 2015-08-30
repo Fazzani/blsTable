@@ -2,7 +2,7 @@
 // http://litutech.blogspot.fr/2014/02/an-angular-table-directive-having.html
 //
 //---------------------------------------------------------------------------
-app.directive('droppable', ['$parse',
+angular.module("bls_components").directive('droppable', ['$parse',
     function($parse) {
         return {
             link: function(scope, element, attr) {

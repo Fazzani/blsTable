@@ -19,18 +19,18 @@
         <script src="lib/angular-local-storage/dist/angular-local-storage.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="Content/js/tableExport.js"></script>
         <script type="text/javascript">
-        var app = angular.module('app', ['bls_tpls', 'ui.bootstrap', 'LocalStorageModule', 'ngRoute', 'ngAnimate']);
+            var app = angular.module('app', ['bls_components', 'ui.bootstrap', 'LocalStorageModule', 'ngRoute', 'ngAnimate']);
         </script>
         <script src="app/app.js"  type="text/javascript" charset="utf-8" ></script>
         <script src="app/Controllers/rootCtrl.js" type="text/javascript" charset="utf-8" ></script>
         <script src="app/Controllers/homeCtrl.js" type="text/javascript" charset="utf-8" ></script>
         <script src="app/Controllers/testCtrl.js" type="text/javascript" charset="utf-8" ></script>
-        <script src="app/Services/services.js" type="text/javascript" charset="utf-8" ></script>
 
         <script src="app/Templates/bls_tpls.js" type="text/javascript" charset="utf-8"></script>
 
-        <script src="app/Directives/allowDrag.js"  type="text/javascript" charset="utf-8" ></script>
         <script src="app/Directives/blsTable.js"  type="text/javascript" charset="utf-8" ></script>
+        <script src="app/Directives/allowDrag.js" type="text/javascript" charset="utf-8"></script>
+        <script src="app/Services/services.js" type="text/javascript" charset="utf-8"></script>
         <script src="app/Directives/blsActions.js" type="text/javascript" charset="utf-8"></script>
         <script src="app/Directives/blsRowChild.js" type="text/javascript" charset="utf-8"></script>
         <script src="app/Directives/blsRows.js" type="text/javascript" charset="utf-8"></script>
@@ -60,12 +60,9 @@
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
                             <li ng-class="getActiveMenu('/docs')"><a href="/docs">Docs</a></li>
-                            <li class="dropdown" ng-class="getActiveMenu('/blsGrid')||getActiveMenu('/blsGridAsync')">
+                            <li class="dropdown" ng-class="getActiveMenu('/blsTable')||getActiveMenu('/blsTable')">
                                 <a href="#" class="dropdown-toggle"  data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Examples <span class="caret"> <span  class="sr-only">(current)</span></span></a>
                                 <ul class="dropdown-menu">
-                                    <li ng-class="getActiveMenu('/blsGrid')"><a href="/blsGrid">BlsGrid</a></li>
-                                    <li ng-class="getActiveMenu('/blsGridAsync')"><a href="/blsGridAsync">BlsGrid Async</a></li>
-                                    <li ng-class="getActiveMenu('/hfGrid')"><a href="/hfGrid">hfGrid</a></li>
                                     <li role="separator" class="divider"></li>
                                     <li ng-class="getActiveMenu('/blsTable')"><a href="/blsTable">blsTable</a></li>
                                 </ul>

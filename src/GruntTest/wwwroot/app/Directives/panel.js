@@ -1,6 +1,7 @@
- 'use strict';
+(function (angular) {
+    'use strict';
 
- app.directive("panel", function() {
+ angular.module("bls_components").directive("panel", function () {
      return {
          link: function(scope, element, attrs) {
              scope.dataSource = "directive";
@@ -13,3 +14,4 @@
          transclude: true
      }
  })
+})(window.angular);

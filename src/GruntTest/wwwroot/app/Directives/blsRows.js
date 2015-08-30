@@ -1,5 +1,5 @@
 (function (angular) {
-    app.directive('blsRows', ['$log', '$compile', '$templateCache', '$timeout', function($log, $compile, $templateCache, $timeout) {
+    angular.module("bls_components").directive('blsRows', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
         this.link = function(scope, element, attrs, ctrls) {
             // var blsTableCtrl = ctrls[0];
             // debugger;
