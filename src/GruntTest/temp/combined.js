@@ -1,7 +1,7 @@
-(function(angular) {
-    app.directive('blsCols', ['$log', '$compile', '$templateCache', '$timeout', function($log, $compile, $templateCache, $timeout) {
+(function (angular) {
+    app.directive('blsCols', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
         this.link = {
-            post: function(scope, element, attrs, ctrls) {
+            post: function (scope, element, attrs, ctrls) {
                 var blsTableCtrl = ctrls[0];
                 var blsColsCtrl = ctrls[1];
                 $log.debug('    Link => blsCols');
@@ -9,13 +9,13 @@
             }
         };
         this.controller = ['$scope', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'dropableservice',
-            function($scope, $filter, $timeout, $element, $log, localStorageService, dropableService) {
+            function ($scope, $filter, $timeout, $element, $log, localStorageService, dropableService) {
                 $log.debug('    controller => blsCols');
                 var cols = [];
-                this.addCol = function(col) {
+                this.addCol = function (col) {
                     cols.push(col);
                 }
-                this.getCols = function() {
+                this.getCols = function () {
                     return cols;
                 };
             }
@@ -27,25 +27,32 @@
             link: this.link,
             controller: this.controller
         };
-    }]).directive('blsCol', ['$log', '$compile', '$templateCache', '$timeout', function($log, $compile, $templateCache, $timeout) {
+    }]).directive('blsCol', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
         this.link = {
-            pre: function(scope, element, attrs, ctrls) {
+            pre: function (scope, element, attrs, ctrls) {
                 // var blsTableCtrl = ctrls[0];
                 var blsColsCtrl = ctrls[1];
                 // var blsColCtrl = ctrls[2];
                 $log.debug('        Link => blsCol');
-                blsColsCtrl.addCol({
-                    title: attrs.title || attrs.fieldName,
-                    fieldName: attrs.fieldName,
-                    resize:angular.isDefined(attrs.resize),
-                    tpl: element.html(),
-                    sortable: angular.isDefined(attrs.sort),
-                    dragable: angular.isDefined(attrs.dragable)
-                });
+                if (attrs.isActions) {
+                    blsColsCtrl.addCol({
+                        title: attrs.title || 'Actions',
+                        isActions:true,
+                        resize: angular.isDefined(attrs.resize)
+                    });
+                } else
+                    blsColsCtrl.addCol({
+                        title: attrs.title || attrs.fieldName,
+                        fieldName: attrs.fieldName,
+                        resize: angular.isDefined(attrs.resize),
+                        tpl: element.html(),
+                        sortable: angular.isDefined(attrs.sort),
+                        dragable: angular.isDefined(attrs.dragable)
+                    });
             }
         };
         this.controller = ['$scope', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'dropableservice',
-            function($scope, $filter, $timeout, $element, $log, localStorageService, dropableService) {
+            function ($scope, $filter, $timeout, $element, $log, localStorageService, dropableService) {
                 $log.debug('        controller => blsCol');
             }
         ];
@@ -584,39 +591,6 @@ app.directive("blsGrid", function() {
              </div>\
             </div>\
         </div>');
-$templateCache.put('template/blsGrid/blsGridMasterSlave.html', '<pre> itemsCount : {{data.length}}  options.search.searchText : {{options.search.searchText}} pageIndex : {{options.pagination.pageIndex}} offset = {{offset}} Sorting predicate = {{predicate}}; reverse = {{reverse}}</pre>\
- <div class="bls-table-container">\
-    <bls-tool-bar></bls-tool-bar>\
-    <div ng-class="{\'overlay\':isLoading}"><div ng-show="isLoading"><div class="double-bounce1"></div><div class="double-bounce2"></div></div></div>\
-    <div><table class="{{gridClass}} blsGrid" id="{{storageIds.colResizeDataKey}}">\
-        <thead>\
-            <tr>\
-            <th>&nbsp;</th>\
-                <th class="colHeader" ng-repeat="col in columns" data-original-title="{{col.id}}" ng-click="order(col.id)" ng-class={draggable:{{!isActionCol(col)}}} droppable="{{!isActionCol(col)}}" draggable="{{!isActionCol(col)}}" dragData="{{col.id}}" drop="handleDrop" drag="handleDrag"  dragImage="5">\
-                       {{col.displayName|uppercase}}\
-                    <i class="pull-left fa fa-sort"  ng-class="glyphOrder(col.id)"></i>\
-                </th>\
-            </tr>\
-        </thead>\
-        <tbody>\
-            <tr ng-class="{\'info\':(selectedRows.indexOf(d)>=0)}" ng-click="toggleSelectedRow(d)" ng-repeat="d in filteredData = (data | filter:options.search.searchText| orderBy:predicate:reverse| limitTo:options.pagination.itemsPerPage.selected:offset)">\
-                <td class="expand"><button class="btn btn-default btn-xs" ng-click="ShowSlaveView(d)"><span class="glyphicon glyphicon-eye-open"></span></button></td>\
-                <td ng-repeat="a in columns|filter:{ id:\'!actions\'}">{{d[a.id]}}</td>\
-                <td ng-if="actionsEnabled" class="center">\
-                    <a ng-repeat="btn in options.actions" class="btn btn-default {{btn.class}}" ng-click="btn.action(d)" title="{{btn.title}}" ng-class="btn.class"><i class="{{btn.glyphicon}}"></i></a>\
-                </td>\
-            </tr>\
-        </tbody>\
-    </table>\
-    <div class="footer">\
-        <pagination class="col-md-10 col-xs-8" total-items="data.length" ng-model="options.pagination.pageIndex" max-size="options.pagination.pager.maxSize" items-per-page="options.pagination.itemsPerPage.selected" class="pagination-sm" boundary-links="true" rotate="false"></pagination>\
-        <div class="pagerList col-md-2 col-xs-4">\
-            <select class="form-control" id="sel1" ng-model="options.pagination.itemsPerPage.selected" ng-change="updateRecordsCount()" ng-options="c as c for c in options.pagination.itemsPerPage.range" ng-selected="options.pagination.itemsPerPage.selected == c"></select>\
-        </div>\
-     </div>\
-    </div>\
-</div>');
-        $templateCache.put('Views/Partials/slavePostTemplate.html','<table class="table table-hover table-striped"><tr ng-repeat="c in listData"><td>{{c.id}}</td><td>{{c.name}}</td><td>{{c.email}}</td><td>{{c.body}}</td></tr></table>');
     }]);
 })(window.angular);
 
@@ -732,8 +706,12 @@ $templateCache.put('template/blsGrid/blsGridMasterSlave.html', '<pre> itemsCount
     }]);
 })(window.angular);
 (function(angular) {
-    app.directive('blsRows', ['$log', '$compile', '$templateCache', '$timeout', function($log, $compile, $templateCache, $timeout) {
-        var rowTpl = '<tr ng-repeat="d in data" ><td ng-repeat="c in cols" dynamic="getTdTpl(c)">{{d[c.fieldName]}}</td></tr>';
+    app.directive('blsRows', ['$log', '$compile', '$templateCache', '$timeout','$filter', function($log, $compile, $templateCache, $timeout,$filter) {
+        var rowTpl = '<tr ng-repeat="d in data" ><td ng-repeat="c in cols|filter:isActions:false" dynamic="getTdTpl(c)">{{d[c.fieldName]}}{{c.isActions}}</td>\
+                        <td ng-if="c.isActions" class="center">\
+                            <a ng-repeat="btn in options.actions" class="btn btn-default {{btn.class}}" ng-click="btn.action(d)" title="{{btn.title}}" ng-class="btn.class"><i class="{{btn.glyphicon}}"></i></a>\
+                        </td>\
+                    </tr>';
         this.link = function(scope, element, attrs, ctrls) {
             // var blsTableCtrl = ctrls[0];
             // debugger;
@@ -880,6 +858,7 @@ $templateCache.put('template/blsGrid/blsGridMasterSlave.html', '<pre> itemsCount
                     }
                 };
                 $scope.options = angular.extend({}, defaultOptions, $scope.options);
+                $log.debug('Actions : ',$scope.options.actions);
                 if ($scope.options.pagination.itemsPerPage && $scope.options.pagination.itemsPerPage.range && $scope.options.pagination.itemsPerPage.range.indexOf($scope.options.pagination.pageLength) < 1) $scope.options.pagination.pageLength = localStorageService.get($scope.storageIds.itemsPerPageId) || $scope.options.pagination.itemsPerPage.range[0];
                 $scope.$watch('options.pagination.pageIndex', function (newValue, oldValue) {
                     if (newValue != oldValue) {

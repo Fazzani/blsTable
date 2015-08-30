@@ -39,6 +39,7 @@
                     }
                 };
                 $scope.options = angular.extend({}, defaultOptions, $scope.options);
+                $log.debug('Actions : ',$scope.options.actions);
                 if ($scope.options.pagination.itemsPerPage && $scope.options.pagination.itemsPerPage.range && $scope.options.pagination.itemsPerPage.range.indexOf($scope.options.pagination.pageLength) < 1) $scope.options.pagination.pageLength = localStorageService.get($scope.storageIds.itemsPerPageId) || $scope.options.pagination.itemsPerPage.range[0];
                 $scope.$watch('options.pagination.pageIndex', function (newValue, oldValue) {
                     if (newValue != oldValue) {
@@ -105,6 +106,7 @@
                     }
                 });
                 $scope.$watch('data', function (newValue, oldValue) {
+                    $log.debug('data changed!!!');
                     if (newValue != oldValue) {
                         if ($scope.cols.length > 0) {
                             $log.debug('init Table config');
@@ -175,7 +177,6 @@
                         }
                     );
                 $scope.isHierarchical = function () {
-
                     return angular.isDefined($attrs.getChildren);
                 };
             }

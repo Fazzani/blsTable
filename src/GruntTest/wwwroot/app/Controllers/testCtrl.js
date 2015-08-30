@@ -53,13 +53,12 @@
                 glyphicon: 'glyphicon glyphicon-edit',
                 class: 'btn-circle btn-info btn-xs',
                 action: function (row) {
-                    $log.info('edit  : ' + row.id);
-                    var obj = $filter('filter')($scope.fakeData, {
+                    $log.info('edit row : ' + row.id);
+                    var obj = $filter('filter')($scope.model.data, {
                         id: row.id
                     })[0];
                     $log.info(obj);
-                    $scope.fakeData.slice($scope.fakeData.indexOf(obj), 1);
-                    // $scope.fakeData.push(row);
+                    obj.name = 'Edited row '+row.id;
                 }
             }, {
                 title: 'delete',
@@ -68,12 +67,14 @@
                 action: function (row) {
                     //$scope.listPersons.
                     $log.info('delete  : ' + row.id);
-                    var obj = $filter('filter')($scope.fakeData, {
+                    var obj = $filter('filter')($scope.model.data, {
                         id: row.id
                     })[0];
                     $log.info(obj);
-                    $scope.fakeData.slice($scope.fakeData.indexOf(obj), 1);
-                    //$scope.fakeData.slice($scope.fakeData.indexOf(row),1);
+                    $log.info($scope.model.data.indexOf(obj));
+                    $scope.model.data.splice($scope.model.data.indexOf(obj), 1);
+                    $scope.model.totalItems--;
+                    //$scope.model.data.slice($scope.model.data.indexOf(row),1);
                 }
             }],
             pagination: {

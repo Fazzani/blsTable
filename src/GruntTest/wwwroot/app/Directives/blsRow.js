@@ -1,6 +1,28 @@
-(function(angular) {
-    app.directive('blsRows', ['$log', '$compile', '$templateCache', '$timeout', function($log, $compile, $templateCache, $timeout) {
-        var rowTpl = '<tr ng-repeat="d in data" ><td ng-repeat="c in cols" dynamic="getTdTpl(c)">{{d[c.fieldName]}}</td></tr>';
+(function (angular) {
+    app.directive('blsActions', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
+        var tpl = '<td ng-if="c.isActions" class="center">\
+                            <a ng-repeat="btn in options.actions" class="btn btn-default {{btn.class}}" ng-click="btn.action(d)" title="{{btn.title}}" ng-class="btn.class"><i class="{{btn.glyphicon}}"></i></a>\
+                   </td>';
+        this.link = function (scope, element, attrs, ctrls) {
+            // var blsTableCtrl = ctrls[0];
+            if (scope.c.isActions) {
+                var eleTpl = angular.element(tpl);
+                $timeout(function () {
+                    element.replaceWith(eleTpl);
+                    $compile(eleTpl)(scope);
+                }, 0);
+            }
+            
+        };
+        return {
+            //require: ['^blsTable'],
+            priority: -18,
+            restrict: 'A',
+            link: this.link
+        };
+    }]);
+    app.directive('blsRows', ['$log', '$compile', '$templateCache', '$timeout','$filter', function($log, $compile, $templateCache, $timeout,$filter) {
+        var rowTpl = '<tr ng-repeat="d in data" ><td ng-repeat="c in cols" bls-actions dynamic="getTdTpl(c)">{{d[c.fieldName]}}</td></tr>';
         this.link = function(scope, element, attrs, ctrls) {
             // var blsTableCtrl = ctrls[0];
             // debugger;

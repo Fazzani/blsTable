@@ -44,8 +44,8 @@ module.exports = function (grunt) {
     });
    
     // This command registers the default task which will install bower packages into wwwroot/lib
-    grunt.registerTask("default", ["bower:install"]);
-    grunt.registerTask("dist", ['clean', 'concat', 'jshint', 'uglify']);
+    //grunt.registerTask("default", ["bower:install"]);
+    //grunt.registerTask("dist", ['clean', 'concat', 'jshint', 'uglify']);
     grunt.registerTask('jsonServer', ['shell:json_server']);
     grunt.registerTask('webServer', ['shell:express_server']);
     // The following line loads the grunt plugins.
