@@ -1,6 +1,6 @@
-(function(angular) {
+(function (angular) {
     'use strict';
-    app.controller("testCtrl", function($scope, $http, $filter, $timeout, $log) {
+    app.controller("testCtrl", function ($scope, $http, $filter, $timeout, $log) {
         var root = 'http://localhost:3000';
         // http://localhost:3000/persons/1/friends
         var requestOptions = {
@@ -18,13 +18,13 @@
             totalItems: 0,
             data: {}
         };
-        $scope.getChildren = function(obj, resource) {
+        $scope.getChildren = function (obj, resource) {
             if (!angular.isDefined(resource)) resource = "/friends"
             $log.debug('in getChildrens request children of parendId : ', obj.id);
             var url = root + "/persons/" + obj.id + resource;
             return $http.get(url, requestOptions);
         };
-        $scope.query = function(pageIndex, pageLength, searchedText, orderBy, order) {
+        $scope.query = function (pageIndex, pageLength, searchedText, orderBy, order) {
             var offset = (pageIndex - 1) * pageLength;
             var url = root + "/persons" + "?_start=" + offset + "&_end=" + (offset + pageLength);
             if (angular.isDefined(searchedText) && searchedText !== "") url += "&q=" + searchedText;
@@ -33,11 +33,11 @@
                 url += '&_order=' + (order == 0 ? 'ASC' : 'DESC');
             }
             $log.debug('url=> ' + url);
-            return $http.get(url, requestOptions).then(function(response) {
+            return $http.get(url, requestOptions).then(function (response) {
                 $scope.model.totalItems = response.headers()['x-total-count'];
                 $scope.model.data = response.data;
                 return $scope.model;
-            }, function(errors) {
+            }, function (errors) {
                 $log.error(errors);
             });
         };
@@ -52,7 +52,7 @@
                 title: 'edit',
                 glyphicon: 'glyphicon glyphicon-edit',
                 class: 'btn-circle btn-info btn-xs',
-                action: function(row) {
+                action: function (row) {
                     $log.info('edit  : ' + row.id);
                     var obj = $filter('filter')($scope.fakeData, {
                         id: row.id
@@ -65,7 +65,7 @@
                 title: 'delete',
                 glyphicon: 'glyphicon glyphicon-remove',
                 class: 'btn-circle btn-danger btn-xs',
-                action: function(row) {
+                action: function (row) {
                     //$scope.listPersons.
                     $log.info('delete  : ' + row.id);
                     var obj = $filter('filter')($scope.fakeData, {
@@ -91,7 +91,7 @@
                 }
             }
         };
-        $scope.callFunction = function() {
+        $scope.callFunction = function () {
             console.log('sdffffffffff');
         };
         //$scope.query(1, 10);

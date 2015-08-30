@@ -1,9 +1,9 @@
-(function(angular) {
-    app.directive('blsTable', ['$log', '$compile', '$templateCache', '$timeout', 'dropableservice', function($log, $compile, $templateCache, $timeout, dropableservice) {
+(function (angular) {
+    app.directive('blsTable', ['$log', '$compile', '$templateCache', '$timeout', 'dropableservice', function ($log, $compile, $templateCache, $timeout, dropableservice) {
         var me = this;
         this.tpl = $templateCache.get('templates/blsTable.html');
-        this.controller = ['$scope','$attrs', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'dropableservice',
-            function($scope, $attrs, $filter, $timeout, $element, $log, localStorageService, dropableService) {
+        this.controller = ['$scope', '$attrs', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'dropableservice',
+            function ($scope, $attrs, $filter, $timeout, $element, $log, localStorageService, dropableService) {
                 var me = this;
                 me.initialLoad = $scope.isLoading = true;
                 this.tableConfig = {};
@@ -40,22 +40,22 @@
                 };
                 $scope.options = angular.extend({}, defaultOptions, $scope.options);
                 if ($scope.options.pagination.itemsPerPage && $scope.options.pagination.itemsPerPage.range && $scope.options.pagination.itemsPerPage.range.indexOf($scope.options.pagination.pageLength) < 1) $scope.options.pagination.pageLength = localStorageService.get($scope.storageIds.itemsPerPageId) || $scope.options.pagination.itemsPerPage.range[0];
-                $scope.$watch('options.pagination.pageIndex', function(newValue, oldValue) {
+                $scope.$watch('options.pagination.pageIndex', function (newValue, oldValue) {
                     if (newValue != oldValue) {
                         $scope.options.pagination.pageIndex = newValue++;
                         me.refreshDataGrid();
                     }
                 });
-                $scope.updateRecordsCount = function() {
-                        $scope.saveUserData({
-                            key: $scope.storageIds.itemsPerPageId,
-                            val: $scope.options.pagination.itemsPerPage.selected
-                        });
-                        $scope.options.pagination.pageLength = $scope.options.pagination.itemsPerPage.selected;
-                        me.refreshDataGrid();
-                    }
-                    //Reload ngModel by the Func
-                this.refreshDataGrid = function() {
+                $scope.updateRecordsCount = function () {
+                    $scope.saveUserData({
+                        key: $scope.storageIds.itemsPerPageId,
+                        val: $scope.options.pagination.itemsPerPage.selected
+                    });
+                    $scope.options.pagination.pageLength = $scope.options.pagination.itemsPerPage.selected;
+                    me.refreshDataGrid();
+                }
+                //Reload ngModel by the Func
+                this.refreshDataGrid = function () {
                     if (angular.isDefined($scope.funcAsync)) {
                         me.initColConfig();
                         $scope.isLoading = true;
@@ -70,15 +70,15 @@
                         });
                     }
                 }
-                this.setCols = function(cols) {
+                this.setCols = function (cols) {
                     $scope.cols = cols;
                     $scope.$emit('blsDataGrid_initedEvent');
                     $log.debug('cols =>', $scope.cols);
                     me.initColConfig();
                     me.refreshDataGrid();
                 }
-                this.changeColumnsOrder = function(from, to) {
-                    $scope.$applyAsync(function() {
+                this.changeColumnsOrder = function (from, to) {
+                    $scope.$applyAsync(function () {
                         $scope.data.swap(from, to);
                         $scope.cols.swap(from, to);
                         me.tableConfig.cols.swap(from, to);
@@ -88,7 +88,7 @@
                         });
                     });
                 }
-                $scope.setColWidth = function(index, width) {
+                $scope.setColWidth = function (index, width) {
                     $log.debug('setColWidth => ', index, ' width = ', width);
                     me.tableConfig.cols[index].width = width;
                     $scope.saveUserData({
@@ -96,15 +96,15 @@
                         val: me.tableConfig
                     });
                 };
-                $scope.$watch('options.search.searchText', function(newValue, oldValue) {
+                $scope.$watch('options.search.searchText', function (newValue, oldValue) {
                     if (me.timerSearch) $timeout.cancel(me.timerSearch);
                     if (newValue != oldValue) {
-                        me.timerSearch = $timeout(function() {
+                        me.timerSearch = $timeout(function () {
                             me.refreshDataGrid();
                         }, 500);
                     }
                 });
-                $scope.$watch('data', function(newValue, oldValue) {
+                $scope.$watch('data', function (newValue, oldValue) {
                     if (newValue != oldValue) {
                         if ($scope.cols.length > 0) {
                             $log.debug('init Table config');
@@ -113,27 +113,27 @@
                     }
                 });
                 //init columns disposition from the localStorage if exists else create new Object
-                this.initColConfig = function() {
-                        if (localStorageService.isSupported) me.tableConfig = localStorageService.get($scope.storageIds.tableConfig);
-                        if (me.tableConfig == null) {
-                            me.tableConfig = {
-                                id: $scope.uniqueId,
-                                cols: []
-                            };
-                            for (var i = 0; i <= $scope.cols.length - 1; i++) {
-                                me.tableConfig.cols.push({
-                                    index: i,
-                                    width: -1
-                                });
-                            };
-                            $scope.saveUserData({
-                                key: $scope.storageIds.tableConfig,
-                                val: me.tableConfig
+                this.initColConfig = function () {
+                    if (localStorageService.isSupported) me.tableConfig = localStorageService.get($scope.storageIds.tableConfig);
+                    if (me.tableConfig == null) {
+                        me.tableConfig = {
+                            id: $scope.uniqueId,
+                            cols: []
+                        };
+                        for (var i = 0; i <= $scope.cols.length - 1; i++) {
+                            me.tableConfig.cols.push({
+                                index: i,
+                                width: -1
                             });
-                        }
+                        };
+                        $scope.saveUserData({
+                            key: $scope.storageIds.tableConfig,
+                            val: me.tableConfig
+                        });
                     }
-                    //Swap data columns according to tableConfig 
-                this.initTableConfig = function() {
+                }
+                //Swap data columns according to tableConfig 
+                this.initTableConfig = function () {
                     if (me.initialLoad) {
                         for (var i = 0; i <= me.tableConfig.cols.length - 1; i++) {
                             if (i != me.tableConfig.cols[i].index) {
@@ -147,21 +147,21 @@
                     }
                     $scope.isLoading = false;
                 }
-                $scope.saveUserData = function(data) {
+                $scope.saveUserData = function (data) {
                     if (localStorageService.isSupported) localStorageService.set(data.key, data.val);
                 }
-                $scope.$on('flushEvent', function(data) {
+                $scope.$on('flushEvent', function (data) {
                     $log.debug(localStorageService.keys());
                     $log.debug('clearUserDataEvent intercepted => $scope.uniqueId : ', $scope.uniqueId);
                     if (localStorageService.isSupported) {
                         localStorageService.clearAll('^(.)+' + $scope.uniqueId + '$');
                     }
                 });
-                $scope.$on('refreshEvent', function(data) {
+                $scope.$on('refreshEvent', function (data) {
                     $log.debug('refreshEvent intercepted');
                     me.refreshDataGrid();
                 });
-                $scope.$on('exportEvent', function(e, format) {
+                $scope.$on('exportEvent', function (e, format) {
                     $log.debug('exportEvent intercepted to type : ', format);
                     $element.find('table').tableExport({
                         type: format
@@ -170,11 +170,11 @@
 
                 $scope.$on(
                         "$destroy",
-                        function( event ) {
-                            $timeout.cancel( me.timerSearch );
+                        function (event) {
+                            $timeout.cancel(me.timerSearch);
                         }
                     );
-                $scope.isHierarchical = function() {
+                $scope.isHierarchical = function () {
 
                     return angular.isDefined($attrs.getChildren);
                 };
