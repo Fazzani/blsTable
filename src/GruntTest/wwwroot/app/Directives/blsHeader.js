@@ -10,14 +10,14 @@
             pre: function(scope, element, attrs, ctrls) {
                 scope.$on('blsDataGrid_initedEvent', function(e) {
                     $log.debug('    blsDataGrid_initedEvent intercepted');
-                    var blsCompositeGridCtrl = ctrls[0];
+                    var blsTableCtrl = ctrls[0];
                     var blsHeaderCtrl = ctrls[1];
                     scope.setPredicate(localStorageService.get(scope.storageIds.predicateId) || (scope.cols[0] == undefined ? "" : scope.cols[0].id));
-                    scope.refreshDataGrid = blsCompositeGridCtrl.refreshDataGrid;
+                    scope.refreshDataGrid = blsTableCtrl.refreshDataGrid;
                     $log.debug('    Link => blsHeader');
                     var eleTpl = angular.element(tpl);
                     scope.getColWidth = function(index) {
-                        if (blsCompositeGridCtrl.tableConfig.cols[index].width > 0) return blsCompositeGridCtrl.tableConfig.cols[index].width + 'px';
+                        if (blsTableCtrl.tableConfig.cols[index].width > 0) return blsTableCtrl.tableConfig.cols[index].width + 'px';
                     }
                     $timeout(function() {
                         element.siblings('table').find('thead').append(eleTpl);
@@ -102,7 +102,7 @@
         ];
         return {
             priority: -20,
-            require: ['^?blsCompositeGrid', 'blsHeader'],
+            require: ['^?blsTable', 'blsHeader'],
             restrict: 'E',
             link: this.link,
             controller: controller

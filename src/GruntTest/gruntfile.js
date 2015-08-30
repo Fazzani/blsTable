@@ -1,4 +1,4 @@
-﻿/// <binding ProjectOpened='watch:tasks, jsonServer, webServer' />
+/// <binding ProjectOpened='watch:tasks, jsonServer, webServer' />
 module.exports = function (grunt) {
     grunt.initConfig({
         clean: ["wwwroot/lib/*", "temp/"],

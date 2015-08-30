@@ -1,8 +1,8 @@
 <div class="page-header">
-    <h1>blsRow example</h1>
+    <h1>blsTable example</h1>
 </div>
 <!-- <pre>{{model.data|json}}</pre> -->
-<bls-composite-grid
+<bls-table
 ng-model="model.data"
 func-async="query(pageIndex, pageLength, searchedText, orderBy, order)"
 options="options"
@@ -16,4 +16,4 @@ get-children="getChildren">
 <bls-col resize title="Photo Profile" field-name="picture"><img style="height:18px;margin: 0 auto;" class="img-responsive" src="{{::field}}" alt=""/></bls-col>
 <bls-col resize field-name="phone"><button type="button" ng-click="callFunction()" class="btn btn-primary btn-xs" value="{{::field}}">call</button></bls-col>
 </bls-cols>
-</bls-composite-grid>
+</bls-table>

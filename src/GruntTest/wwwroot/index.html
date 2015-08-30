@@ -26,25 +26,24 @@
         <script src="app/Controllers/homeCtrl.js" type="text/javascript" charset="utf-8" ></script>
         <script src="app/Controllers/testCtrl.js" type="text/javascript" charset="utf-8" ></script>
         <script src="app/Directives/services.js" type="text/javascript" charset="utf-8" ></script>
-        <script src="app/Directives/blsGrid.js"  type="text/javascript" charset="utf-8" ></script>
-        <script src="app/Directives/blsGridAsync.js"  type="text/javascript" charset="utf-8" ></script>
-        <script src="app/Directives/blsGridTreeView.js"  type="text/javascript" charset="utf-8" ></script>
+
+        <script src="app/Templates/bls_tpls.js" type="text/javascript" charset="utf-8"></script>
+
         <script src="app/Directives/draggableDirective.js"  type="text/javascript" charset="utf-8" ></script>
-        <script src="app/Directives/blsCompositeGrid.js"  type="text/javascript" charset="utf-8" ></script>
+        <script src="app/Directives/blsTable.js"  type="text/javascript" charset="utf-8" ></script>
         <script src="app/Directives/blsRow.js"  type="text/javascript" charset="utf-8" ></script>
         <script src="app/Directives/blsHeader.js"  type="text/javascript" charset="utf-8" ></script>
         <script src="app/Directives/blsCols.js"  type="text/javascript" charset="utf-8" ></script>
         <script src="app/Directives/blsTr.js"  type="text/javascript" charset="utf-8" ></script>
         <script src="app/Directives/dropable.js" type="text/javascript" charset="utf-8" ></script>
         <script src="app/Directives/blsToolBar.js" type="text/javascript" charset="utf-8" ></script>
-        <script src="app/Directives/hfGrid.js" type="text/javascript" charset="utf-8" ></script>
     </head>
     <body>
         <div class="container col-md-8 col-md-offset-2">
             <nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
                 <div class="container-fluid">
                     <div class="navbar-header">
-                        <a class="navbar-brand" href="#">BlsGrid</a>
+                        <a class="navbar-brand" href="#">Bls components</a>
                         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                         <span class="sr-only">Toggle navigation</span>
                         <span class="icon-bar"></span>
@@ -62,7 +61,7 @@
                                     <li ng-class="getActiveMenu('/blsGridAsync')"><a href="/blsGridAsync">BlsGrid Async</a></li>
                                     <li ng-class="getActiveMenu('/hfGrid')"><a href="/hfGrid">hfGrid</a></li>
                                     <li role="separator" class="divider"></li>
-                                    <li ng-class="getActiveMenu('/blsRow')"><a href="/blsRow">blsRow</a></li>
+                                    <li ng-class="getActiveMenu('/blsTable')"><a href="/blsTable">blsTable</a></li>
                                 </ul>
                             </li>
                         </ul>

@@ -2,10 +2,10 @@
     app.directive('blsCols', ['$log', '$compile', '$templateCache', '$timeout', function($log, $compile, $templateCache, $timeout) {
         this.link = {
             post: function(scope, element, attrs, ctrls) {
-                var blsCompositeGridCtrl = ctrls[0];
+                var blsTableCtrl = ctrls[0];
                 var blsColsCtrl = ctrls[1];
                 $log.debug('    Link => blsCols');
-                blsCompositeGridCtrl.setCols(blsColsCtrl.getCols());
+                blsTableCtrl.setCols(blsColsCtrl.getCols());
             }
         };
         this.controller = ['$scope', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'dropableservice',
@@ -22,7 +22,7 @@
         ];
         return {
             priority: 0,
-            require: ['^blsCompositeGrid', 'blsCols'],
+            require: ['^blsTable', 'blsCols'],
             restrict: 'E',
             link: this.link,
             controller: this.controller
@@ -30,7 +30,7 @@
     }]).directive('blsCol', ['$log', '$compile', '$templateCache', '$timeout', function($log, $compile, $templateCache, $timeout) {
         this.link = {
             pre: function(scope, element, attrs, ctrls) {
-                // var blsCompositeGridCtrl = ctrls[0];
+                // var blsTableCtrl = ctrls[0];
                 var blsColsCtrl = ctrls[1];
                 // var blsColCtrl = ctrls[2];
                 $log.debug('        Link => blsCol');
@@ -51,7 +51,7 @@
         ];
         return {
             priority: -1,
-            require: ['^blsCompositeGrid', '^blsCols', 'blsCol'],
+            require: ['^blsTable', '^blsCols', 'blsCol'],
             restrict: 'E',
             link: this.link,
             controller: this.controller

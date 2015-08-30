@@ -2,7 +2,7 @@
     app.directive('blsRows', ['$log', '$compile', '$templateCache', '$timeout', function($log, $compile, $templateCache, $timeout) {
         var rowTpl = '<tr ng-repeat="d in data" ><td ng-repeat="c in cols" dynamic="getTdTpl(c)">{{d[c.fieldName]}}</td></tr>';
         this.link = function(scope, element, attrs, ctrls) {
-            // var blsCompositeGridCtrl = ctrls[0];
+            // var blsTableCtrl = ctrls[0];
             // debugger;
             
             var eleTpl = angular.element(rowTpl);
@@ -14,7 +14,7 @@
             }, 0);
         };
         return {
-            require: ['^blsCompositeGrid'],
+            require: ['^blsTable'],
             priority: -17,
             restrict: 'E',
             link: this.link,
@@ -86,7 +86,7 @@
             }, 0);
         };
         return {
-            require: ['^blsCompositeGrid'],
+            require: ['^blsTable'],
             priority: -16,
             restrict: 'A',
             link: this.link,

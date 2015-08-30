@@ -1,6 +1,6 @@
 {
-    "name": "BlsGrid",
-    "description": "This to user blsGrid by angular.",
+    "name": "BlsTable",
+    "description": "This to user blsTable by angular.",
     "version": "0.0.1",
     "dependencies": {
         "express": "4.11.0"
@@ -11,9 +11,9 @@
     "main": "Server.js",
     "keywords": [
         "nodejs",
-        "blsGrid",
-        "blsGridAsync",
+        "blsTable",
         "Angularjs",
+        "Angular",
         "heroku"
     ],
     "author": "Fazzani Heni",

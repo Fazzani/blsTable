@@ -1,5 +1,5 @@
 {
-    "name": "BlsGrid",
+    "name": "BlsTable",
     "private": true,
     "dependencies": {
         "angular": "^1.4.5",
@@ -10,7 +10,6 @@
         "angular-sanitize": "^1.4.5",
         "bootstrap": "^3.3.5",
         "Font-Awesome": "^4.4.0",
-        "jquery": "^2.1.4",
-        "ng-csv": "^0.3.4"
+        "jquery": "^2.1.4"
     }
 }

@@ -1,7 +1,7 @@
 (function(angular) {
-    app.directive('blsCompositeGrid', ['$log', '$compile', '$templateCache', '$timeout', 'dropableservice', function($log, $compile, $templateCache, $timeout, dropableservice) {
+    app.directive('blsTable', ['$log', '$compile', '$templateCache', '$timeout', 'dropableservice', function($log, $compile, $templateCache, $timeout, dropableservice) {
         var me = this;
-        this.tpl = $templateCache.get('templates/blsCompositeGrid.html');
+        this.tpl = $templateCache.get('templates/blsTable.html');
         this.controller = ['$scope','$attrs', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'dropableservice',
             function($scope, $attrs, $filter, $timeout, $element, $log, localStorageService, dropableService) {
                 var me = this;
