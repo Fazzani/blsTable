@@ -26,23 +26,7 @@
         <script src="app/Controllers/homeCtrl.js" type="text/javascript" charset="utf-8" ></script>
         <script src="app/Controllers/testCtrl.js" type="text/javascript" charset="utf-8" ></script>
 
-        <script src="app/Templates/bls_tpls.js" type="text/javascript" charset="utf-8"></script>
-
-        <script src="app/Directives/blsTable.js"  type="text/javascript" charset="utf-8" ></script>
-        <script src="app/Directives/allowDrag.js" type="text/javascript" charset="utf-8"></script>
-        <script src="app/Services/services.js" type="text/javascript" charset="utf-8"></script>
-        <script src="app/Directives/blsActions.js" type="text/javascript" charset="utf-8"></script>
-        <script src="app/Directives/blsRowChild.js" type="text/javascript" charset="utf-8"></script>
-        <script src="app/Directives/blsRows.js" type="text/javascript" charset="utf-8"></script>
-        <script src="app/Directives/dynamic.js"  type="text/javascript" charset="utf-8" ></script>
-        <script src="app/Directives/blsHeader.js"  type="text/javascript" charset="utf-8" ></script>
-        <script src="app/Directives/blsCols.js" type="text/javascript" charset="utf-8"></script>
-        <script src="app/Directives/blsCol.js"  type="text/javascript" charset="utf-8" ></script>
-        <script src="app/Directives/blsTr.js"  type="text/javascript" charset="utf-8" ></script>
-        <script src="app/Directives/draggable.js" type="text/javascript" charset="utf-8"></script>
-        <script src="app/Directives/dropable.js" type="text/javascript" charset="utf-8" ></script>
-        <script src="app/Directives/blsDropDown.js" type="text/javascript" charset="utf-8"></script>
-        <script src="app/Directives/blsToolBar.js" type="text/javascript" charset="utf-8" ></script>
+        <script src="dist/blsComponents.min.js"  type="text/javascript" charset="utf-8" ></script>
     </head>
     <body>
         <div class="container col-md-8 col-md-offset-2">
@@ -61,7 +45,7 @@
                         <ul class="nav navbar-nav">
                             <li ng-class="getActiveMenu('/docs')"><a href="/docs">Docs</a></li>
                             <li class="dropdown" ng-class="getActiveMenu('/blsTable')||getActiveMenu('/blsTable')">
-                                <a href="#" class="dropdown-toggle"  data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Examples <span class="caret"> <span  class="sr-only">(current)</span></span></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Examples <span class="caret"> <span  class="sr-only">(current)</span></span></a>
                                 <ul class="dropdown-menu">
                                     <li role="separator" class="divider"></li>
                                     <li ng-class="getActiveMenu('/blsTable')"><a href="/blsTable">blsTable</a></li>

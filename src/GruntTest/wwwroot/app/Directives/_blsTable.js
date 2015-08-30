@@ -1,5 +1,6 @@
 (function (angular) {
-    angular.module("bls_components", ['bls_tpls']).directive('blsTable', ['$log', '$compile', '$templateCache', '$timeout', 'blsTableServices', function ($log, $compile, $templateCache, $timeout, blsTableServices) {
+    angular.module("bls_components", ['bls_tpls'])
+        .directive('blsTable', ['$log', '$compile', '$templateCache', '$timeout', 'blsTableServices', function ($log, $compile, $templateCache, $timeout, blsTableServices) {
         var me = this;
         this.controller = ['$scope', '$attrs', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices',
             function ($scope, $attrs, $filter, $timeout, $element, $log, localStorageService, blsTableServices) {

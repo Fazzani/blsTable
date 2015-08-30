@@ -1,6 +1,4 @@
-(function (angular) {
-    'use strict';
-angular.module("bls_components").service('blsTableServices', function ($log, localStorageService) {
+angular.module("bls_components").service('blsTableServices', ['$log','localStorageService',function ($log, localStorageService) {
     Array.prototype.swap = function(new_index, old_index) {
             if (new_index >= this.length) {
                 var k = new_index - this.length;
@@ -55,5 +53,4 @@ angular.module("bls_components").service('blsTableServices', function ($log, loc
             localStorageService.set(key, colConfigArray);
         }
     }
-});
-})(window.angular);
+}]);

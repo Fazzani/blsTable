@@ -1,13 +1,12 @@
-﻿(function (angular) {
-    angular.module("bls_components").directive('blsRowChild', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
-    this.link = function(scope, element, attrs, ctrls, transclude) {
+﻿angular.module("bls_components").directive('blsRowChild', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
+    var link = function (scope, element, attrs, ctrls, transclude) {
         $log.debug('    Link => blsRows');
         var me = this;
         this.childs = [];
         var elemTplCaret = angular.element($templateCache.get('templates/blsChildRowsCaret.html'));
         scope.expand = false;
         scope.firstExpand = true;
-        this.getRowsChilds = function(id, target) {
+        this.getRowsChilds = function (id, target) {
             var siblings = target.siblings('tr[parentId="' + id + '"]').toArray();
             me.childs = me.childs.concat(siblings);
             for (var i = 0; i < siblings.length; i++) {
@@ -15,8 +14,8 @@
             };
             return me.childs;
         };
-        scope.getTdTpl = function(col, d) {
-            if (col.tpl  && col.tpl != '') {
+        scope.getTdTpl = function (col, d) {
+            if (col.tpl && col.tpl != '') {
                 col.tpl = col.tpl.replace('::data', 'd');
                 return col.tpl.replace('::field', "d[c.fieldName]");
             }
@@ -26,21 +25,21 @@
             scope.level = 0;
             element.data('dataLevel', scope.level);
         }
-        $timeout(function() {
-            this.toggle = function(id, target, expand) {
+        $timeout(function () {
+            this.toggle = function (id, target, expand) {
                 me.childs = me.getRowsChilds(id, target);
-                me.childs.forEach(function(child) {
+                me.childs.forEach(function (child) {
                     expand ? $(child).show() : $(child).hide();
                 });
             }
-            elemTplCaret.on('click', function(e) {
+            elemTplCaret.on('click', function (e) {
                 $log.debug('    toggle row');
                 var $this = $(this);
                 if (scope.firstExpand) {
                     elemTplCaret.addClass('fa-spinner');
                     scope.firstExpand = false;
                     var childScope = scope.$new();
-                    scope.getChildren()(scope.d).then(function(response) {
+                    scope.getChildren()(scope.d).then(function (response) {
                         elemTplCaret.removeClass('fa-spinner');
                         if (response.data.length > 0) {
                             childScope.data = response.data;
@@ -52,7 +51,7 @@
                             elemTplRow.insertAfter(element);
                         } else elemTplCaret.removeClass('fa').removeClass('fa-caret-down').removeClass('fa-caret-right').off('click');
                     });
-                } else scope.$apply(function() {
+                } else scope.$apply(function () {
                     scope.expand = !scope.expand;
                     me.toggle(scope.$id, $this.closest('tr'), scope.expand);
                 });
@@ -66,8 +65,7 @@
         require: ['^blsTable'],
         priority: -16,
         restrict: 'A',
-        link: this.link,
+        link: link,
         scope: true
     };
 }]);
-})(window.angular);

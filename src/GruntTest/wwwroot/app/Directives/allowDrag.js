@@ -2,7 +2,6 @@ angular.module("bls_components").directive("allowDrag", function () {
     return {
         restrict: "A",
         require: ['^blsTable'],
-        controller: function() {},
         compile: function(el, attr) {
             function removeDragClass(element, className) {
                 var elm = element[0].parentNode.querySelector('.' + className);

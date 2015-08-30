@@ -1,6 +1,5 @@
-﻿(function (angular) {
-    angular.module("bls_components").directive('blsCol', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
-    this.link = {
+﻿angular.module("bls_components").directive('blsCol', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
+    var link = {
         pre: function (scope, element, attrs, ctrls) {
             // var blsTableCtrl = ctrls[0];
             var blsColsCtrl = ctrls[1];
@@ -9,7 +8,7 @@
             if (attrs.isActions) {
                 blsColsCtrl.addCol({
                     title: attrs.title || 'Actions',
-                    isActions:true,
+                    isActions: true,
                     resize: angular.isDefined(attrs.resize)
                 });
             } else
@@ -23,7 +22,7 @@
                 });
         }
     };
-    this.controller = ['$scope', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices',
+    var controller = ['$scope', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices',
         function ($scope, $filter, $timeout, $element, $log, localStorageService, blsTableServices) {
             $log.debug('        controller => blsCol');
         }
@@ -32,8 +31,7 @@
         priority: -1,
         require: ['^blsTable', '^blsCols', 'blsCol'],
         restrict: 'E',
-        link: this.link,
-        controller: this.controller
+        link: link,
+        controller: controller
     };
 }]);
-})(window.angular);

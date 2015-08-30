@@ -1,7 +1,7 @@
-/// <binding ProjectOpened='watch:tasks, jsonServer, webServer' />
+/// <binding AfterBuild='dist' ProjectOpened='watch:tasks, jsonServer, webServer' />
 module.exports = function (grunt) {
     grunt.initConfig({
-        clean: ["wwwroot/lib/*", "temp/"],
+        clean: ["wwwroot/dist/*", "wwwroot/temp/*"],
         bower: {
             install: {
                 options: {
@@ -12,25 +12,25 @@ module.exports = function (grunt) {
             }
         },
         jshint: {
-            files: ['temp/*.js'],
+            files: ['wwwroot/temp/*.js'],
             options: {
                 '-W069': false,
             }
         },
         concat: {
             all: {
-                src: ['wwwroot/app/Directives/*.js'],
-                dest: 'temp/combined.js'
+                src: ["wwwroot/app/templates/*.js", 'wwwroot/app/Directives/*.js', "wwwroot/app/Services/*.js"],
+                dest: 'wwwroot/temp/blsComponents.js'
             }
         },
         uglify: {
             all: {
-                src: ['temp/combined.js'],
-                dest: 'wwwroot/lib/combined.min.js'
+                src: ['wwwroot/temp/blsComponents.js'],
+                dest: 'wwwroot/dist/blsComponents.min.js'
             }
         },
         watch: {
-            files: ["wwwroot/app/Directives/*.js"],
+            files: ["wwwroot/app/Directives/*.js", "wwwroot/app/Services/*.js", "wwwroot/app/templates/*.js"],
             tasks: ["dist"]
         },
         shell: {
@@ -44,8 +44,8 @@ module.exports = function (grunt) {
     });
    
     // This command registers the default task which will install bower packages into wwwroot/lib
-    //grunt.registerTask("default", ["bower:install"]);
-    //grunt.registerTask("dist", ['clean', 'concat', 'jshint', 'uglify']);
+    grunt.registerTask("default", ["bower:install"]);
+    grunt.registerTask("dist", ['clean', 'concat', 'jshint', 'uglify']);
     grunt.registerTask('jsonServer', ['shell:json_server']);
     grunt.registerTask('webServer', ['shell:express_server']);
     // The following line loads the grunt plugins.

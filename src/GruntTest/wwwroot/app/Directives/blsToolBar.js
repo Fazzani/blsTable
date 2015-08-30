@@ -6,26 +6,26 @@ angular.module("bls_components").directive('blsToolBar', [function () {
         restrict: 'E', // E = Element, A = Attribute, C = Class, M = Comment
         templateUrl: 'templates/blsToolBar.html',
         replace: true,
-        controller: function($scope, $element, $document, $log) {
+        controller: ['$scope', '$element', '$document', '$log', function ($scope, $element, $document, $log) {
             $scope.btnClass = "btn btn-default";
             $scope.searchPlaceHolder = "search...";
             $scope.selectedAll = false;
             $scope.titleExportButton = "Export";
-            $scope.clearUserData = function() {
+            $scope.clearUserData = function () {
                 $scope.$emit('flushEvent');
             }
-            $scope.refresh = function() {
+            $scope.refresh = function () {
                 $scope.$emit('refreshEvent');
             }
-            $scope.toggleSelectAll = function() {
+            $scope.toggleSelectAll = function () {
                 $scope.selectedAll = !$scope.selectedAll;
                 $scope.$emit('toggleSelectAllEvent', $scope.selectedAll);
             }
-            $scope.export = function(type) {
+            $scope.export = function (type) {
                 $log.debug('    export type => ', type)
                 $scope.$emit('exportEvent', type);
             }
-            $scope.links = ['excel', 'xml', 'csv','sql', 'json','doc', 'powerpoint' ];
-        }
+            $scope.links = ['excel', 'xml', 'csv', 'sql', 'json', 'doc', 'powerpoint'];
+        }]
     };
 }]);
