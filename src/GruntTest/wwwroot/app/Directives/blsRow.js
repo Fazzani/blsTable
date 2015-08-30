@@ -12,7 +12,6 @@
                     $compile(eleTpl)(scope);
                 }, 0);
             }
-            
         };
         return {
             //require: ['^blsTable'],
