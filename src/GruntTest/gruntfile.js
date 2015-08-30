@@ -19,7 +19,7 @@ module.exports = function (grunt) {
         },
         concat: {
             all: {
-                src: ["wwwroot/app/templates/*.js", 'wwwroot/app/Directives/*.js', "wwwroot/app/Services/*.js"],
+                src: ["wwwroot/app/templates/*.js", 'wwwroot/app/Directives/*.js', "wwwroot/app/Services/*.js", "wwwroot/Content/js/*.js"],
                 dest: 'wwwroot/temp/blsComponents.js'
             }
         },
