@@ -55,20 +55,18 @@ clone row + injecter la fonction dans la première Td => compiler la row => appe
     + Resize Columns
     + Global loading
     + Exporting data ('excel', 'xml', 'csv','sql', 'json','doc', 'powerpoint')
+    + Action's buttons
 
     RAF
-    + Action's buttons
     + Filter by culumn
     + Collpase all and Expand all
     + Different events (loading, refresh, etc..)
     + Row selection (For export)
-   
 
     Bugs 
     + Drag/drop column has have expand capabilty (we have to detect that is the col of expanding and refresh all the grid)
     + Adjust design
     + Prevent right click event
-
 
     Enhancement
     + Cache differents templates

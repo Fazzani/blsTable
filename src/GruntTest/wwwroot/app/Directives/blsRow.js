@@ -1,5 +1,5 @@
 (function (angular) {
-    app.directive('blsActions', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
+    app.directive('blsActions', ['$log', '$compile', '$templateCache', '$timeout','$q', function ($log, $compile, $templateCache, $timeout,$q) {
         var tpl = '<td ng-if="c.isActions" class="center">\
                             <a ng-repeat="btn in options.actions" class="btn btn-default {{btn.class}}" ng-click="action(btn,d)" title="{{btn.title}}" ng-class="btn.class"><i class="{{btn.glyphicon}}"></i></a>\
                    </td>';
@@ -20,10 +20,12 @@
             link: this.link,
             controller: function ($scope) {
                 $scope.action = function (btn, d) {
-                    btn.action(d);
-                    if (btn.isRemoveAction) {
-                        $scope.data.splice($scope.data.indexOf(d), 1);
-                    }
+                    $q.when(btn.action(d)).then(function (res) {
+                        if (btn.isRemoveAction) {
+                            $scope.data.splice($scope.data.indexOf(d), 1);
+                        }
+                    });;
+                   
                 }
             }
         };

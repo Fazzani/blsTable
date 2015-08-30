@@ -1,6 +1,6 @@
 (function (angular) {
     'use strict';
-    app.controller("testCtrl", function ($scope, $http, $filter, $timeout, $log) {
+    app.controller("testCtrl", function ($scope, $http, $filter, $timeout, $log,$q) {
         var root = 'http://localhost:3000';
         // http://localhost:3000/persons/1/friends
         var requestOptions = {
@@ -54,19 +54,29 @@
                 class: 'btn-circle btn-info btn-xs',
                 isRemoveAction: false,
                 action: function (row) {
+                    var deferred = $q.defer();
                     $log.info('edit row : ' + row.id);
                     //var obj = $filter('filter')($scope.model.data, {
                     //    id: row.id
                     //})[0];
                     //$log.info(obj);
-                    row.name = 'Edited row '+row.id;
+                    row.name = 'Edited row ' + row.id;
+                    if (row) {
+                        deferred.resolve("Success");
+                    } else {
+                        deferred.reject("Error");
+                    }
+
+                    return deferred.promise;
                 }
             }, {
                 title: 'delete',
                 glyphicon: 'glyphicon glyphicon-remove',
                 class: 'btn-circle btn-danger btn-xs',
-                isRemoveAction:true,
+                isRemoveAction: true,
                 action: function (row) {
+                    var deferred = $q.defer();
+
                     $log.info('delete  : ' + row.id);
                     var obj = $filter('filter')($scope.model.data, {
                         id: row.id
@@ -75,6 +85,15 @@
                     //$log.info($scope.model.data.indexOf(obj));
                     //$scope.model.data.splice($scope.model.data.indexOf(obj), 1);
                     $scope.model.totalItems--;
+
+                    if (row) {
+                        deferred.resolve("Success");
+                    } else {
+                        deferred.reject("Error");
+                    }
+
+                    return deferred.promise;
+                   
                 }
             }],
             pagination: {
