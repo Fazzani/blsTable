@@ -8,8 +8,8 @@
                 blsTableCtrl.setCols(blsColsCtrl.getCols());
             }
         };
-        this.controller = ['$scope', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'dropableservice',
-            function ($scope, $filter, $timeout, $element, $log, localStorageService, dropableService) {
+        this.controller = ['$scope', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices',
+            function ($scope, $filter, $timeout, $element, $log, localStorageService, blsTableServices) {
                 $log.debug('    controller => blsCols');
                 var cols = [];
                 this.addCol = function (col) {
@@ -51,8 +51,8 @@
                     });
             }
         };
-        this.controller = ['$scope', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'dropableservice',
-            function ($scope, $filter, $timeout, $element, $log, localStorageService, dropableService) {
+        this.controller = ['$scope', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices',
+            function ($scope, $filter, $timeout, $element, $log, localStorageService, blsTableServices) {
                 $log.debug('        controller => blsCol');
             }
         ];
@@ -80,8 +80,8 @@ app.directive("blsGrid", function() {
             func: '&' //function to load data (promise). on doit soit le ngModel pour passer les données ou cette promise/ the func return all Data
         },
         templateUrl: 'template/blsGrid/blsGrid.html',
-        controller: ['$scope', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'dropableservice',
-            function($scope, $filter, $timeout, $element, $log, localStorageService, dropableService) {
+        controller: ['$scope', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices',
+            function($scope, $filter, $timeout, $element, $log, localStorageService, blsTableServices) {
                 var me = this;
                 $scope.source;
                 var defaultOptions = {
@@ -160,7 +160,7 @@ app.directive("blsGrid", function() {
                         $scope.reverse = localStorageService.get($scope.storageIds.reverseId);
                         $scope.predicate = localStorageService.get($scope.storageIds.predicateId) || ($scope.columns[0] == undefined ? "" : $scope.columns[0].id);
                         if ($scope.options.pagination.itemsPerPage && $scope.options.pagination.itemsPerPage.range && $scope.options.pagination.itemsPerPage.range.indexOf($scope.options.pagination.pageLength) < 1) $scope.options.pagination.pageLength = localStorageService.get($scope.storageIds.itemsPerPageId) || $scope.options.pagination.itemsPerPage.range[0];
-                        $scope.colOrderConfig = dropableService.initReorderColumns($scope.columns, $scope.data, $scope.storageIds.colReorderDataKey);
+                        $scope.colOrderConfig = blsTableServices.initReorderColumns($scope.columns, $scope.data, $scope.storageIds.colReorderDataKey);
                         $log.debug('init colOrderConfig : ' + $scope.colOrderConfig);
                     }
                     $scope.isLoading = false;
@@ -280,9 +280,9 @@ app.directive("blsGrid", function() {
                 $scope.handleDrop = function(draggedData, targetElem) {
                     var srcIdx = $filter('getIndexByProperty')('id', draggedData, $scope.columns);
                     var destIdx = $filter('getIndexByProperty')('id', $(targetElem).data('originalTitle'), $scope.columns);
-                    dropableService.swapArrayElements($scope.columns, srcIdx, destIdx);
-                    dropableService.swapArrayElements($scope.data, srcIdx, destIdx);
-                    dropableService.swapArrayElements($scope.colOrderConfig, srcIdx, destIdx);
+                    blsTableServices.swapArrayElements($scope.columns, srcIdx, destIdx);
+                    blsTableServices.swapArrayElements($scope.data, srcIdx, destIdx);
+                    blsTableServices.swapArrayElements($scope.colOrderConfig, srcIdx, destIdx);
                 };
                 $scope.handleDrag = function(columnName) {
                     //$log.debug('handleDrag : ' + columnName);
@@ -290,7 +290,7 @@ app.directive("blsGrid", function() {
                 };
                 $scope.$watchCollection('columns', function(newVal, oldVal) {
                     if (newVal != oldVal && newVal) {
-                        dropableService.saveConfig($scope.storageIds.colReorderDataKey, $scope.colOrderConfig);
+                        blsTableServices.saveConfig($scope.storageIds.colReorderDataKey, $scope.colOrderConfig);
                     }
                 })
                 init();
@@ -321,8 +321,8 @@ app.directive("blsGrid", function() {
                 funcAsync: '&'
             },
             templateUrl: 'template/blsGrid/blsGridAsync.html',
-            controller: ['$scope', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'dropableservice',
-                function($scope, $filter, $timeout, $element, $log, localStorageService, dropableService) {
+            controller: ['$scope', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices',
+                function($scope, $filter, $timeout, $element, $log, localStorageService, blsTableServices) {
                     var me = this;
                     var defaultOptions = {
                         multiSelection: true,
@@ -397,7 +397,7 @@ app.directive("blsGrid", function() {
                                 }
                             });
                             if ($scope.options.pagination.itemsPerPage && $scope.options.pagination.itemsPerPage.range && $scope.options.pagination.itemsPerPage.range.indexOf($scope.options.pagination.pageLength) < 1) $scope.options.pagination.pageLength = localStorageService.get($scope.storageIds.itemsPerPageId) || $scope.options.pagination.itemsPerPage.range[0];
-                            $scope.colOrderConfig = dropableService.initReorderColumns($scope.columns, $scope.data, $scope.storageIds.colReorderDataKey);
+                            $scope.colOrderConfig = blsTableServices.initReorderColumns($scope.columns, $scope.data, $scope.storageIds.colReorderDataKey);
                             $log.debug('init colOrderConfig : ' + $scope.colOrderConfig);
                         }
                         $scope.isLoading = false;
@@ -508,9 +508,9 @@ app.directive("blsGrid", function() {
                     $scope.handleDrop = function(draggedData, targetElem) {
                         var srcIdx = $filter('getIndexByProperty')('id', draggedData, $scope.columns);
                         var destIdx = $filter('getIndexByProperty')('id', $(targetElem).data('originalTitle'), $scope.columns);
-                        dropableService.swapArrayElements($scope.columns, srcIdx, destIdx);
-                        dropableService.swapArrayElements($scope.data, srcIdx, destIdx);
-                        dropableService.swapArrayElements($scope.colOrderConfig, srcIdx, destIdx);
+                        blsTableServices.swapArrayElements($scope.columns, srcIdx, destIdx);
+                        blsTableServices.swapArrayElements($scope.data, srcIdx, destIdx);
+                        blsTableServices.swapArrayElements($scope.colOrderConfig, srcIdx, destIdx);
                     };
                     $scope.handleDrag = function(columnName) {
                         //$log.debug('handleDrag : ' + columnName);
@@ -518,7 +518,7 @@ app.directive("blsGrid", function() {
                     };
                     $scope.$watchCollection('columns', function(newVal, oldVal) {
                         if (newVal != oldVal && newVal) {
-                            dropableService.saveConfig($scope.storageIds.colReorderDataKey, $scope.colOrderConfig);
+                            blsTableServices.saveConfig($scope.storageIds.colReorderDataKey, $scope.colOrderConfig);
                         }
                     })
                     init();
@@ -623,8 +623,8 @@ app.directive("blsGrid", function() {
                 });
             }
         };
-        this.controller = ['$scope', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'dropableservice',
-            function($scope, $filter, $timeout, $element, $log, localStorageService, dropableService) {
+        this.controller = ['$scope', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices',
+            function($scope, $filter, $timeout, $element, $log, localStorageService, blsTableServices) {
                 var me = this;
                 me.reverse = localStorageService.get($scope.storageIds.reverseId) || me.reverse;
                 me.resizeColData = null;
@@ -818,11 +818,11 @@ app.directive("blsGrid", function() {
     }]);
 })(window.angular);
 (function (angular) {
-    app.directive('blsTable', ['$log', '$compile', '$templateCache', '$timeout', 'dropableservice', function ($log, $compile, $templateCache, $timeout, dropableservice) {
+    app.directive('blsTable', ['$log', '$compile', '$templateCache', '$timeout', 'blsTableServices', function ($log, $compile, $templateCache, $timeout, blsTableServices) {
         var me = this;
         this.tpl = $templateCache.get('templates/blsTable.html');
-        this.controller = ['$scope', '$attrs', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'dropableservice',
-            function ($scope, $attrs, $filter, $timeout, $element, $log, localStorageService, dropableService) {
+        this.controller = ['$scope', '$attrs', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices',
+            function ($scope, $attrs, $filter, $timeout, $element, $log, localStorageService, blsTableServices) {
                 var me = this;
                 me.initialLoad = $scope.isLoading = true;
                 this.tableConfig = {};
@@ -1601,7 +1601,7 @@ app.directive('hfGrid', ['$log', '$templateRequest', '$compile', 'localStorageSe
 // })
 
 'use strict';
-app.service('dropableservice', function($log, localStorageService) {
+app.service('blsTableServices', function($log, localStorageService) {
     Array.prototype.swap = function(new_index, old_index) {
             if (new_index >= this.length) {
                 var k = new_index - this.length;

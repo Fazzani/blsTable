@@ -1,13 +1,12 @@
 (function (angular) {
-    app.directive('blsTable', ['$log', '$compile', '$templateCache', '$timeout', 'dropableservice', function ($log, $compile, $templateCache, $timeout, dropableservice) {
+    app.directive('blsTable', ['$log', '$compile', '$templateCache', '$timeout', 'blsTableServices', function ($log, $compile, $templateCache, $timeout, blsTableServices) {
         var me = this;
-        this.tpl = $templateCache.get('templates/blsTable.html');
-        this.controller = ['$scope', '$attrs', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'dropableservice',
-            function ($scope, $attrs, $filter, $timeout, $element, $log, localStorageService, dropableService) {
+        this.controller = ['$scope', '$attrs', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices',
+            function ($scope, $attrs, $filter, $timeout, $element, $log, localStorageService, blsTableServices) {
                 var me = this;
                 me.initialLoad = $scope.isLoading = true;
                 this.tableConfig = {};
-                $scope.uniqueId = "blsContainer_" + $scope.$id; //$scope.options.pagination.itemsPerPage.prefixStorage + $element[0].id;
+                $scope.uniqueId = "blsContainer_" + $scope.$id; 
                 $scope.storageIds = {
                     predicateId: 'prd_' + $scope.uniqueId,
                     reverseId: 'rvs_' + $scope.uniqueId,
@@ -18,7 +17,6 @@
                 };
                 var defaultOptions = {
                     multiSelection: true,
-                    //autoSaveReorderColumns: true,
                     search: {
                         searchText: '',
                         searchClass: 'form-control'
@@ -68,6 +66,7 @@
                             searchedText: $scope.options.search.searchText,
                             orderBy: $scope.predicate,
                             order: $scope.reverse
+                            //,filters:[{name:'age',value:10}]
                         });
                     }
                 }
@@ -185,7 +184,7 @@
             restrict: 'E',
             replace: true,
             transclude: true,
-            template: this.tpl,
+            templateUrl: 'templates/blsTable.html',
             controller: this.controller,
             scope: {
                 data: '=ngModel',

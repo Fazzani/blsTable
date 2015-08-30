@@ -1,6 +1,6 @@
 (function (angular) {
     'use strict';
-    app.controller("testCtrl", function ($scope, $http, $filter, $timeout, $log,$q) {
+    app.controller("testCtrl", function ($scope, $http, $filter, $timeout, $log, $q) {
         var root = 'http://localhost:3000';
         // http://localhost:3000/persons/1/friends
         var requestOptions = {
@@ -24,13 +24,20 @@
             var url = root + "/persons/" + obj.id + resource;
             return $http.get(url, requestOptions);
         };
-        $scope.query = function (pageIndex, pageLength, searchedText, orderBy, order) {
+        $scope.query = function (pageIndex, pageLength, searchedText, orderBy, order, filters) {
             var offset = (pageIndex - 1) * pageLength;
             var url = root + "/persons" + "?_start=" + offset + "&_end=" + (offset + pageLength);
             if (angular.isDefined(searchedText) && searchedText !== "") url += "&q=" + searchedText;
             if (angular.isDefined(orderBy)) {
                 url += '&_sort=' + orderBy;
                 url += '&_order=' + (order == 0 ? 'ASC' : 'DESC');
+            }
+            $log.debug('in query');
+            if (angular.isDefined(filters) && angular.isArray(filters)) {
+                $log.debug('    has filters');
+                angular.forEach(filters, function(filter, key) {
+                    url += "&"+filter.name + "=" + filter.value;
+                });
             }
             $log.debug('url=> ' + url);
             return $http.get(url, requestOptions).then(function (response) {
@@ -93,7 +100,7 @@
                     }
 
                     return deferred.promise;
-                   
+
                 }
             }],
             pagination: {

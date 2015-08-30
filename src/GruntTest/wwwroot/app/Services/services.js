@@ -1,5 +1,5 @@
 'use strict';
-app.service('dropableservice', function($log, localStorageService) {
+app.service('blsTableServices', function($log, localStorageService) {
     Array.prototype.swap = function(new_index, old_index) {
             if (new_index >= this.length) {
                 var k = new_index - this.length;
