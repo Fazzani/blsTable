@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html ng-app="app" ng-controller="rootCtrl">
+    <head>
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <title ng-bind="Page"></title>
+        <base href="/">
+        <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="lib/Font-Awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" href="Content/Styles/styles.css">
+        <script src="lib/jquery/dist/jquery.min.js"></script>
+        <script src="lib/angular/angular.min.js"></script>
+        <script src="lib/angular-route/angular-route.min.js"></script>
+        <script src="lib/angular-animate/angular-animate.min.js"></script>
+        <script src="lib/angular-sanitize/angular-sanitize.min.js"></script>
+        <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="lib/angular-bootstrap/ui-bootstrap.js"></script>
+        <script src="lib/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+        <script src="lib/angular-local-storage/dist/angular-local-storage.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="Content/js/tableExport.js"></script>
+        <script type="text/javascript">
+        var app = angular.module('app', ['bls_tpls', 'ui.bootstrap', 'LocalStorageModule', 'ngRoute', 'ngAnimate']);
+        </script>
+        <script src="app/app.js"  type="text/javascript" charset="utf-8" ></script>
+        <script src="app/Controllers/rootCtrl.js" type="text/javascript" charset="utf-8" ></script>
+        <script src="app/Controllers/homeCtrl.js" type="text/javascript" charset="utf-8" ></script>
+        <script src="app/Controllers/testCtrl.js" type="text/javascript" charset="utf-8" ></script>
+        <script src="app/Directives/services.js" type="text/javascript" charset="utf-8" ></script>
+        <script src="app/Directives/blsGrid.js"  type="text/javascript" charset="utf-8" ></script>
+        <script src="app/Directives/blsGridAsync.js"  type="text/javascript" charset="utf-8" ></script>
+        <script src="app/Directives/blsGridTreeView.js"  type="text/javascript" charset="utf-8" ></script>
+        <script src="app/Directives/draggableDirective.js"  type="text/javascript" charset="utf-8" ></script>
+        <script src="app/Directives/blsCompositeGrid.js"  type="text/javascript" charset="utf-8" ></script>
+        <script src="app/Directives/blsRow.js"  type="text/javascript" charset="utf-8" ></script>
+        <script src="app/Directives/blsHeader.js"  type="text/javascript" charset="utf-8" ></script>
+        <script src="app/Directives/blsCols.js"  type="text/javascript" charset="utf-8" ></script>
+        <script src="app/Directives/blsTr.js"  type="text/javascript" charset="utf-8" ></script>
+        <script src="app/Directives/dropable.js" type="text/javascript" charset="utf-8" ></script>
+        <script src="app/Directives/blsToolBar.js" type="text/javascript" charset="utf-8" ></script>
+        <script src="app/Directives/hfGrid.js" type="text/javascript" charset="utf-8" ></script>
+    </head>
+    <body>
+        <div class="container col-md-8 col-md-offset-2">
+            <nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="#">BlsGrid</a>
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        </button>
+                    </div>
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li ng-class="getActiveMenu('/docs')"><a href="/docs">Docs</a></li>
+                            <li class="dropdown" ng-class="getActiveMenu('/blsGrid')||getActiveMenu('/blsGridAsync')">
+                                <a href="#" class="dropdown-toggle"  data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Examples <span class="caret"> <span  class="sr-only">(current)</span></span></a>
+                                <ul class="dropdown-menu">
+                                    <li ng-class="getActiveMenu('/blsGrid')"><a href="/blsGrid">BlsGrid</a></li>
+                                    <li ng-class="getActiveMenu('/blsGridAsync')"><a href="/blsGridAsync">BlsGrid Async</a></li>
+                                    <li ng-class="getActiveMenu('/hfGrid')"><a href="/hfGrid">hfGrid</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li ng-class="getActiveMenu('/blsRow')"><a href="/blsRow">blsRow</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <div ng-view  class="content pop"></div>
+        </div>
+    </body>
+</html>

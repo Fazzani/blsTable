@@ -1,0 +1,19 @@
+<div class="bls-table-container">
+    <div ng-class="{'overlay':isLoading}"><div ng-show="isLoading"><div class="double-bounce1"></div><div class="double-bounce2"></div></div></div>
+    <bls-tool-bar></bls-tool-bar>
+    <table class="table table-hover table-striped table-bordered blsGrid">
+        <thead ng-mousedown="resizeStart($event)" ng-mouseup="resizeEnd($event)">
+            <bls-header></bls-header>
+        </thead>
+        <tbody>
+            <bls-rows></bls-rows>
+        </tbody>
+    </table>
+    <div style="display:none" id="colsConfig" ng-transclude></div>
+    <div class="footer">
+        <pagination class="col-md-10 col-xs-8" total-items="totalItems" ng-model="options.pagination.pageIndex" max-size="options.pagination.pager.maxSize" items-per-page="options.pagination.itemsPerPage.selected" class="pagination-sm" boundary-links="true" rotate="false"></pagination>
+        <div class="pagerList col-md-2 col-xs-4">
+        <select class="form-control" id="sel1" ng-model="options.pagination.itemsPerPage.selected" ng-change="updateRecordsCount()" ng-options="c as c for c in options.pagination.itemsPerPage.range" ng-selected="options.pagination.itemsPerPage.selected == c"></select>
+    </div>
+</div>
+</div>

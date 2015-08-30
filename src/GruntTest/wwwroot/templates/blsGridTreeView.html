@@ -1,0 +1,28 @@
+<div class="bls-table-container">
+    <bls-tool-bar></bls-tool-bar>
+    <div ng-class="{'overlay':isLoading}"><div ng-show="isLoading"><div class="double-bounce1"></div><div class="double-bounce2"></div></div></div>
+    <div>
+        <table class="{{gridClass}} blsGrid" id="{{storageIds.colResizeDataKey}}">
+            <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th class="colHeader" ng-repeat="col in columns" data-original-title="{{col.id}}" ng-click="order(col.id)" ng-class={draggable:{{!isActionCol(col)}}} droppable="{{!isActionCol(col)}}" draggable="{{!isActionCol(col)}}" dragData="{{col.id}}" drop="handleDrop" drag="handleDrag"  dragImage="5">
+                        {{col.displayName|uppercase}}
+                        <i class="pull-left fa fa-sort"  ng-class="glyphOrder(col.id)"></i>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="a in columns">
+                <bls-tr></bls-tr>
+                </tr>
+            </tbody>
+        </table>
+        <div class="footer">
+            <pagination class="col-md-10 col-xs-8" total-items="data.length" ng-model="options.pagination.pageIndex" max-size="options.pagination.pager.maxSize" items-per-page="options.pagination.itemsPerPage.selected" class="pagination-sm" boundary-links="true" rotate="false"></pagination>
+            <div class="pagerList col-md-2 col-xs-4">
+            <select class="form-control" id="sel1" ng-model="options.pagination.itemsPerPage.selected" ng-change="updateRecordsCount()" ng-options="c as c for c in options.pagination.itemsPerPage.range" ng-selected="options.pagination.itemsPerPage.selected == c"></select>
+        </div>
+    </div>
+</div>
+</div>

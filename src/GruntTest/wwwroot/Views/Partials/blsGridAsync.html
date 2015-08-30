@@ -1,0 +1,20 @@
+<div class="page-header">
+    <h1>Async BLSGrid</h1>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">External actions</div>
+    <div class="panel-body">
+        <button type="button" class="btn btn-danger pull-right" tooltip="Reset user data" ng-click="clearUserData()"><i class="glyphicon glyphicon-trash"></i> Reset </button>
+        <div class="col-md-4 col-xs-12 pull-right">
+            <input type="text" ng-model="options.search.searchText" class="form-control" placeholder="Search for..."></input></div>
+        </div>
+    </div>
+</div>
+<bls-grid-async
+id="ngGridAsync"
+ng-model = "model"
+func-async="query(pageIndex, pageLength, searchedText, orderBy, order)"
+options="options"
+grid-class="table table-hover table-striped table-bordered"
+>
+</bls-grid-async>

@@ -1,0 +1,30 @@
+<div class="row" style="position:relative">
+    <div ng-class="{'overlay':core.isLoading}">
+        <div ng-show="core.isLoading">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+        </div>
+    </div>
+    <table class="hfGrid table table-hover table-striped table-bordered">
+        <thead>
+            <tr>
+                <th ng-repeat="col in cols" hf-grid-sortable>
+                    {{col.title}}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="row in rows">
+                <td ng-repeat="column in cols">{{row[column.field]}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="footer">
+        <pagination class="col-md-10 col-xs-8" total-items="pagination.totalItems" ng-model="pagination.pageIndex" max-size="pagination.maxSize" items-per-page="pagination.itemsPerPage" class="pagination.pagination-sm" boundary-links="true" rotate="false">
+        </pagination>
+        <div class="pagerList pull-right">
+            <select class="form-control" id="sel1" ng-model="pagination.itemsPerPage" ng-options="c as c for c in pagination.range" ng-selected="pagination.itemsPerPage">
+            </select>
+        </div>
+    </div>
+</div>

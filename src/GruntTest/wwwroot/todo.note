@@ -1,0 +1,82 @@
+- Virer pageLength des options et la remplacer par itemsPerPage
+- Tree (http://www.bootply.com/GGAMvot45f) il y'a 2 types de tree View Master/slave(another Data) et hiérarchique(some columns def) 
+    - Expand All
+    - Collapse All
+- Pager buttons name
+- Col def (sortOn , filterOn, classCss, action buttons)
+- Add toolbar 
+    - Search => ok  
+    - Reset user settings => ok
+    - Pagination (itemsPerPage + message for indexPage and count)
+    - Refresh (reload data) => ok
+    - Show hide columns (list checkbox)
+    - Export all or selection (csv, json)
+    - virtual scroll (loading data)
+- Allow customize
+    - Header's class 
+    - Spinner css
+- Create services for differents Features (Reorder, Sort, etc )
+- Add onSeletedItem Event and send the current element and data row
+- ToolTip hover (option)
+
+example :
+http://demos.devexpress.com/aspxgridviewdemos/masterdetail/masterdetail.aspx
+
+
+# HfGrid
+    + TreeView (unshift for collapsing)
+    + Virer les données de Tri, Search de l'objet Pagination
+    + colResize
+    + dragTable
+    + Export (csv, pdf)
+    + persistUserConfig
+    - Show hide columns (list checkbox)
+    + Selection 
+    + Actions buttons
+    + Bind on event (click, dblClick, hover(ToolTip) on row)
+    + Menu 
+        * Search 
+        * reset user Data
+        * reload
+
+
+
+récupérer les données 
+clone row + injecter la fonction dans la première Td => compiler la row => append to parent row
+
+#blsRow
+
+    Operations : 
+    + Filter (Search)
+    + Pagination
+    + sort + direction
+    + Format Cellules
+    + Drag and drop headersnode Server  
+    + Resize Columns
+    + Global loading
+    + Exporting data ('excel', 'xml', 'csv','sql', 'json','doc', 'powerpoint')
+
+    RAF
+    + Action's buttons
+    + Filter by culumn
+    + Collpase all and Expand all
+    + Different events (loading, refresh, etc..)
+    + Row selection (For export)
+   
+
+    Bugs 
+    + Drag/drop column has have expand capabilty (we have to detect that is the col of expanding and refresh all the grid)
+    + Adjust design
+    + Prevent right click event
+
+
+    Enhancement
+    + Cache differents templates
+    + Create services factoring code
+    
+#Spliter Page
+    + Resizable spliter
+    + Save user's datas on localStorage
+    
+    
+

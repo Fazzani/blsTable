@@ -1,0 +1,19 @@
+<div class="page-header">
+    <h1>blsRow example</h1>
+</div>
+<!-- <pre>{{model.data|json}}</pre> -->
+<bls-composite-grid
+ng-model="model.data"
+func-async="query(pageIndex, pageLength, searchedText, orderBy, order)"
+options="options"
+total-items="model.totalItems"
+get-children="getChildren">
+<bls-cols>
+<bls-col resize dragable sort field-name="id"></bls-col>
+<bls-col resize dragable sort field-name="name"></bls-col>
+<bls-col resize dragable field-name="company"></bls-col>
+<bls-col resize dragable sort title="Mail" field-name="email">{{::field|lowercase}}</bls-col>
+<bls-col resize title="Photo Profile" field-name="picture"><img style="height:18px;margin: 0 auto;" class="img-responsive" src="{{::field}}" alt=""/></bls-col>
+<bls-col resize field-name="phone"><button type="button" ng-click="callFunction()" class="btn btn-primary btn-xs" value="{{::field}}">call</button></bls-col>
+</bls-cols>
+</bls-composite-grid>
