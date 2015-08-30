@@ -1,7 +1,7 @@
 (function (angular) {
     app.directive('blsActions', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
         var tpl = '<td ng-if="c.isActions" class="center">\
-                            <a ng-repeat="btn in options.actions" class="btn btn-default {{btn.class}}" ng-click="btn.action(d)" title="{{btn.title}}" ng-class="btn.class"><i class="{{btn.glyphicon}}"></i></a>\
+                            <a ng-repeat="btn in options.actions" class="btn btn-default {{btn.class}}" ng-click="action(btn,d)" title="{{btn.title}}" ng-class="btn.class"><i class="{{btn.glyphicon}}"></i></a>\
                    </td>';
         this.link = function (scope, element, attrs, ctrls) {
             // var blsTableCtrl = ctrls[0];
@@ -17,10 +17,18 @@
             //require: ['^blsTable'],
             priority: -18,
             restrict: 'A',
-            link: this.link
+            link: this.link,
+            controller: function ($scope) {
+                $scope.action = function (btn, d) {
+                    btn.action(d);
+                    if (btn.isRemoveAction) {
+                        $scope.data.splice($scope.data.indexOf(d), 1);
+                    }
+                }
+            }
         };
     }]);
-    app.directive('blsRows', ['$log', '$compile', '$templateCache', '$timeout','$filter', function($log, $compile, $templateCache, $timeout,$filter) {
+    app.directive('blsRows', ['$log', '$compile', '$templateCache', '$timeout', function($log, $compile, $templateCache, $timeout) {
         var rowTpl = '<tr ng-repeat="d in data" ><td ng-repeat="c in cols" bls-actions dynamic="getTdTpl(c)">{{d[c.fieldName]}}</td></tr>';
         this.link = function(scope, element, attrs, ctrls) {
             // var blsTableCtrl = ctrls[0];
@@ -42,7 +50,7 @@
             scope: true
         };
     }]).directive('blsRowChild', ['$log', '$compile', '$templateCache', '$timeout', function($log, $compile, $templateCache, $timeout) {
-        var templateRow = '<tr ng-repeat="d in data" data-bls-id="{{$id}}" parentId="{{parentId}}" bls-row-child func="getChildren" data-level="{{level}}"><td ng-repeat="c in cols" dynamic="getTdTpl(c)">{{d[c.fieldName]}}</td></tr>';
+        var templateRow = '<tr ng-repeat="d in data" data-bls-id="{{$id}}" parentId="{{parentId}}" bls-row-child func="getChildren" data-level="{{level}}"><td ng-repeat="c in cols" bls-actions dynamic="getTdTpl(c)">{{d[c.fieldName]}}</td></tr>';
         var tplCaret = '<i id="{{$id}}" class="fa {{expand?\'fa-caret-down\':\'fa-caret-right\'}}" style="padding:0 4px 0 {{5+(15*level)}}px"></i>';
         this.link = function(scope, element, attrs, ctrls, transclude) {
             $log.debug('    Link => blsRows');
@@ -60,7 +68,7 @@
                 return me.childs;
             };
             scope.getTdTpl = function(col, d) {
-                if (col.tpl != '') {
+                if (col.tpl  && col.tpl != '') {
                     col.tpl = col.tpl.replace('::data', 'd');
                     return col.tpl.replace('::field', "d[c.fieldName]");
                 }

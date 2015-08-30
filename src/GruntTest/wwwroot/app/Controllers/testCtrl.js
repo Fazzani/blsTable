@@ -52,29 +52,29 @@
                 title: 'edit',
                 glyphicon: 'glyphicon glyphicon-edit',
                 class: 'btn-circle btn-info btn-xs',
+                isRemoveAction: false,
                 action: function (row) {
                     $log.info('edit row : ' + row.id);
-                    var obj = $filter('filter')($scope.model.data, {
-                        id: row.id
-                    })[0];
-                    $log.info(obj);
-                    obj.name = 'Edited row '+row.id;
+                    //var obj = $filter('filter')($scope.model.data, {
+                    //    id: row.id
+                    //})[0];
+                    //$log.info(obj);
+                    row.name = 'Edited row '+row.id;
                 }
             }, {
                 title: 'delete',
                 glyphicon: 'glyphicon glyphicon-remove',
                 class: 'btn-circle btn-danger btn-xs',
+                isRemoveAction:true,
                 action: function (row) {
-                    //$scope.listPersons.
                     $log.info('delete  : ' + row.id);
                     var obj = $filter('filter')($scope.model.data, {
                         id: row.id
                     })[0];
                     $log.info(obj);
-                    $log.info($scope.model.data.indexOf(obj));
-                    $scope.model.data.splice($scope.model.data.indexOf(obj), 1);
+                    //$log.info($scope.model.data.indexOf(obj));
+                    //$scope.model.data.splice($scope.model.data.indexOf(obj), 1);
                     $scope.model.totalItems--;
-                    //$scope.model.data.slice($scope.model.data.indexOf(row),1);
                 }
             }],
             pagination: {
