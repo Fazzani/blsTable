@@ -25,7 +25,7 @@
     
     return {
         priority: -1,
-        require: ['^blsTable', '^blsCols', 'blsCol'],
+        require: ['^blsTable', '^blsCols'],
         restrict: 'E',
         link: link
     };

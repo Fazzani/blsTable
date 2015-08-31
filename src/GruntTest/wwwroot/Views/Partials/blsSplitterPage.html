@@ -1,7 +1,22 @@
 ﻿<div class="page-header">
     <h1>blsSplitter example</h1>
 </div>
+<div style="height:100vh;width:100%;background-color:blue;overflow:auto">
+    <bls-splitter minWidth="300" maxWidth="550" style="width:49%;height:500px;background-color:aliceblue;float:left;overflow-x:hidden;overflow-y:hidden">
+        <p>How can this be used to make a divider fill the height of the browser?
+For this question, we can make use of vh: 1vh is equal to 1% of the viewport's height. That is to say, 100vh is equal to the height of the browser window, regardless of where the element is situated in the DOM tree:
+HTML</p><p>transclude - compile the content of the element and make it available to the directive. Typically used with ngTransclude. The advantage of transclusion is that the linking function receives a transclusion function which is pre-bound to the correct scope. In a typical setup the widget creates an isolate scope, but the transclusion is not a child, but a sibling of the isolate scope. This makes it possible for the widget to have private state, and the transclusion to be bound to the parent (pre-isolate) scope.
 
-<bls-splitter minWidth="300" maxWidth="550" style="width:49%;height:500px;background-color:aliceblue;float:left">
-</bls-splitter>
-<div style="width:50%;height:500px;background-color:antiquewhite;float:left;"></div>
+true - transclude the content of the directive.
+'element' - transclude the whole element including any directives defined at lower priority.</p>
+        <p>transclude - compile the content of the element and make it available to the directive. Typically used with ngTransclude. The advantage of transclusion is that the linking function receives a transclusion function which is pre-bound to the correct scope. In a typical setup the widget creates an isolate scope, but the transclusion is not a child, but a sibling of the isolate scope. This makes it possible for the widget to have private state, and the transclusion to be bound to the parent (pre-isolate) scope.
+
+true - transclude the content of the directive.
+'element' - transclude the whole element including any directives defined at lower priority.</p>
+        <p>transclude - compile the content of the element and make it available to the directive. Typically used with ngTransclude. The advantage of transclusion is that the linking function receives a transclusion function which is pre-bound to the correct scope. In a typical setup the widget creates an isolate scope, but the transclusion is not a child, but a sibling of the isolate scope. This makes it possible for the widget to have private state, and the transclusion to be bound to the parent (pre-isolate) scope.
+
+true - transclude the content of the directive.
+'element' - transclude the whole element including any directives defined at lower priority.</p>
+    </bls-splitter>
+    <div style="width:50%;height:500px;background-color:antiquewhite;float:left;"></div>
+</div>

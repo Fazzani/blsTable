@@ -1,4 +1,4 @@
-/// <binding AfterBuild='dist' ProjectOpened='watch:tasks, jsonServer, webServer' />
+/// <binding ProjectOpened='jsonServer, webServer, watch:all' />
 module.exports = function (grunt) {
     'use strict';
     grunt.initConfig({
@@ -9,7 +9,7 @@ module.exports = function (grunt) {
                 ' * Copyright 2011-<%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
                 ' * Licensed under the <%= pkg.license %> license\n' +
                 ' */\n',
-        clean: ["wwwroot/dist/*", "wwwroot/temp/*", "dist/js/*","dist/styles/*"],
+        clean: ["wwwroot/dist/*", "wwwroot/temp/*", "dist/js/*", "dist/styles/*"],
         bower: {
             install: {
                 options: {
@@ -57,8 +57,13 @@ module.exports = function (grunt) {
             }
         },
         watch: {
-            files: ["wwwroot/app/Directives/*.js", "wwwroot/app/Services/*.js", "wwwroot/app/templates/*.js", "wwwroot/Content/Styles/*.css"],
-            tasks: ["puslishDev"]
+            all: {
+                files: ["wwwroot/app/Directives/*.js", "wwwroot/app/Services/*.js", "wwwroot/app/templates/*.js", "wwwroot/Content/Styles/*.css"],
+                tasks: ['publishDev'],
+                options: {
+                    livereload: true
+                }
+            }
         },
         shell: {
             express_server: {
@@ -74,7 +79,7 @@ module.exports = function (grunt) {
         aws: grunt.file.readJSON('grunt-aws.json'),
         s3: {
             options: {
-                debug:false,
+                debug: false,
                 key: '<%= aws.key %>',
                 secret: '<%= aws.secret %>',
                 access: 'public-read',
@@ -123,7 +128,7 @@ module.exports = function (grunt) {
                 options: {
                     position: 'top',
                     banner: '<%= banner %>',
-                    linebreak:false
+                    linebreak: false
                 },
                 files: {
                     src: ['dist/js/blsComponents.min.js', 'dist/styles/styles.css']
@@ -131,7 +136,7 @@ module.exports = function (grunt) {
             }
         }
     });
-   
+
     // This command registers the default task which will install bower packages into wwwroot/lib
     //grunt.registerTask("default", ["bower:install"]);
     grunt.registerTask('jsonServer', ['shell:json_server']);
@@ -141,7 +146,7 @@ module.exports = function (grunt) {
     grunt.registerTask('deployProd', ['s3:prod']);
     grunt.registerTask('newVersionWithoutPublish', ['clean', 'concat', 'cssmin:publish', 'uglify:publish', 'usebanner']);
     grunt.registerTask("default", ['clean', 'concat', 'cssmin:publish', 'uglify:publish', 'usebanner', 'bump']);
-    grunt.registerTask("puslishDev", ['clean', 'concat', 'cssmin:dev',  'uglify:all','jshint', 'usebanner']);
+    grunt.registerTask("publishDev", ['clean', 'concat', 'cssmin:dev', 'uglify:all', 'jshint', 'usebanner']);
 
     // The following line loads the grunt plugins.
     // This line needs to be at the end of this this file.
@@ -156,5 +161,5 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-s3');
     grunt.loadNpmTasks('grunt-bump');
     grunt.loadNpmTasks('grunt-banner');
-   
+
 };
