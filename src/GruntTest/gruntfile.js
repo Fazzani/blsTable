@@ -57,8 +57,8 @@ module.exports = function (grunt) {
             }
         },
         watch: {
-            files: ["wwwroot/app/Directives/*.js", "wwwroot/app/Services/*.js", "wwwroot/app/templates/*.js"],
-            tasks: ["dist"]
+            files: ["wwwroot/app/Directives/*.js", "wwwroot/app/Services/*.js", "wwwroot/app/templates/*.js", "wwwroot/Content/Styles/*.css"],
+            tasks: ["puslishDev"]
         },
         shell: {
             express_server: {
