@@ -3,6 +3,7 @@
     "private": true,
     "description": "All js bls's Components",
     "version": "0.0.1",
+    "main":[ "dist/js/blsComponents.min.js","dist/styles/styles.css"],
     "dependencies": {
         "angular": "^1.4.5",
         "angular-local-storage": "^0.2.2",
@@ -27,7 +28,7 @@
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/Fazzani/blsTable"
+        "url": "https://github.com/Fazzani/blsTable.git"
     },
     "license": "MIT",
     "ignore": [

@@ -1,6 +1,14 @@
 /// <binding AfterBuild='dist' ProjectOpened='watch:tasks, jsonServer, webServer' />
 module.exports = function (grunt) {
+    'use strict';
     grunt.initConfig({
+        // Metadata.
+        pkg: grunt.file.readJSON('package.json'),
+        banner: '/*!\n' +
+                ' * blsComponents v<%= pkg.version %> (<%= pkg.homepage %>)\n' +
+                ' * Copyright 2011-<%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
+                ' * Licensed under the <%= pkg.license %> license\n' +
+                ' */\n',
         clean: ["wwwroot/dist/*", "wwwroot/temp/*", "dist/js/*","dist/styles/*"],
         bower: {
             install: {
@@ -97,18 +105,41 @@ module.exports = function (grunt) {
                   }
                 ]
             }
+        },
+        bump: {
+            scripts: {
+                files: ["dist/js/*.js", "dist/styles/*.css"],
+                updateConfigs: ["pkg"],
+                commitFiles: ["-a"],
+                push: true,
+                commit: true,
+                tagName: 'v%VERSION%',
+                tagMessage: 'Version %VERSION%'
+            }
+        },
+        usebanner: {
+            dist: {
+                options: {
+                    position: 'top',
+                    banner: '<%= banner %>',
+                    linebreak:false
+                },
+                files: {
+                    src: ['dist/js/blsComponents.min.js', 'dist/styles/styles.css']
+                }
+            }
         }
     });
    
     // This command registers the default task which will install bower packages into wwwroot/lib
-    grunt.registerTask("default", ["bower:install"]);
-    grunt.registerTask("dist", ['clean', 'concat', 'jshint', 'uglify']);
+    //grunt.registerTask("default", ["bower:install"]);
     grunt.registerTask('jsonServer', ['shell:json_server']);
     grunt.registerTask('webServer', ['shell:express_server']);
     //grunt.registerTask('minCss', ['cssmin:dev']);
     grunt.registerTask('deployDev', ['s3:dev']);
     grunt.registerTask('deployProd', ['s3:prod']);
-    grunt.registerTask("publishBower", ['clean', 'concat', 'jshint', 'cssmin:publish', 'uglify:publish']);
+    grunt.registerTask('newVersionWithoutPublish', ['clean', 'concat', 'cssmin:publish', 'uglify:publish', 'usebanner']);
+    grunt.registerTask("default", ['clean', 'concat', 'cssmin:publish', 'uglify:publish','usebanner', 'bump']);
 
     // The following line loads the grunt plugins.
     // This line needs to be at the end of this this file.
@@ -121,5 +152,7 @@ module.exports = function (grunt) {
     //grunt.loadNpmTasks("grunt-bower-task");
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-s3');
+    grunt.loadNpmTasks('grunt-bump');
+    grunt.loadNpmTasks('grunt-banner');
    
 };
