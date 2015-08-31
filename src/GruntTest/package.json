@@ -1,7 +1,7 @@
 {
   "name": "BlsTable",
   "description": "This to user blsTable by angular.",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "dependencies": {
     "express": "4.11.0"
   },
@@ -29,6 +29,7 @@
     "json-server": "^0.7.25",
     "grunt-shell": "^1.1.2",
     "grunt-contrib-cssmin": "^0.13.0",
-    "grunt-s3": "^0.2.0-alpha.3"
+    "grunt-s3": "^0.2.0-alpha.3",
+    "grunt-bump": "^0.5.0"
   }
 }
