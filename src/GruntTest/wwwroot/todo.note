@@ -69,7 +69,6 @@ clone row + injecter la fonction dans la première Td => compiler la row => appe
     + Prevent right click event
 
     Enhancement
-    + Cache differents templates
     + Create services factoring code
     
 #Spliter Page

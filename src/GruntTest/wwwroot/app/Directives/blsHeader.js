@@ -5,13 +5,13 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
                 $log.debug('    blsDataGrid_initedEvent intercepted');
                 var blsTableCtrl = ctrls[0];
                 var blsHeaderCtrl = ctrls[1];
-                scope.setPredicate(localStorageService.get(scope.storageIds.predicateId) || (scope.cols[0] == undefined ? "" : scope.cols[0].id));
+                scope.setPredicate(localStorageService.get(scope.storageIds.predicateId) || (scope.cols[0] === undefined ? "" : scope.cols[0].id));
                 scope.refreshDataGrid = blsTableCtrl.refreshDataGrid;
                 $log.debug('    Link => blsHeader');
                 var eleTpl = angular.element($templateCache.get('templates/blsHeader.html'));
                 scope.getColWidth = function (index) {
                     if (blsTableCtrl.tableConfig.cols[index].width > 0) return blsTableCtrl.tableConfig.cols[index].width + 'px';
-                }
+                };
                 $timeout(function () {
                     element.siblings('table').find('thead').append(eleTpl);
                     $log.debug('    compiling blsHeader');

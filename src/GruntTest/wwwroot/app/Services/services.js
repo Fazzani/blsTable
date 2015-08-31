@@ -13,7 +13,7 @@ angular.module("bls_components").service('blsTableServices', ['$log','localStora
         var array = new Array(length);
         for (var i = array.length - 1; i >= 0; i--) {
             array[i] = i;
-        };
+        }
         return array;
     };
     this.swapArrayElements = function(array_object, index_a, index_b) {
@@ -30,7 +30,7 @@ angular.module("bls_components").service('blsTableServices', ['$log','localStora
      */
     this.initReorderColumns = function(colArray, dataArray, key) {
         var arrayConfig = localStorageService.get(key);
-        if (arrayConfig == null || arrayConfig.length == 0) arrayConfig = this.defaultColConfig(colArray.length);
+        if (arrayConfig === null || arrayConfig.length === 0) arrayConfig = this.defaultColConfig(colArray.length);
         var me = this;
         for (var i = 0; i < arrayConfig.length - 2; i++) {
             if (i != arrayConfig[i]) {
@@ -38,7 +38,7 @@ angular.module("bls_components").service('blsTableServices', ['$log','localStora
                 me.swapArrayElements(colArray, i, arrayConfig.indexOf(i));
                 me.swapArrayElements(dataArray, i, arrayConfig.indexOf(i));
             }
-        };
+        }
         return arrayConfig;
     };
     /**
@@ -46,11 +46,11 @@ angular.module("bls_components").service('blsTableServices', ['$log','localStora
      * @param  {[type]} colConfigArray [description]
      * @param  {[type]} key            [description]
      */
-    this.saveConfig = function(key, colConfigArray) {
+    this.saveConfig = function (key, colConfigArray) {
         if (localStorageService.isSupported) {
             $log.info('saveConfig  : ' + colConfigArray);
             $log.info('saveConfig key : ' + key);
             localStorageService.set(key, colConfigArray);
         }
-    }
+    };
 }]);

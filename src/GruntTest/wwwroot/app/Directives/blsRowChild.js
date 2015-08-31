@@ -11,15 +11,15 @@
             me.childs = me.childs.concat(siblings);
             for (var i = 0; i < siblings.length; i++) {
                 me.childs.concat(getRowsChilds(angular.element(siblings[i]).data('blsId'), $(siblings[i])));
-            };
+            }
             return me.childs;
         };
         scope.getTdTpl = function (col, d) {
-            if (col.tpl && col.tpl != '') {
+            if (col.tpl && col.tpl !== '') {
                 col.tpl = col.tpl.replace('::data', 'd');
                 return col.tpl.replace('::field', "d[c.fieldName]");
             }
-        }
+        };
         var elemTplRow = angular.element($templateCache.get('templates/blsChildRows.html'));
         if (!angular.isDefined(attrs.level)) {
             scope.level = 0;
@@ -31,7 +31,7 @@
                 me.childs.forEach(function (child) {
                     expand ? $(child).show() : $(child).hide();
                 });
-            }
+            };
             elemTplCaret.on('click', function (e) {
                 $log.debug('    toggle row');
                 var $this = $(this);

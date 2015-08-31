@@ -22,16 +22,11 @@
                 });
         }
     };
-    var controller = ['$scope', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices',
-        function ($scope, $filter, $timeout, $element, $log, localStorageService, blsTableServices) {
-            $log.debug('        controller => blsCol');
-        }
-    ];
+    
     return {
         priority: -1,
         require: ['^blsTable', '^blsCols', 'blsCol'],
         restrict: 'E',
-        link: link,
-        controller: controller
+        link: link
     };
 }]);

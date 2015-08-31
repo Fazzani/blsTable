@@ -1,0 +1,8 @@
+﻿{
+    "key": "AKIAJRENURFVSXLPEAOA",
+    "secret": "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",
+    "buckets": {
+        "dev": "blsbucket.dev",
+        "prod": "blsbucket.prod"
+    }
+}

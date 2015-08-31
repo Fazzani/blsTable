@@ -9,6 +9,9 @@
             }).when("/blsTable", {
                 templateUrl: "Views/Partials/blsTable.html",
                 controller:'testCtrl'
+            }).when("/blsSplitter", {
+                templateUrl: "Views/Partials/blsSplitterPage.html",
+                controller: 'testCtrl'
             }).otherwise({
                 redirectTo: '/docs'
             });

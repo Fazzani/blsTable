@@ -62,16 +62,16 @@ angular.module("bls_components").directive("blsTr", ['$compile', '$templateReque
                             $scope.tpl.insertAfter($element);
                             $log.debug('childs length : ', res.data);
                         });
-                        $scope.$parent.data.splice($scope.index + 1, 0, res.data);;
+                        $scope.$parent.data.splice($scope.index + 1, 0, res.data);
                     });
                 }
-            }
+            };
             $scope.collpaseState = function (config) {
                 //$log.debug('in collpaseState ', config);
                 if (angular.isDefined(config)) {
                     return config.collapsed ? 'fa-caret-right' : 'fa-caret-down';
                 }
-            }
+            };
         }]
     };
 }]);
