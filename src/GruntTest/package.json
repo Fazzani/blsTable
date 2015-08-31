@@ -1,7 +1,7 @@
 {
   "name": "BlsTable",
   "description": "This to user blsTable by angular.",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "dependencies": {
     "express": "4.11.0"
   },
