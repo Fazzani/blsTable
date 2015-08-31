@@ -24,7 +24,8 @@ module.exports = function (grunt) {
                 expand: true,
                 cwd: 'wwwroot/Content/Styles',
                 src: ['*.css'],
-                dest: 'wwwroot/dist/styles'
+                dest: 'wwwroot/dist/styles',
+                ext: '.min.css'
             },
             publish: {
                 expand: true,
@@ -48,7 +49,7 @@ module.exports = function (grunt) {
         uglify: {
             all: {
                 src: ['wwwroot/temp/blsComponents.js'],
-                dest: 'wwwroot/dist/blsComponents.min.js'
+                dest: 'wwwroot/dist/js/blsComponents.min.js'
             },
             publish: {
                 src: ['wwwroot/temp/blsComponents.js'],
@@ -139,7 +140,8 @@ module.exports = function (grunt) {
     grunt.registerTask('deployDev', ['s3:dev']);
     grunt.registerTask('deployProd', ['s3:prod']);
     grunt.registerTask('newVersionWithoutPublish', ['clean', 'concat', 'cssmin:publish', 'uglify:publish', 'usebanner']);
-    grunt.registerTask("default", ['clean', 'concat', 'cssmin:publish', 'uglify:publish','usebanner', 'bump']);
+    grunt.registerTask("default", ['clean', 'concat', 'cssmin:publish', 'uglify:publish', 'usebanner', 'bump']);
+    grunt.registerTask("puslishDev", ['clean', 'concat', 'cssmin:dev',  'uglify:all','jshint', 'usebanner']);
 
     // The following line loads the grunt plugins.
     // This line needs to be at the end of this this file.
