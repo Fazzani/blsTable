@@ -13,7 +13,7 @@ angular.module("bls_components").directive('blsCols', ['$log', '$compile', '$tem
             var cols = [];
             this.addCol = function (col) {
                 cols.push(col);
-            }
+            };
             this.getCols = function () {
                 return cols;
             };

@@ -25,7 +25,7 @@ angular.module("bls_components").directive('draggable', function () {
                 if (dragFn !== 'undefined') {
                     scope.$apply(function () {
                         scope[dragFn](sendData);
-                    })
+                    });
                 }
             });
         }

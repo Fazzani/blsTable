@@ -9,5 +9,5 @@ angular.module("bls_components").directive("panel", function () {
             return angular.element(document.querySelector("#template")).html();
         },
         transclude: true
-    }
-})
+    };
+});
