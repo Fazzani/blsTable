@@ -88,6 +88,7 @@
                                 val: me.tableConfig
                             });
                         });
+                        me.refreshDataGrid();//TODO: à virer et corriger le pb du drag and Drop
                     };
                     $scope.setColWidth = function (index, width) {
                         $log.debug('setColWidth => ', index, ' width = ', width);

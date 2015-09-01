@@ -17,10 +17,6 @@ angular.module("bls_components").directive('draggable', function () {
             elem.bind("dragstart", function (e) {
                 var sendData = angular.toJson(dragDataVal);
                 e.originalEvent.dataTransfer.setData("Text", sendData);
-                // if (attr.dragimage !== 'undefined') {
-                //   e.originalEvent.dataTransfer.setDragImage(
-                //     document.getElementById(draggedGhostImgElemId), 0, 0);
-                //}
                 var dragFn = attr.drag;
                 if (dragFn !== 'undefined') {
                     scope.$apply(function () {

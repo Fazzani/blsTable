@@ -133,6 +133,7 @@
                                 val: me.tableConfig
                             });
                         });
+                        me.refreshDataGrid();//TODO: à virer et corriger le pb du drag and Drop
                     };
                     $scope.setColWidth = function (index, width) {
                         $log.debug('setColWidth => ', index, ' width = ', width);
@@ -792,10 +793,6 @@ angular.module("bls_components").directive('draggable', function () {
             elem.bind("dragstart", function (e) {
                 var sendData = angular.toJson(dragDataVal);
                 e.originalEvent.dataTransfer.setData("Text", sendData);
-                // if (attr.dragimage !== 'undefined') {
-                //   e.originalEvent.dataTransfer.setDragImage(
-                //     document.getElementById(draggedGhostImgElemId), 0, 0);
-                //}
                 var dragFn = attr.drag;
                 if (dragFn !== 'undefined') {
                     scope.$apply(function () {
@@ -815,7 +812,6 @@ angular.module("bls_components").directive('droppable', ['$parse',
         return {
             link: function(scope, element, attr) {
                 function onDragOver(e) {
-                    console.log('drag over');
                     if (e.preventDefault) {
                         e.preventDefault();
                     }
@@ -827,7 +823,6 @@ angular.module("bls_components").directive('droppable', ['$parse',
                 }
 
                 function onDrop(e) {
-                    console.log('onDrop');
                     if (e.preventDefault) {
                         e.preventDefault();
                     }

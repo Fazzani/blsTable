@@ -7,7 +7,6 @@ angular.module("bls_components").directive('droppable', ['$parse',
         return {
             link: function(scope, element, attr) {
                 function onDragOver(e) {
-                    console.log('drag over');
                     if (e.preventDefault) {
                         e.preventDefault();
                     }
@@ -19,7 +18,6 @@ angular.module("bls_components").directive('droppable', ['$parse',
                 }
 
                 function onDrop(e) {
-                    console.log('onDrop');
                     if (e.preventDefault) {
                         e.preventDefault();
                     }

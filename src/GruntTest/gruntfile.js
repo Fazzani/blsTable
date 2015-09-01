@@ -150,6 +150,7 @@ module.exports = function (grunt) {
 
     // The following line loads the grunt plugins.
     // This line needs to be at the end of this this file.
+
     grunt.loadNpmTasks('grunt-shell');
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks('grunt-contrib-jshint');
