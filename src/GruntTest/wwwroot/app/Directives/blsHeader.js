@@ -10,7 +10,7 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
                 $log.debug('    Link => blsHeader');
                 var eleTpl = angular.element($templateCache.get('templates/blsHeader.html'));
                 scope.getColWidth = function (index) {
-                    if (blsTableCtrl.tableConfig.cols[index].width > 0) return blsTableCtrl.tableConfig.cols[index].width + 'px';
+                    if (blsTableCtrl.tableConfig.cols[index].width > 0) return blsTableCtrl.tableConfig.cols[index].width;
                 };
                 $timeout(function () {
                     element.siblings('table').find('thead').append(eleTpl);
@@ -52,13 +52,21 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
                         $scope.refreshDataGrid();
                     }
             };
+            me.resizeData = {
+
+            };
             $scope.resizeStart = function (e) {
+                $log.debug('     resizeStart');
                 var target = e.target ? e.target : e.srcElement;
                 if (target.classList.contains("resize")) {
-                    start = target.parentNode;
-                    me.resizePressed = true;
-                    startX = e.pageX;
-                    startWidth = target.parentNode.offsetWidth;
+                    me.resizeData.target = target.parentNode;
+                    me.resizeData.siblingTarget = target.parentNode.nextElementSibling;
+                    me.resizeData.resizePressed = true;
+                    me.resizeData.startX = e.pageX;
+                    me.resizeData.startWidth = target.parentNode.offsetWidth;
+                    me.resizeData.minWidth = 50;
+                    me.resizeData.maxWidth = me.resizeData.startWidth + me.resizeData.siblingTarget.offsetWidth - me.resizeData.minWidth;
+                    $log.debug(me.resizeData);
                     document.addEventListener('mousemove', drag);
                     document.addEventListener('mouseup', $scope.resizeEnd);
                     e.stopPropagation();
@@ -67,27 +75,33 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
             };
 
             function drag(e) {
-                if (me.resizePressed) {
-                    start.width = startWidth + (e.pageX - startX);
-                    //$log.debug('start.width == ', start.width);
+                var newWidth = me.resizeData.startWidth + (e.pageX - me.resizeData.startX);
+                $log.debug(newWidth);
+                if (me.resizeData.resizePressed && me.resizeData.maxWidth > newWidth && me.resizeData.minWidth < newWidth) {
+                    me.resizeData.target.width = newWidth;
+                    me.resizeData.siblingTarget.width = me.resizeData.siblingTarget.offsetWidth + (me.resizeData.startWidth - newWidth);
+                    $log.debug('e', e);
+                    $log.debug('start.width == ', me.resizeData.target.width);
+                    $log.debug('startX == ', me.resizeData.startX);
+                    $log.debug('e.pageX == ', e.pageX);
                     me.resizeColData = {
-                        index: angular.element(e.target).scope().$index,
-                        width: start.width
+                        index: me.resizeData.target.cellIndex,
+                        width: me.resizeData.target.width
                     };
                 }
             }
             $scope.resizeEnd = function (e) {
-                if (me.resizePressed) {
+                if (me.resizeData.resizePressed) {
                     document.removeEventListener('mousemove', drag);
                     document.removeEventListener('mouseup', $scope.resizeEnd);
                     e.stopPropagation();
                     e.preventDefault();
-                    setTimeout(function () {
-                        me.resizePressed = false;
-                    }, 50);
-                    //me.resizePressed = false;
+                    //setTimeout(function () {
+                    //    me.resizeData.resizePressed = false;
+                    //}, 50);
                     $scope.setColWidth(me.resizeColData.index, me.resizeColData.width);
                     me.resizeColData = null;
+                    me.resizeData = {};
                     return false;
                 }
             };

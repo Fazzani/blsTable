@@ -168,10 +168,11 @@
                                 id: $scope.uniqueId,
                                 cols: []
                             };
+                            var defaulColWidth = Math.round($element[0].offsetWidth / $scope.cols.length);
                             for (var i = 0; i <= $scope.cols.length - 1; i++) {
                                 me.tableConfig.cols.push({
                                     index: i,
-                                    width: -1
+                                    width: defaulColWidth
                                 });
                             }
                             $scope.saveUserData({
@@ -401,7 +402,7 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
                 $log.debug('    Link => blsHeader');
                 var eleTpl = angular.element($templateCache.get('templates/blsHeader.html'));
                 scope.getColWidth = function (index) {
-                    if (blsTableCtrl.tableConfig.cols[index].width > 0) return blsTableCtrl.tableConfig.cols[index].width + 'px';
+                    if (blsTableCtrl.tableConfig.cols[index].width > 0) return blsTableCtrl.tableConfig.cols[index].width;
                 };
                 $timeout(function () {
                     element.siblings('table').find('thead').append(eleTpl);
@@ -443,13 +444,21 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
                         $scope.refreshDataGrid();
                     }
             };
+            me.resizeData = {
+
+            };
             $scope.resizeStart = function (e) {
+                $log.debug('     resizeStart');
                 var target = e.target ? e.target : e.srcElement;
                 if (target.classList.contains("resize")) {
-                    start = target.parentNode;
-                    me.resizePressed = true;
-                    startX = e.pageX;
-                    startWidth = target.parentNode.offsetWidth;
+                    me.resizeData.target = target.parentNode;
+                    me.resizeData.siblingTarget = target.parentNode.nextElementSibling;
+                    me.resizeData.resizePressed = true;
+                    me.resizeData.startX = e.pageX;
+                    me.resizeData.startWidth = target.parentNode.offsetWidth;
+                    me.resizeData.minWidth = 50;
+                    me.resizeData.maxWidth = me.resizeData.startWidth + me.resizeData.siblingTarget.offsetWidth - me.resizeData.minWidth;
+                    $log.debug(me.resizeData);
                     document.addEventListener('mousemove', drag);
                     document.addEventListener('mouseup', $scope.resizeEnd);
                     e.stopPropagation();
@@ -458,27 +467,33 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
             };
 
             function drag(e) {
-                if (me.resizePressed) {
-                    start.width = startWidth + (e.pageX - startX);
-                    //$log.debug('start.width == ', start.width);
+                var newWidth = me.resizeData.startWidth + (e.pageX - me.resizeData.startX);
+                $log.debug(newWidth);
+                if (me.resizeData.resizePressed && me.resizeData.maxWidth > newWidth && me.resizeData.minWidth < newWidth) {
+                    me.resizeData.target.width = newWidth;
+                    me.resizeData.siblingTarget.width = me.resizeData.siblingTarget.offsetWidth + (me.resizeData.startWidth - newWidth);
+                    $log.debug('e', e);
+                    $log.debug('start.width == ', me.resizeData.target.width);
+                    $log.debug('startX == ', me.resizeData.startX);
+                    $log.debug('e.pageX == ', e.pageX);
                     me.resizeColData = {
-                        index: angular.element(e.target).scope().$index,
-                        width: start.width
+                        index: me.resizeData.target.cellIndex,
+                        width: me.resizeData.target.width
                     };
                 }
             }
             $scope.resizeEnd = function (e) {
-                if (me.resizePressed) {
+                if (me.resizeData.resizePressed) {
                     document.removeEventListener('mousemove', drag);
                     document.removeEventListener('mouseup', $scope.resizeEnd);
                     e.stopPropagation();
                     e.preventDefault();
-                    setTimeout(function () {
-                        me.resizePressed = false;
-                    }, 50);
-                    //me.resizePressed = false;
+                    //setTimeout(function () {
+                    //    me.resizeData.resizePressed = false;
+                    //}, 50);
                     $scope.setColWidth(me.resizeColData.index, me.resizeColData.width);
                     me.resizeColData = null;
+                    me.resizeData = {};
                     return false;
                 }
             };
@@ -696,84 +711,6 @@ angular.module("bls_components").directive('blsToolBar', [function () {
         }]
     };
 }]);
-angular.module("bls_components").directive("blsTr", ['$compile', '$templateRequest', '$templateCache', '$log',function ($compile, $templateRequest, $templateCache, $log) {
-    var link = {
-        post: function (scope, element, attrs, ctrls) {
-            var blsTrCtrl = ctrls[1];
-            var blsNestedGridCtrl = ctrls[0];
-            if (!angular.isDefined(scope.row)) scope.row = scope.$eval(attrs.blsTr);
-            if (!angular.isDefined(scope.columns)) scope.columns = scope.$parent.$parent.columns;
-            if (!angular.isDefined(scope.config)) scope.config = scope.$eval(attrs.config);
-            if (!angular.isDefined(scope.nestedDataFunc)) scope.nestedDataFunc = scope.$eval(attrs.nestedDataFunc);
-            if (!angular.isDefined(scope.index)) scope.index = scope.$eval(attrs.index);
-            if (!scope.config) {
-                scope.config = {
-                    level: 0,
-                    collapsed: true,
-                    loaded: false
-                };
-            } else {
-                scope.config.level++;
-                scope.childConfig = {
-                    level: scope.config.level + 1,
-                    collapsed: true,
-                    loaded: false
-                };
-            }
-            $log.debug('config  ===== ', scope.config);
-            // scope.nestedDataFunc = scope.$parent.$parent.nestedDataFunc;
-            // scope.row.childs=[];
-            $log.debug('**************************  start compile blsTr');
-            scope.tpl = angular.element($templateCache.get('templates/blsTr.html'));
-            element.replaceWith(scope.tpl);
-            $compile(scope.tpl)(scope);
-        }
-    };
-    return {
-        restrict: "A",
-        require: ['^?blsNestedGrid', 'blsTr'],
-        link: link,
-        scope: {},
-        // templateUrl:'templates/blsTr.html',
-        // replace:true,
-        controller: ['$scope', '$element', '$attrs', '$log', '$compile', '$templateCache', function ($scope, $element, $attrs, $log, $compile, $templateCache) {
-            $log.debug('row = ', $scope.row);
-            $scope.expand = function () {
-                $log.debug('expanding data');
-                $scope.config.collapsed = !$scope.config.collapsed;
-                if (!$scope.config.loaded) {
-                    $scope.config.loaded = true;
-                    $scope.nestedDataFunc()($scope.row).then(function (res) {
-                        if (!angular.isArray(res.data)) res.data = [res.data];
-                        angular.forEach(res.data, function (value, key) {
-                            var childScope = $scope.$new(true);
-                            childScope.nestedDataFunc = $scope.nestedDataFunc();
-                            childScope.columns = $scope.columns;
-                            childScope.row = value;
-                            childScope.index = $scope.index + 1;
-                            childScope.config = {
-                                level: $scope.config.level + 1,
-                                collapsed: true,
-                                loaded: false
-                            };
-                            $compile($scope.tpl)(childScope);
-                            $scope.tpl.insertAfter($element);
-                            $log.debug('childs length : ', res.data);
-                        });
-                        $scope.$parent.data.splice($scope.index + 1, 0, res.data);
-                    });
-                }
-            };
-            $scope.collpaseState = function (config) {
-                //$log.debug('in collpaseState ', config);
-                if (angular.isDefined(config)) {
-                    return config.collapsed ? 'fa-caret-right' : 'fa-caret-down';
-                }
-            };
-        }]
-    };
-}]);
-
 //
 // http://litutech.blogspot.fr/2014/02/an-angular-table-directive-having.html
 //

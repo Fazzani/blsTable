@@ -123,10 +123,11 @@
                                 id: $scope.uniqueId,
                                 cols: []
                             };
+                            var defaulColWidth = Math.round($element[0].offsetWidth / $scope.cols.length);
                             for (var i = 0; i <= $scope.cols.length - 1; i++) {
                                 me.tableConfig.cols.push({
                                     index: i,
-                                    width: -1
+                                    width: defaulColWidth
                                 });
                             }
                             $scope.saveUserData({
