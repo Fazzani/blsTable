@@ -18,9 +18,21 @@
                     };
                     var defaultOptions = {
                         multiSelection: true,
-                        search: {
-                            searchText: '',
-                            searchClass: 'form-control'
+                        toolbar: {
+                            hide: false,
+                            search: {
+                                hide: false,
+                                searchText: '',
+                                searchClass: 'form-control'
+                            },
+                            export: {
+                                hide: false,
+                                formats: ['excel', 'xml', 'csv', 'sql', 'json']
+                            }, reset: {
+                                hide: false
+                            }, refresh: {
+                                hide: false
+                            }
                         },
                         pagination: {
                             pageLength: 5,
@@ -64,7 +76,7 @@
                             $scope.funcAsync({
                                 pageIndex: $scope.options.pagination.pageIndex,
                                 pageLength: $scope.options.pagination.itemsPerPage.selected,
-                                searchedText: $scope.options.search.searchText,
+                                searchedText: $scope.options.toolbar.search.searchText,
                                 orderBy: $scope.predicate,
                                 order: $scope.reverse
                                 //,filters:[{name:'age',value:10}]
@@ -98,7 +110,7 @@
                             val: me.tableConfig
                         });
                     };
-                    $scope.$watch('options.search.searchText', function (newValue, oldValue) {
+                    $scope.$watch('options.toolbar.search.searchText', function (newValue, oldValue) {
                         if (me.timerSearch) $timeout.cancel(me.timerSearch);
                         if (newValue != oldValue) {
                             me.timerSearch = $timeout(function () {

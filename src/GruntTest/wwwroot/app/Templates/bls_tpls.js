@@ -15,14 +15,14 @@
         $templateCache.put('templates/blsToolBar.html', '<div class="row">\
                        <div class="btn-toolbar pull-right col-xs-12" role="toolbar">\
                             <div class="btn-group btn-group-sm pull-right ">\
-                                <bls-drop-down links="links" func="export" title="titleExportButton" ></bls-drop-down>\
-                                <button type="button" ng-click="clearUserData()" class="{{btnClass}}" tooltip="Reset" aria-label="Right Align"><span class="fa fa-recycle" aria-hidden="true"></span></button>\
-                                <button type="button" ng-click="refresh()" class="{{btnClass}}" tooltip="Refresh" aria-label="Right Align"><span class="fa fa-refresh" aria-hidden="true"></span></button>\
+                                <bls-drop-down links="links" func="export" title="titleExportButton" ng-hide="options.toolbar.export.hide"></bls-drop-down>\
+                                <button type="button" ng-click="clearUserData()" ng-hide="options.toolbar.reset.hide" class="{{btnClass}}" tooltip="Reset" aria-label="Right Align"><span class="fa fa-recycle" aria-hidden="true"></span></button>\
+                                <button type="button" ng-click="refresh()" ng-hide="options.toolbar.refresh.hide" class="{{btnClass}}" tooltip="Refresh" aria-label="Right Align"><span class="fa fa-refresh" aria-hidden="true"></span></button>\
                             </div>\
-                            <form action="" class="search-form pull-right col-md-2 col-xs-12">\
+                            <form action="" class="search-form pull-right col-md-2 col-xs-12" ng-hide="options.toolbar.search.hide">\
                                 <div class="form-group has-feedback">\
                                     <label for="search" class="sr-only">Search</label>\
-                                    <input type="text" class="{{options.search.searchClass}}" name="search" id="search" placeholder="{{searchPlaceHolder}}" ng-model="options.search.searchText">\
+                                    <input type="text" class="{{options.toolbar.search.searchClass}}" name="search" id="search" placeholder="{{searchPlaceHolder}}" ng-model="options.toolbar.search.searchText">\
                                     <span class="glyphicon glyphicon-search form-control-feedback"></span>\
                                 </div>\
                             </form>\

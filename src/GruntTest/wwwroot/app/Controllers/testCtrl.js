@@ -35,8 +35,8 @@
             $log.debug('in query');
             if (angular.isDefined(filters) && angular.isArray(filters)) {
                 $log.debug('    has filters');
-                angular.forEach(filters, function(filter, key) {
-                    url += "&"+filter.name + "=" + filter.value;
+                angular.forEach(filters, function (filter, key) {
+                    url += "&" + filter.name + "=" + filter.value;
                 });
             }
             $log.debug('url=> ' + url);
@@ -51,9 +51,21 @@
         $scope.columns = ['id', 'name', 'company', 'email', 'picture', 'phone'];
         $scope.options = {
             multiSelection: true,
-            search: {
-                searchText: '',
-                searchClass: 'form-control'
+            toolbar: {
+                hide: false,
+                search: {
+                    hide: false,
+                    searchText: '',
+                    searchClass: 'form-control'
+                },
+                export: {
+                    hide: false,
+                    formats: ['csv, json, xml']
+                }, reset: {
+                    hide: false
+                }, refresh: {
+                    hide: false
+                }
             },
             actions: [{
                 title: 'edit',
