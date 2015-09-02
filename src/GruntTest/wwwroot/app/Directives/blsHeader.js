@@ -10,7 +10,7 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
                 $log.debug('    Link => blsHeader');
                 var eleTpl = angular.element($templateCache.get('templates/blsHeader.html'));
                 scope.getColWidth = function (index) {
-                    if (blsTableCtrl.tableConfig.cols[index].width > 0) return blsTableCtrl.tableConfig.cols[index].width;
+                    if (blsTableCtrl.tableConfig.cols[index].width > 0) return blsTableCtrl.tableConfig.cols[index].width + 'px';
                 };
                 $timeout(function () {
                     element.siblings('table').find('thead').append(eleTpl);
@@ -26,19 +26,19 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
             me.reverse = localStorageService.get($scope.storageIds.reverseId) || me.reverse;
             me.resizeColData = null;
             me.resizePressed = false;
-            $log.debug('    blsHeader controller: in init...');
+            //$log.debug('    blsHeader controller: in init...');
             $scope.setPredicate = function (predicate) {
                 me.predicate = predicate;
             };
             $scope.glyphOrder = function (col) {
-                $log.debug('    glyphOrder function was called');
+                //$log.debug('    glyphOrder function was called');
                 if (col.fieldName != $scope.predicate) return 'fa-sort';
                 return me.reverse ? 'fa-sort-asc' : 'fa-sort-desc';
             };
             $scope.order = function (col) {
                 if (!me.resizePressed)
                     if (col.sortable) {
-                        $log.debug('    order function was called');
+                        //$log.debug('    order function was called');
                         me.reverse = ($scope.predicate === col.fieldName) ? !me.reverse : false;
                         me.predicate = col.fieldName;
                         $scope.saveUserData({
@@ -52,20 +52,21 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
                         $scope.refreshDataGrid();
                     }
             };
-            me.resizeData = {
-
-            };
+            me.resizeData = {};
             $scope.resizeStart = function (e) {
-                $log.debug('     resizeStart');
                 var target = e.target ? e.target : e.srcElement;
                 if (target.classList.contains("resize")) {
                     me.resizeData.target = target.parentNode;
                     me.resizeData.siblingTarget = target.parentNode.nextElementSibling;
+                    var $siblingElm = $(me.resizeData.siblingTarget);
+                    var $targetElm = $(me.resizeData.target);
+
                     me.resizeData.resizePressed = true;
                     me.resizeData.startX = e.pageX;
-                    me.resizeData.startWidth = target.parentNode.offsetWidth;
+                    me.resizeData.startWidth = $targetElm.width();
+                    me.resizeData.startWidthSibling = $siblingElm.width();
                     me.resizeData.minWidth = 50;
-                    me.resizeData.maxWidth = me.resizeData.startWidth + me.resizeData.siblingTarget.offsetWidth - me.resizeData.minWidth;
+                    me.resizeData.maxWidth = me.resizeData.startWidth + me.resizeData.startWidthSibling - me.resizeData.minWidth;
                     $log.debug(me.resizeData);
                     document.addEventListener('mousemove', drag);
                     document.addEventListener('mouseup', $scope.resizeEnd);
@@ -75,18 +76,18 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
             };
 
             function drag(e) {
-                var newWidth = me.resizeData.startWidth + (e.pageX - me.resizeData.startX);
-                $log.debug(newWidth);
+                var $siblingElm = $(me.resizeData.siblingTarget);
+                var $targetElm = $(me.resizeData.target);
+                var offset = e.pageX - me.resizeData.startX;
+                var newWidth = me.resizeData.startWidth + offset;
                 if (me.resizeData.resizePressed && me.resizeData.maxWidth > newWidth && me.resizeData.minWidth < newWidth) {
-                    me.resizeData.target.width = newWidth;
-                    me.resizeData.siblingTarget.width = me.resizeData.siblingTarget.offsetWidth + (me.resizeData.startWidth - newWidth);
-                    $log.debug('e', e);
-                    $log.debug('start.width == ', me.resizeData.target.width);
-                    $log.debug('startX == ', me.resizeData.startX);
-                    $log.debug('e.pageX == ', e.pageX);
+                    $targetElm.width(newWidth);
+                    $siblingElm.width(me.resizeData.startWidthSibling - offset);
                     me.resizeColData = {
                         index: me.resizeData.target.cellIndex,
-                        width: me.resizeData.target.width
+                        width: $targetElm.width(),
+                        indexSibling: me.resizeData.siblingTarget.cellIndex,
+                        widthSibling: $siblingElm.width()
                     };
                 }
             }
@@ -96,11 +97,11 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
                     document.removeEventListener('mouseup', $scope.resizeEnd);
                     e.stopPropagation();
                     e.preventDefault();
-                    //setTimeout(function () {
-                    //    me.resizeData.resizePressed = false;
-                    //}, 50);
-                    $scope.setColWidth(me.resizeColData.index, me.resizeColData.width);
-                    me.resizeColData = null;
+                    if (me.resizeColData !== null) {
+                        $scope.setColWidth(me.resizeColData.index, me.resizeColData.width);
+                        $scope.setColWidth(me.resizeColData.indexSibling, me.resizeColData.widthSibling);
+                        me.resizeColData = null;
+                    }
                     me.resizeData = {};
                     return false;
                 }

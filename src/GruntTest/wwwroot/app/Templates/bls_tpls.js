@@ -29,7 +29,7 @@
                         </div>\
                  </div>');
         $templateCache.put('templates/blsHeader.html', '<tr>\
-                        <th class="colHeader" ng-repeat="col in cols" ng-click="order(col)" width="{{getColWidth($index)}}" allow-drag>\
+                        <th class="colHeader" ng-repeat="col in cols" ng-click="order(col)" style="width:{{getColWidth($index)}}" allow-drag>\
                                         {{col.title|uppercase}}\
                             <i ng-if="col.sortable" class="pull-left fa " ng-class="glyphOrder(col)"></i><i ng-if="col.resize" class="resize"></i>\
                         </th>\
