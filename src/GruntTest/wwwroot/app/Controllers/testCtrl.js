@@ -56,7 +56,8 @@
                 search: {
                     hide: false,
                     searchText: '',
-                    searchClass: 'form-control'
+                    searchClass: 'form-control',
+                    heighLight: false
                 },
                 export: {
                     hide: false,

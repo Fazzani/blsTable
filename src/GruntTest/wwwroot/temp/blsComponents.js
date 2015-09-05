@@ -37,10 +37,10 @@
         $templateCache.put('templates/blsActions.html', '<td ng-if="c.isActions" class="center">\
                             <a ng-repeat="btn in options.actions" class="btn btn-default {{btn.class}}" ng-click="action(btn,d)" title="{{btn.title}}" ng-class="btn.class"><i class="{{btn.glyphicon}}"></i></a>\
                    </td>');
-        $templateCache.put('templates/blsRows.html', '<tr ng-repeat="d in data" ><td ng-repeat="c in cols" bls-actions dynamic="getTdTpl(c)">{{d[c.fieldName]}}</td></tr>');
-        $templateCache.put('templates/blsChildRows.html', '<tr ng-repeat="d in data" data-bls-id="{{$id}}" parentId="{{parentId}}" bls-row-child func="getChildren" data-level="{{level}}"><td ng-repeat="c in cols" bls-actions dynamic="getTdTpl(c)">{{d[c.fieldName]}}</td></tr>');
-        $templateCache.put('templates/blsStaticChildRows.html', '<tr ng-repeat="d in data" data-bls-id="{{$id}}" parentId="{{parentId}}" bls-static-child-cells level="{{level}}">\
-                                </tr>');
+        $templateCache.put('templates/blsRows.html', '<tr ng-repeat="d in data" ><td ng-repeat="c in cols" bls-actions dynamic="getTdTpl(c)" ng-bind-html="d[c.fieldName]| highlight:options.toolbar.search.searchText:options.toolbar.search.heighLight"></td></tr>');
+        $templateCache.put('templates/blsChildRows.html', '<tr ng-repeat="d in data" data-bls-id="{{$id}}" parentId="{{parentId}}" bls-row-child func="getChildren" data-level="{{level}}">\
+                            <td ng-repeat="c in cols" bls-actions dynamic="getTdTpl(c)" ng-bind-html="d[c.fieldName]| highlight:options.toolbar.search.searchText:options.toolbar.search.heighLight"></td></tr>');
+        $templateCache.put('templates/blsStaticChildRows.html', '<tr ng-repeat="d in data" data-bls-id="{{$id}}" parentId="{{parentId}}" bls-static-child-cells level="{{level}}"></tr>');
         $templateCache.put('templates/blsStaticChildCells.html', '<td ng-repeat="c in cols" dynamic="getTdTpl(c)">\
                                     <i id="{{$id}}" ng-if="isExpandable" class="fa {{expand?\'fa-caret-down\':\'fa-caret-right\'}}" style="padding:0 4px 0 {{5+(15*level)}}px"></i>\
                                     {{ngModel[c.fieldName]}}{{isExpandable}}</td>\
@@ -53,7 +53,7 @@
 
 
 (function (angular) {
-    angular.module("bls_components", ['bls_tpls'])
+    angular.module("bls_components", ['bls_tpls', 'ngSanitize'])
         .directive('blsTable', ['$log', '$compile', '$templateCache', '$timeout', 'blsTableServices', function ($log, $compile, $templateCache, $timeout, blsTableServices) {
             var me = this;
             this.controller = ['$scope', '$attrs', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices',
@@ -77,7 +77,8 @@
                             search: {
                                 hide: false,
                                 searchText: '',
-                                searchClass: 'form-control'
+                                searchClass: 'form-control',
+                                heighLight: true
                             },
                             export: {
                                 hide: false,
@@ -103,8 +104,7 @@
                             }
                         }
                     };
-                    $scope.options = angular.extend({}, defaultOptions, $scope.options);
-                    $log.debug('Actions : ', $scope.options.actions);
+                    $scope.options = angular.merge({}, defaultOptions, $scope.options);
                     if ($scope.options.pagination.itemsPerPage && $scope.options.pagination.itemsPerPage.range && $scope.options.pagination.itemsPerPage.range.indexOf($scope.options.pagination.pageLength) < 1) $scope.options.pagination.pageLength = localStorageService.get($scope.storageIds.itemsPerPageId) || $scope.options.pagination.itemsPerPage.range[0];
                     $scope.$watch('options.pagination.pageIndex', function (newValue, oldValue) {
                         if (newValue != oldValue) {
@@ -557,9 +557,12 @@ angular.module("bls_components").directive('blsRowChild', ['$log', '$compile', '
             return me.childs;
         };
         scope.getTdTpl = function (col, d) {
+            var predicate = "d[c.fieldName] ";
+            //
             if (col.tpl && col.tpl !== '') {
                 col.tpl = col.tpl.replace('::data', 'd');
-                return col.tpl.replace('::field', "d[c.fieldName]");
+                    col.tpl = col.tpl.replace('::field', predicate);
+                return col.tpl;
             }
         };
         var elemTplRow = angular.element($templateCache.get('templates/blsChildRows.html'));
@@ -940,14 +943,20 @@ angular.module("bls_components").directive('droppable', ['$parse',
     }
 ]);
 
-angular.module("bls_components").directive('dynamic', ['$compile', function ($compile) { //compile dynamic html
+angular.module("bls_components").directive('dynamic', ['$compile', '$log', '$timeout', function ($compile, $log, $timeout) {
     return {
         restrict: 'A',
         replace: true,
+        priority: -20,
         link: function (scope, ele, attrs) {
-            scope.$watch(attrs.dynamic, function (html) {
-                ele.html(html);
-                $compile(ele.contents())(scope);
+            scope.$eval(attrs.dynamic);
+            $timeout(function () {
+                if (angular.isDefined(scope.c.tpl)) {
+                    if (scope.c.tpl !== '' && !scope.c.tpl.startsWith('{{') && $(scope.c.tpl)[0]) {
+                        ele.html(scope.c.tpl);
+                        $compile(ele.contents())(scope);
+                    }
+                }
             });
         }
     };
@@ -967,25 +976,25 @@ angular.module("bls_components").directive("panel", function () {
     };
 });
 
-angular.module("bls_components").service('blsTableServices', ['$log','localStorageService',function ($log, localStorageService) {
-    Array.prototype.swap = function(new_index, old_index) {
-            if (new_index >= this.length) {
-                var k = new_index - this.length;
-                while ((k--) + 1) {
-                    this.push(undefined);
-                }
+angular.module("bls_components").service('blsTableServices', ['$log', 'localStorageService', function ($log, localStorageService) {
+    Array.prototype.swap = function (new_index, old_index) {
+        if (new_index >= this.length) {
+            var k = new_index - this.length;
+            while ((k--) + 1) {
+                this.push(undefined);
             }
-            this.splice(new_index, 0, this.splice(old_index, 1)[0]);
-            return this;
-        };
-    this.defaultColConfig = function(length) {
+        }
+        this.splice(new_index, 0, this.splice(old_index, 1)[0]);
+        return this;
+    };
+    this.defaultColConfig = function (length) {
         var array = new Array(length);
         for (var i = array.length - 1; i >= 0; i--) {
             array[i] = i;
         }
         return array;
     };
-    this.swapArrayElements = function(array_object, index_a, index_b) {
+    this.swapArrayElements = function (array_object, index_a, index_b) {
         var temp = array_object[index_a];
         array_object[index_a] = array_object[index_b];
         array_object[index_b] = temp;
@@ -997,7 +1006,7 @@ angular.module("bls_components").service('blsTableServices', ['$log','localStora
      * @param  {string} key    [colum Reorder Data key]
      * @return {[array]}                [array col config]
      */
-    this.initReorderColumns = function(colArray, dataArray, key) {
+    this.initReorderColumns = function (colArray, dataArray, key) {
         var arrayConfig = localStorageService.get(key);
         if (arrayConfig === null || arrayConfig.length === 0) arrayConfig = this.defaultColConfig(colArray.length);
         var me = this;
@@ -1022,7 +1031,15 @@ angular.module("bls_components").service('blsTableServices', ['$log','localStora
             localStorageService.set(key, colConfigArray);
         }
     };
-}]);
+}]).filter('highlight', function ($sce) {
+    return function (text, phrase, isActive) {
+        if (!angular.isString(text) || !isActive) return text;
+        if (phrase) text = text.replace(new RegExp('(' + phrase + ')', 'gi'),
+          '<span class="highlighted">$1</span>')
+
+        return $sce.trustAsHtml(text)
+    }
+});
 
 /*The MIT License (MIT)
 

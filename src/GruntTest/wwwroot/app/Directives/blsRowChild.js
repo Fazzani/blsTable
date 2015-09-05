@@ -15,9 +15,12 @@
             return me.childs;
         };
         scope.getTdTpl = function (col, d) {
+            var predicate = "d[c.fieldName] ";
+            //
             if (col.tpl && col.tpl !== '') {
                 col.tpl = col.tpl.replace('::data', 'd');
-                return col.tpl.replace('::field', "d[c.fieldName]");
+                    col.tpl = col.tpl.replace('::field', predicate);
+                return col.tpl;
             }
         };
         var elemTplRow = angular.element($templateCache.get('templates/blsChildRows.html'));

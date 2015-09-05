@@ -37,10 +37,10 @@
         $templateCache.put('templates/blsActions.html', '<td ng-if="c.isActions" class="center">\
                             <a ng-repeat="btn in options.actions" class="btn btn-default {{btn.class}}" ng-click="action(btn,d)" title="{{btn.title}}" ng-class="btn.class"><i class="{{btn.glyphicon}}"></i></a>\
                    </td>');
-        $templateCache.put('templates/blsRows.html', '<tr ng-repeat="d in data" ><td ng-repeat="c in cols" bls-actions dynamic="getTdTpl(c)">{{d[c.fieldName]}}</td></tr>');
-        $templateCache.put('templates/blsChildRows.html', '<tr ng-repeat="d in data" data-bls-id="{{$id}}" parentId="{{parentId}}" bls-row-child func="getChildren" data-level="{{level}}"><td ng-repeat="c in cols" bls-actions dynamic="getTdTpl(c)">{{d[c.fieldName]}}</td></tr>');
-        $templateCache.put('templates/blsStaticChildRows.html', '<tr ng-repeat="d in data" data-bls-id="{{$id}}" parentId="{{parentId}}" bls-static-child-cells level="{{level}}">\
-                                </tr>');
+        $templateCache.put('templates/blsRows.html', '<tr ng-repeat="d in data" ><td ng-repeat="c in cols" bls-actions dynamic="getTdTpl(c)" ng-bind-html="d[c.fieldName]| highlight:options.toolbar.search.searchText:options.toolbar.search.heighLight"></td></tr>');
+        $templateCache.put('templates/blsChildRows.html', '<tr ng-repeat="d in data" data-bls-id="{{$id}}" parentId="{{parentId}}" bls-row-child func="getChildren" data-level="{{level}}">\
+                            <td ng-repeat="c in cols" bls-actions dynamic="getTdTpl(c)" ng-bind-html="d[c.fieldName]| highlight:options.toolbar.search.searchText:options.toolbar.search.heighLight"></td></tr>');
+        $templateCache.put('templates/blsStaticChildRows.html', '<tr ng-repeat="d in data" data-bls-id="{{$id}}" parentId="{{parentId}}" bls-static-child-cells level="{{level}}"></tr>');
         $templateCache.put('templates/blsStaticChildCells.html', '<td ng-repeat="c in cols" dynamic="getTdTpl(c)">\
                                     <i id="{{$id}}" ng-if="isExpandable" class="fa {{expand?\'fa-caret-down\':\'fa-caret-right\'}}" style="padding:0 4px 0 {{5+(15*level)}}px"></i>\
                                     {{ngModel[c.fieldName]}}{{isExpandable}}</td>\

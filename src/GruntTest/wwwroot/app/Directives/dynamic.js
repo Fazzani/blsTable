@@ -1,11 +1,17 @@
-﻿angular.module("bls_components").directive('dynamic', ['$compile', function ($compile) { //compile dynamic html
+﻿angular.module("bls_components").directive('dynamic', ['$compile', '$log', '$timeout', function ($compile, $log, $timeout) {
     return {
         restrict: 'A',
         replace: true,
+        priority: -20,
         link: function (scope, ele, attrs) {
-            scope.$watch(attrs.dynamic, function (html) {
-                ele.html(html);
-                $compile(ele.contents())(scope);
+            scope.$eval(attrs.dynamic);
+            $timeout(function () {
+                if (angular.isDefined(scope.c.tpl)) {
+                    if (scope.c.tpl !== '' && !scope.c.tpl.startsWith('{{') && $(scope.c.tpl)[0]) {
+                        ele.html(scope.c.tpl);
+                        $compile(ele.contents())(scope);
+                    }
+                }
             });
         }
     };

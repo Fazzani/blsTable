@@ -1,5 +1,5 @@
 (function (angular) {
-    angular.module("bls_components", ['bls_tpls'])
+    angular.module("bls_components", ['bls_tpls', 'ngSanitize'])
         .directive('blsTable', ['$log', '$compile', '$templateCache', '$timeout', 'blsTableServices', function ($log, $compile, $templateCache, $timeout, blsTableServices) {
             var me = this;
             this.controller = ['$scope', '$attrs', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices',
@@ -23,7 +23,8 @@
                             search: {
                                 hide: false,
                                 searchText: '',
-                                searchClass: 'form-control'
+                                searchClass: 'form-control',
+                                heighLight: true
                             },
                             export: {
                                 hide: false,
@@ -49,8 +50,7 @@
                             }
                         }
                     };
-                    $scope.options = angular.extend({}, defaultOptions, $scope.options);
-                    $log.debug('Actions : ', $scope.options.actions);
+                    $scope.options = angular.merge({}, defaultOptions, $scope.options);
                     if ($scope.options.pagination.itemsPerPage && $scope.options.pagination.itemsPerPage.range && $scope.options.pagination.itemsPerPage.range.indexOf($scope.options.pagination.pageLength) < 1) $scope.options.pagination.pageLength = localStorageService.get($scope.storageIds.itemsPerPageId) || $scope.options.pagination.itemsPerPage.range[0];
                     $scope.$watch('options.pagination.pageIndex', function (newValue, oldValue) {
                         if (newValue != oldValue) {
