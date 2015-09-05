@@ -57,11 +57,11 @@
                     hide: false,
                     searchText: '',
                     searchClass: 'form-control',
-                    heighLight: false
+                    heighLight: true
                 },
                 export: {
                     hide: false,
-                    formats: ['csv, json, xml']
+                    formats: ['csv', 'json', 'xml']
                 }, reset: {
                     hide: false
                 }, refresh: {

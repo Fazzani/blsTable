@@ -15,7 +15,7 @@
         $templateCache.put('templates/blsToolBar.html', '<div class="row">\
                        <div class="btn-toolbar pull-right col-xs-12" role="toolbar">\
                             <div class="btn-group btn-group-sm pull-right ">\
-                                <bls-drop-down links="links" func="export" title="titleExportButton" ng-hide="options.toolbar.export.hide"></bls-drop-down>\
+                                <bls-drop-down links="options.toolbar.export.formats" func="export" title="titleExportButton" ng-hide="options.toolbar.export.hide"></bls-drop-down>\
                                 <button type="button" ng-click="clearUserData()" ng-hide="options.toolbar.reset.hide" class="{{btnClass}}" tooltip="Reset" aria-label="Right Align"><span class="fa fa-recycle" aria-hidden="true"></span></button>\
                                 <button type="button" ng-click="refresh()" ng-hide="options.toolbar.refresh.hide" class="{{btnClass}}" tooltip="Refresh" aria-label="Right Align"><span class="fa fa-refresh" aria-hidden="true"></span></button>\
                             </div>\

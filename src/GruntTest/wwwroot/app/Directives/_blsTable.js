@@ -50,7 +50,17 @@
                             }
                         }
                     };
+                    this.initExportFormatArray = function () {
+                        try {
+                            if (angular.isDefined($scope.options.toolbar.export.formats))
+                                defaultOptions.toolbar.export.formats = $scope.options.toolbar.export.formats;
+                        } catch (e) {
+                        }
+                    };
+                    this.initExportFormatArray();
                     $scope.options = angular.merge({}, defaultOptions, $scope.options);
+                    $scope.options.toolbar.export.formats = $scope.options.toolbar.export.formats.distinct();
+
                     if ($scope.options.pagination.itemsPerPage && $scope.options.pagination.itemsPerPage.range && $scope.options.pagination.itemsPerPage.range.indexOf($scope.options.pagination.pageLength) < 1) $scope.options.pagination.pageLength = localStorageService.get($scope.storageIds.itemsPerPageId) || $scope.options.pagination.itemsPerPage.range[0];
                     $scope.$watch('options.pagination.pageIndex', function (newValue, oldValue) {
                         if (newValue != oldValue) {
@@ -66,6 +76,7 @@
                         $scope.options.pagination.pageLength = $scope.options.pagination.itemsPerPage.selected;
                         me.refreshDataGrid();
                     };
+                    
                     //Reload ngModel by the Func
                     this.refreshDataGrid = function () {
                         if (angular.isDefined($scope.funcAsync)) {

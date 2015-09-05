@@ -25,7 +25,6 @@ angular.module("bls_components").directive('blsToolBar', [function () {
                 $log.debug('    export type => ', type);
                 $scope.$emit('exportEvent', type);
             };
-            $scope.links = ['excel', 'xml', 'csv', 'sql', 'json'];
         }]
     };
 }]);

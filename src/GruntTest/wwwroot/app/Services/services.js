@@ -9,6 +9,17 @@ angular.module("bls_components").service('blsTableServices', ['$log', 'localStor
         this.splice(new_index, 0, this.splice(old_index, 1)[0]);
         return this;
     };
+    Array.prototype.distinct = function () {
+        var u = {}, a = [];
+        for (var i = 0, l = this.length; i < l; ++i) {
+            if (u.hasOwnProperty(this[i])) {
+                continue;
+            }
+            a.push(this[i]);
+            u[this[i]] = 1;
+        }
+        return a;
+    }
     this.defaultColConfig = function (length) {
         var array = new Array(length);
         for (var i = array.length - 1; i >= 0; i--) {
