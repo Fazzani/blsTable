@@ -39,9 +39,18 @@
                    </td>');
         $templateCache.put('templates/blsRows.html', '<tr ng-repeat="d in data" ><td ng-repeat="c in cols" bls-actions dynamic="getTdTpl(c)">{{d[c.fieldName]}}</td></tr>');
         $templateCache.put('templates/blsChildRows.html', '<tr ng-repeat="d in data" data-bls-id="{{$id}}" parentId="{{parentId}}" bls-row-child func="getChildren" data-level="{{level}}"><td ng-repeat="c in cols" bls-actions dynamic="getTdTpl(c)">{{d[c.fieldName]}}</td></tr>');
+        $templateCache.put('templates/blsStaticChildRows.html', '<tr ng-repeat="d in data" data-bls-id="{{$id}}" parentId="{{parentId}}" bls-static-child-cells level="{{level}}">\
+                                </tr>');
+        $templateCache.put('templates/blsStaticChildCells.html', '<td ng-repeat="c in cols" dynamic="getTdTpl(c)">\
+                                    <i id="{{$id}}" ng-if="isExpandable" class="fa {{expand?\'fa-caret-down\':\'fa-caret-right\'}}" style="padding:0 4px 0 {{5+(15*level)}}px"></i>\
+                                    {{ngModel[c.fieldName]}}{{isExpandable}}</td>\
+                                <bls-static-childs-rows ng-model="childs" ng-if="isExpandable"  level={{level++}}></bls-static-childs-rows>');
         $templateCache.put('templates/blsChildRowsCaret.html', '<i id="{{$id}}" class="fa {{expand?\'fa-caret-down\':\'fa-caret-right\'}}" style="padding:0 4px 0 {{5+(15*level)}}px"></i>');
     }]);
 })(window.angular);
+
+
+
 
 (function (angular) {
     angular.module("bls_components", ['bls_tpls'])
@@ -135,6 +144,9 @@
                         me.initColConfig();
                         me.refreshDataGrid();
                     };
+                    this.getCols = function () {
+                        return $scope.cols;
+                    };
                     this.changeColumnsOrder = function (from, to) {
                         $scope.$applyAsync(function () {
                             $scope.data.swap(from, to);
@@ -211,6 +223,12 @@
                     $scope.saveUserData = function (data) {
                         if (localStorageService.isSupported) localStorageService.set(data.key, data.val);
                     };
+                    this.getChildItemsProp = function () {
+                        return $scope.childItemsProp;
+                    };
+                    $scope.isStaticHierarchic = function () {
+                        return angular.isDefined($scope.childItemsProp) && $scope.childItemsProp.length > 0;
+                    };
                     $scope.$on('flushEvent', function (data) {
                         $log.debug(localStorageService.keys());
                         $log.debug('clearUserDataEvent intercepted => $scope.uniqueId : ', $scope.uniqueId);
@@ -251,7 +269,8 @@
                     funcAsync: '&',
                     getChildren: '&',
                     options: '=',
-                    totalItems: '='
+                    totalItems: '=',
+                    childItemsProp: '@'
                 }
             };
         }]);
@@ -693,6 +712,133 @@ angular.module("bls_components")
         template: '<div style="width:49%;height:500px;background-color:aliceblue;float:left;overflow-x:hidden;overflow-y:hidden" ng-transclude><div>'
     };
 }]);
+angular.module("bls_components").directive('blsStaticChildsRows', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
+    var link = function (scope, element, attrs, ctrls, transclude) {
+        $log.debug('    Link => blsStaticChildsRows');
+        var me = this;
+        scope.childs = [];
+        var elemTplCaret = angular.element($templateCache.get('templates/blsChildRowsCaret.html'));
+        scope.expand = false;
+        scope.firstExpand = true;
+        scope.isExpandable = false;
+
+        var childItemsProp = ctrls[0].getChildItemsProp();
+        scope.setChilds = function (d) {
+            scope.childs = d[childItemsProp];
+            scope.isExpandable = angular.isDefined(scope.childs) && scope.childs.length;
+            $log.debug('scope.childs', scope.childs);
+        };
+        scope.cols = ctrls[0].getCols();
+        //this.getRowsChilds = function (id, target) {
+        //    var siblings = target.siblings('tr[parentId="' + id + '"]').toArray();
+        //    me.childs = me.childs.concat(siblings);
+        //    for (var i = 0; i < siblings.length; i++) {
+        //        me.childs.concat(getRowsChilds(angular.element(siblings[i]).data('blsId'), $(siblings[i])));
+        //    }
+        //    return me.childs;
+        //};
+        scope.getTdTpl = function (col, d) {
+            if (col.tpl && col.tpl !== '') {
+                col.tpl = col.tpl.replace('::data', 'd');
+                return col.tpl.replace('::field', "d[c.fieldName]");
+            }
+        };
+        var elemTplRow = angular.element($templateCache.get('templates/blsStaticChildRows.html'));
+        if (!angular.isDefined(attrs.level)) {
+            scope.level = 0;
+            element.data('dataLevel', scope.level);
+        }
+        $timeout(function () {
+            $compile(elemTplRow)(scope);
+            element.siblings('table').find('tbody').append(elemTplRow);
+        });
+        this.toggle = function (id, target, expand) {
+            me.childs = me.getRowsChilds(id, target);
+            me.childs.forEach(function (child) {
+                expand ? $(child).show() : $(child).hide();
+            });
+        };
+        //$timeout(function () {
+        //    this.toggle = function (id, target, expand) {
+        //        me.childs = me.getRowsChilds(id, target);
+        //        me.childs.forEach(function (child) {
+        //            expand ? $(child).show() : $(child).hide();
+        //        });
+        //    };
+        //    elemTplCaret.on('click', function (e) {
+        //        $log.debug('    toggle row');
+        //        var $this = $(this);
+        //        if (scope.firstExpand) {
+        //            elemTplCaret.addClass('fa-spinner');
+        //            scope.firstExpand = false;
+        //            var childScope = scope.$new();
+        //            if (me.childs && me.childs.length && me.childs.length > 0) {
+        //                childScope.data = me.childs;
+        //                childScope.level = scope.level + 1;
+        //                childScope.parentId = scope.$id;
+        //                $compile(elemTplRow)(childScope);
+        //                scope.expand = !scope.expand;
+        //                me.toggle(scope.$id, $this.closest('tr'), scope.expand);
+        //                elemTplRow.insertAfter(element);
+        //            } else
+        //                scope.getChildren()(scope.d).then(function (response) {
+        //                    elemTplCaret.removeClass('fa-spinner');
+        //                    if (response.data.length > 0) {
+        //                        childScope.data = response.data;
+        //                        childScope.level = scope.level + 1;
+        //                        childScope.parentId = scope.$id;
+        //                        $compile(elemTplRow)(childScope);
+        //                        scope.expand = !scope.expand;
+        //                        me.toggle(scope.$id, $this.closest('tr'), scope.expand);
+        //                        elemTplRow.insertAfter(element);
+        //                    } else elemTplCaret.removeClass('fa').removeClass('fa-caret-down').removeClass('fa-caret-right').off('click');
+        //                });
+        //        } else scope.$apply(function () {
+        //            scope.expand = !scope.expand;
+        //            me.toggle(scope.$id, $this.closest('tr'), scope.expand);
+        //        });
+        //    });
+        //    //insert caret
+        //    $compile(elemTplCaret)(scope);
+        //    angular.element(element.find('td')[0]).prepend(elemTplCaret);
+        //}, 0);
+    };
+    return {
+        require: ['^blsTable'],
+        priority: -16,
+        restrict: 'E',
+        link: link,
+        scope: {
+            data: '=ngModel',
+            level: '='
+        }
+    };
+}]).directive('blsStaticChildCells', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
+    var link = function (scope, element, attrs, ctrls) {
+        $log.debug('        Link => blsStaticChildData');
+        scope.expand = false;
+        var elemTplRow = angular.element($templateCache.get('templates/blsStaticChildData.html'));
+        scope.childs = ngModel[childItemsProp];
+        scope.isExpandable = angular.isDefined(scope.childs) && scope.childs.length;
+        $log.debug('scope.childs', scope.childs);
+        $timeout(function () {
+            $compile(elemTplRow)(scope);
+            elemTplRow.insertAfter(element);
+        });
+    }
+    return {
+        //require: ['^blsStaticChildsRows'],
+        priority: -16,
+        restrict: 'E',
+        link: link,
+        scope: {
+            ngModel: '=',
+            level: '=',
+            cols: '='
+        }
+    };
+}]);
+
 angular.module("bls_components").directive('blsToolBar', [function () {
     // Runs during compile
     return {

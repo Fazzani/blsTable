@@ -18,10 +18,11 @@
     <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="lib/angular-bootstrap/ui-bootstrap.js"></script>
     <script src="lib/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="lib/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="lib/angular-local-storage/dist/angular-local-storage.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="temp/blsComponents.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript">
-        var app = angular.module('app', ['bls_components', 'ui.bootstrap', 'LocalStorageModule', 'ngRoute', 'ngAnimate']);
+        var app = angular.module('app', ['bls_components', 'ui.bootstrap', 'LocalStorageModule', 'ngRoute', 'ngAnimate','ui.router']);
     </script>
     <script src="app/app.js" type="text/javascript" charset="utf-8"></script>
     <script src="app/Controllers/rootCtrl.js" type="text/javascript" charset="utf-8"></script>
@@ -43,19 +44,19 @@
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
-                        <li ng-class="getActiveMenu('/docs')"><a href="/docs">Docs</a></li>
-                        <li class="dropdown" ng-class="getActiveMenu('/blsTable')||getActiveMenu('/blsTable')">
+                        <li ui-sref-active="active"><a ui-sref="docs">Docs</a></li>
+                        <li class="dropdown" ui-sref-active="active">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Examples <span class="caret"> <span class="sr-only">(current)</span></span></a>
                             <ul class="dropdown-menu">
-                                <li ng-class="getActiveMenu('/blsTable')"><a href="/blsTable">blsTable</a></li>
-                                <li ng-class="getActiveMenu('/blsSplitter')"><a href="/blsSplitter">blsSplitter</a></li>
+                                <li ui-sref-active="active"><a ui-sref="blsTable">blsTable</a></li>
+                                <li ui-sref-active="active"><a ui-sref="blsSplitter">blsSplitter</a></li>
                             </ul>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
-        <div ng-view class="content pop"></div>
+        <div ui-view class="content pop"></div>
     </div>
 </body>
 </html>

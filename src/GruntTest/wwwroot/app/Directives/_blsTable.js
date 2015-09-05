@@ -90,6 +90,9 @@
                         me.initColConfig();
                         me.refreshDataGrid();
                     };
+                    this.getCols = function () {
+                        return $scope.cols;
+                    };
                     this.changeColumnsOrder = function (from, to) {
                         $scope.$applyAsync(function () {
                             $scope.data.swap(from, to);
@@ -166,6 +169,12 @@
                     $scope.saveUserData = function (data) {
                         if (localStorageService.isSupported) localStorageService.set(data.key, data.val);
                     };
+                    this.getChildItemsProp = function () {
+                        return $scope.childItemsProp;
+                    };
+                    $scope.isStaticHierarchic = function () {
+                        return angular.isDefined($scope.childItemsProp) && $scope.childItemsProp.length > 0;
+                    };
                     $scope.$on('flushEvent', function (data) {
                         $log.debug(localStorageService.keys());
                         $log.debug('clearUserDataEvent intercepted => $scope.uniqueId : ', $scope.uniqueId);
@@ -206,7 +215,8 @@
                     funcAsync: '&',
                     getChildren: '&',
                     options: '=',
-                    totalItems: '='
+                    totalItems: '=',
+                    childItemsProp: '@'
                 }
             };
         }]);
