@@ -19,7 +19,8 @@ angular.module("bls_components").service('blsTableServices', ['$log', 'localStor
             u[this[i]] = 1;
         }
         return a;
-    }
+    };
+
     this.defaultColConfig = function (length) {
         var array = new Array(length);
         for (var i = array.length - 1; i >= 0; i--) {

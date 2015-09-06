@@ -12,10 +12,10 @@ angular.module("bls_components").directive('blsToolBar', [function () {
             $scope.selectedAll = false;
             $scope.titleExportButton = "Export";
             $scope.clearUserData = function () {
-                $scope.$emit('flushEvent');
+                $scope.$emit('blsTable.ResetEvent');
             };
             $scope.refresh = function () {
-                $scope.$emit('refreshEvent');
+                $scope.$emit('blsTable.RefreshEvent');
             };
             $scope.toggleSelectAll = function () {
                 $scope.selectedAll = !$scope.selectedAll;
@@ -23,7 +23,7 @@ angular.module("bls_components").directive('blsToolBar', [function () {
             };
             $scope.export = function (type) {
                 $log.debug('    export type => ', type);
-                $scope.$emit('exportEvent', type);
+                $scope.$emit('blsTable.ExportEvent', type);
             };
         }]
     };

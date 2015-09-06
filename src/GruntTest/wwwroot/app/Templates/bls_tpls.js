@@ -22,7 +22,7 @@
                             <form action="" class="search-form pull-right col-md-2 col-xs-12" ng-hide="options.toolbar.search.hide">\
                                 <div class="form-group has-feedback">\
                                     <label for="search" class="sr-only">Search</label>\
-                                    <input type="text" class="{{options.toolbar.search.searchClass}}" name="search" id="search" placeholder="{{searchPlaceHolder}}" ng-model="options.toolbar.search.searchText">\
+                                    <input type="text" class="{{options.toolbar.search.searchClass}}" name="search" id="search" placeholder="{{searchPlaceHolder}}" ng-model="options.toolbar.search.searchedText">\
                                     <span class="glyphicon glyphicon-search form-control-feedback"></span>\
                                 </div>\
                             </form>\
@@ -37,9 +37,9 @@
         $templateCache.put('templates/blsActions.html', '<td ng-if="c.isActions" class="center">\
                             <a ng-repeat="btn in options.actions" class="btn btn-default {{btn.class}}" ng-click="action(btn,d)" title="{{btn.title}}" ng-class="btn.class"><i class="{{btn.glyphicon}}"></i></a>\
                    </td>');
-        $templateCache.put('templates/blsRows.html', '<tr ng-repeat="d in data" ><td ng-repeat="c in cols" bls-actions dynamic="getTdTpl(c)" ng-bind-html="d[c.fieldName]| highlight:options.toolbar.search.searchText:options.toolbar.search.heighLight"></td></tr>');
+        $templateCache.put('templates/blsRows.html', '<tr ng-repeat="d in data" ><td ng-repeat="c in cols" bls-actions dynamic="getTdTpl(c)" ng-bind-html="d[c.fieldName]| highlight:options.toolbar.search.searchedText:options.toolbar.search.heighLight"></td></tr>');
         $templateCache.put('templates/blsChildRows.html', '<tr ng-repeat="d in data" data-bls-id="{{$id}}" parentId="{{parentId}}" bls-row-child func="getChildren" data-level="{{level}}">\
-                            <td ng-repeat="c in cols" bls-actions dynamic="getTdTpl(c)" ng-bind-html="d[c.fieldName]| highlight:options.toolbar.search.searchText:options.toolbar.search.heighLight"></td></tr>');
+                            <td ng-repeat="c in cols" bls-actions dynamic="getTdTpl(c)" ng-bind-html="d[c.fieldName]| highlight:options.toolbar.search.searchedText:options.toolbar.search.heighLight"></td></tr>');
         $templateCache.put('templates/blsStaticChildRows.html', '<tr ng-repeat="d in data" data-bls-id="{{$id}}" parentId="{{parentId}}" bls-static-child-cells level="{{level}}"></tr>');
         $templateCache.put('templates/blsStaticChildCells.html', '<td ng-repeat="c in cols" dynamic="getTdTpl(c)">\
                                     <i id="{{$id}}" ng-if="isExpandable" class="fa {{expand?\'fa-caret-down\':\'fa-caret-right\'}}" style="padding:0 4px 0 {{5+(15*level)}}px"></i>\

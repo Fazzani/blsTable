@@ -1,6 +1,6 @@
 (function (angular) {
     angular.module("bls_components", ['bls_tpls', 'ngSanitize'])
-        .directive('blsTable', ['$log', '$compile', '$templateCache', '$timeout', 'blsTableServices', function ($log, $compile, $templateCache, $timeout, blsTableServices) {
+        .directive('blsTable', ['$log', '$compile', '$templateCache', '$timeout', '$parse', 'blsTableServices', function ($log, $compile, $templateCache, $timeout, $parse, blsTableServices) {
             var me = this;
             this.controller = ['$scope', '$attrs', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices',
                 function ($scope, $attrs, $filter, $timeout, $element, $log, localStorageService, blsTableServices) {
@@ -22,7 +22,7 @@
                             hide: false,
                             search: {
                                 hide: false,
-                                searchText: '',
+                                searchedText: '',
                                 searchClass: 'form-control',
                                 heighLight: true
                             },
@@ -51,24 +51,30 @@
                         }
                     };
                     //Init option's array before merging with defaultOptions
-                    this.initOptionsArray = function () {
-                        try {
-                            if (angular.isDefined($scope.options.toolbar.export.formats))
-                                defaultOptions.toolbar.export.formats = $scope.options.toolbar.export.formats;
-                        } catch (e) {
-                        }
-                        try {
-                            if (angular.isDefined($scope.options.pagination.itemsPerPage.range))
-                                defaultOptions.pagination.itemsPerPage.range = $scope.options.pagination.itemsPerPage.range;
-                        } catch (e) {
-                        }
 
+                    this.initOptions = function () {
+                        me.initOptionsArray = function () {
+                            try {
+                                if (angular.isDefined($scope.options.toolbar.export.formats))
+                                    defaultOptions.toolbar.export.formats = $scope.options.toolbar.export.formats;
+                            } catch (e) {
+                            }
+                            try {
+                                if (angular.isDefined($scope.options.pagination.itemsPerPage.range))
+                                    defaultOptions.pagination.itemsPerPage.range = $scope.options.pagination.itemsPerPage.range;
+                            } catch (e) {
+                            }
+
+                        };
+                        me.initOptionsArray();
+                        var initialOptions = angular.copy($scope.options);
+                        angular.merge($scope.options, defaultOptions);
+                        angular.merge($scope.options, initialOptions);
+
+                        $scope.options.toolbar.export.formats = $scope.options.toolbar.export.formats.distinct();
+                        $scope.options.pagination.itemsPerPage.range = $scope.options.pagination.itemsPerPage.range.distinct();
+                        $scope.options.pagination.itemsPerPage.selected = localStorageService.get($scope.storageIds.itemsPerPageId) || $scope.options.pagination.itemsPerPage.range[0];
                     };
-                    this.initOptionsArray();
-                    $scope.options = angular.merge({}, defaultOptions, $scope.options);
-                    $scope.options.toolbar.export.formats = $scope.options.toolbar.export.formats.distinct();
-                    $scope.options.pagination.itemsPerPage.range = $scope.options.pagination.itemsPerPage.range.distinct();
-                    $scope.options.pagination.itemsPerPage.selected = localStorageService.get($scope.storageIds.itemsPerPageId) || $scope.options.pagination.itemsPerPage.range[0];
 
                     $scope.$watch('options.pagination.pageIndex', function (newValue, oldValue) {
                         if (newValue != oldValue) {
@@ -95,7 +101,7 @@
                             $scope.funcAsync({
                                 pageIndex: $scope.options.pagination.pageIndex,
                                 pageLength: $scope.options.pagination.itemsPerPage.selected,
-                                searchedText: $scope.options.toolbar.search.searchText,
+                                searchedText: $scope.options.toolbar.search.searchedText,
                                 orderBy: $scope.predicate,
                                 order: $scope.reverse
                                 //,filters:[{name:'age',value:10}]
@@ -132,7 +138,9 @@
                             val: me.tableConfig
                         });
                     };
-                    $scope.$watch('options.toolbar.search.searchText', function (newValue, oldValue) {
+
+                    $scope.$watch('options.toolbar.search.searchedText', function (newValue, oldValue) {
+                        $log.debug('searchedText changed => ', newValue);
                         if (me.timerSearch) $timeout.cancel(me.timerSearch);
                         if (newValue != oldValue) {
                             me.timerSearch = $timeout(function () {
@@ -194,35 +202,34 @@
                     $scope.isStaticHierarchic = function () {
                         return angular.isDefined($scope.childItemsProp) && $scope.childItemsProp.length > 0;
                     };
-                    $scope.$on('flushEvent', function (data) {
+                    $scope.$on('blsTable.ResetEvent', function (data) {
                         $log.debug(localStorageService.keys());
                         $log.debug('clearUserDataEvent intercepted => $scope.uniqueId : ', $scope.uniqueId);
                         if (localStorageService.isSupported) {
                             localStorageService.clearAll('^(.)+' + $scope.uniqueId + '$');
                         }
                     });
-                    $scope.$on('refreshEvent', function (data) {
+                    $scope.$on('blsTable.RefreshEvent', function (data) {
                         $log.debug('refreshEvent intercepted');
                         me.refreshDataGrid();
                     });
-                    $scope.$on('exportEvent', function (e, format) {
+                    $scope.$on('blsTable.ExportEvent', function (e, format) {
                         $log.debug('exportEvent intercepted to type : ', format);
                         $element.find('table').tableExport({
                             type: format
                         });
                     });
 
-                    $scope.$on(
-                            "$destroy",
-                            function (event) {
-                                $timeout.cancel(me.timerSearch);
-                            }
-                        );
+                    $scope.$on("$destroy", function (event) {
+                        $timeout.cancel(me.timerSearch);
+                    });
                     $scope.isHierarchical = function () {
                         return angular.isDefined($attrs.getChildren);
                     };
+                    this.initOptions();
                 }
             ];
+
             return {
                 restrict: 'E',
                 replace: true,

@@ -22,7 +22,7 @@
     <script src="lib/angular-local-storage/dist/angular-local-storage.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="temp/blsComponents.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript">
-        var app = angular.module('app', ['bls_components', 'ui.bootstrap', 'LocalStorageModule', 'ngRoute', 'ngAnimate','ui.router']);
+        var app = angular.module('app', ['bls_components', 'ui.bootstrap', 'LocalStorageModule', 'ngRoute', 'ngAnimate', 'ui.router']);
     </script>
     <script src="app/app.js" type="text/javascript" charset="utf-8"></script>
     <script src="app/Controllers/rootCtrl.js" type="text/javascript" charset="utf-8"></script>
@@ -48,15 +48,18 @@
                         <li class="dropdown" ui-sref-active="active">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Examples <span class="caret"> <span class="sr-only">(current)</span></span></a>
                             <ul class="dropdown-menu">
-                                <li ui-sref-active="active"><a ui-sref="blsTable">blsTable</a></li>
-                                <li ui-sref-active="active"><a ui-sref="blsSplitter">blsSplitter</a></li>
+                                <li ui-sref-active="active"><a ui-sref="root.blsTable">blsTable</a></li>
+                                <li ui-sref-active="active"><a ui-sref="root.blsSplitter">blsSplitter</a></li>
                             </ul>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
-        <div ui-view class="content pop"></div>
-    </div>
+        <div class="content pop">
+            <div ui-view="header" class="page-header row-fluid"></div>
+            <div ui-view="main" class="row"></div>
+            <div ui-view="footer" class="footer row"></div>
+        </div>
 </body>
 </html>

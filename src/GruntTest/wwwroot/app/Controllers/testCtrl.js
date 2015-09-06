@@ -1,8 +1,10 @@
 (function (angular) {
     'use strict';
-    app.controller("testCtrl", function ($scope, $http, $filter, $timeout, $log, $q) {
+    app.controller("testCtrl", function ($scope, $http, $filter, $timeout, $log, $q, optionsBlsTable) {
+        $scope.options = optionsBlsTable.options;
         var root = 'http://localhost:3000';
         // http://localhost:3000/persons/1/friends
+        $log.debug('init testCtrl...');
         var requestOptions = {
             dataType: 'json',
             data: '',
@@ -49,91 +51,17 @@
             });
         };
         $scope.columns = ['id', 'name', 'company', 'email', 'picture', 'phone'];
-        $scope.options = {
-            multiSelection: true,
-            toolbar: {
-                hide: false,
-                search: {
-                    hide: false,
-                    searchText: '',
-                    searchClass: 'form-control',
-                    heighLight: true
-                },
-                export: {
-                    hide: false,
-                    formats: ['csv', 'json', 'xml']
-                }, reset: {
-                    hide: false
-                }, refresh: {
-                    hide: false
-                }
-            },
-            actions: [{
-                title: 'edit',
-                glyphicon: 'glyphicon glyphicon-edit',
-                class: 'btn-circle btn-info btn-xs',
-                isRemoveAction: false,
-                action: function (row) {
-                    var deferred = $q.defer();
-                    $log.info('edit row : ' + row.id);
-                    //var obj = $filter('filter')($scope.model.data, {
-                    //    id: row.id
-                    //})[0];
-                    //$log.info(obj);
-                    row.name = 'Edited row ' + row.id;
-                    if (row) {
-                        deferred.resolve("Success");
-                    } else {
-                        deferred.reject("Error");
-                    }
-
-                    return deferred.promise;
-                }
-            }, {
-                title: 'delete',
-                glyphicon: 'glyphicon glyphicon-remove',
-                class: 'btn-circle btn-danger btn-xs',
-                isRemoveAction: true,
-                action: function (row) {
-                    var deferred = $q.defer();
-
-                    $log.info('delete  : ' + row.id);
-                    var obj = $filter('filter')($scope.model.data, {
-                        id: row.id
-                    })[0];
-                    $log.info(obj);
-                    //$log.info($scope.model.data.indexOf(obj));
-                    //$scope.model.data.splice($scope.model.data.indexOf(obj), 1);
-                    $scope.model.totalItems--;
-
-                    if (row) {
-                        deferred.resolve("Success");
-                    } else {
-                        deferred.reject("Error");
-                    }
-
-                    return deferred.promise;
-
-                }
-            }],
-            pagination: {
-                pageLength: 20,
-                pageIndex: 1,
-                pager: {
-                    nextTitle: 'Suivant',
-                    perviousTitle: 'Précédent',
-                    maxSize: 5
-                },
-                itemsPerPage: {
-                    prefixStorage: 'ipp_', //itemsPerPage
-                    selected: 20,
-                    range: [20, 50, 100]
-                }
-            }
-        };
+        
         $scope.callFunction = function () {
             console.log('sdffffffffff');
         };
+        $scope.$watch('options.toolbar.search.searchedText', function (newValue, oldValue) {
+            $log.debug('=> testCtrl :  searchedText changed => ', newValue);
+            //$scope.$applyAsync(function () { $scope.options.toolbar.search.searchedText = newValue;})
+        });
+        //this.submitSearch = function () {
+        //    $scope.options.toolbar.search.searchedText
+        //};
         //$scope.query(1, 10);
         //$scope.cols = ['id', 'name', 'firstName', 'birthday', 'phone'];
         // $scope.data = [{
