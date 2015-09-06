@@ -6,7 +6,7 @@ app.use('/app', express.static(__dirname + '/app'));
 app.use('/Content', express.static(__dirname + '/Content'));
 app.use('/lib', express.static(__dirname + '/lib'));
 app.use('/Views', express.static(__dirname + '/Views'));
-app.use('/templates', express.static(__dirname + '/templates'));
+//app.use('/templates', express.static(__dirname + '/templates'));
 app.use('/temp', express.static(__dirname + '/temp'));
 app.use('/dist', express.static(__dirname + '/dist'));
 
