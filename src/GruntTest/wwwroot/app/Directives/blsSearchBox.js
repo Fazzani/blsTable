@@ -16,16 +16,7 @@
             var defaultOptions = {
                 id: $scope.uniqueId,
                 placeholder: 'search...',
-                searchClass: 'form-control',
-                button: {
-                    hide: true,
-                    title: 'search',
-                    btnClass: 'btn btn-default'
-                },
-                minChars: {
-                    enbaled: true,
-                    count: 3
-                }
+                minChars: 3
             };
 
             this.initOptions = function () {
@@ -38,6 +29,17 @@
             };
 
             this.initOptions();
+            $scope.model = $scope.ngModel;
+            if ($scope.options.minChars !== 0) {
+                $scope.model = angular.copy($scope.ngModel);
+                var isActiveSearch = false;
+                $scope.$watch('model', function (newVal, oldVal) {
+                    if ((newVal != oldVal && newVal.length >= $scope.options.minChars) || isActiveSearch) {
+                        isActiveSearch = newVal.length !== 0;
+                        $scope.ngModel = newVal;
+                    }
+                });
+            }
         }]
     };
 }]);

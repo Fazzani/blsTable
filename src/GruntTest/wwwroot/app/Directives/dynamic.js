@@ -7,7 +7,6 @@
             $timeout(function () {
                 if (angular.isDefined(attrs.dynamic)) {
                     var value = eval("scope." + attrs.dynamic);
-                    $log.debug(value);
                     if (value && value !== '' && !value.startsWith('{{') && $(value)[0]) {
                         ele.html(value);
                         $compile(ele.contents())(scope);

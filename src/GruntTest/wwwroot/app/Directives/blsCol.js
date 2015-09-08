@@ -1,4 +1,4 @@
-﻿angular.module("bls_components").directive('blsCol', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
+﻿angular.module("bls_components").directive('blsCol', ['$log', function ($log) {
     var link = {
         pre: function (scope, element, attrs, ctrls) {
             // var blsTableCtrl = ctrls[0];

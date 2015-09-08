@@ -46,9 +46,9 @@
                         </div>\
                  </div>');
         $templateCache.put('templates/blsSearchBox.html', '<div class="col-xs-6 col-md-3 navbar-btn form-group navbar-form">\
-					    <input type="text" class="form-control" placeholder="{{options.placeholder}}" ng-model="ngModel">\
-					    <button  ng-show="ngModel==\'\'" type="submit" class="btn btn-search"><i class="fa fa-search"></i></button>\
-                        <span ng-show="ngModel" ng-click="ngModel=null" class="glyphicon glyphicon-remove-sign form-control-feedback form-control-clear" aria-hidden="true"></span>\
+					    <input type="text" class="form-control" placeholder="{{options.placeholder}}" ng-model="model">\
+					    <button  ng-show="model==\'\'" type="submit" class="btn btn-search"><i class="fa fa-search"></i></button>\
+                        <span ng-show="model" ng-click="model=null" class="glyphicon glyphicon-remove-sign form-control-feedback form-control-clear" aria-hidden="true"></span>\
                         <span class="sr-only">Clear input content</span>\
 				   </div>');
         $templateCache.put('templates/blsHeader.html', '<tr>\
@@ -402,7 +402,7 @@ angular.module("bls_components").directive('blsActions', ['$log', '$compile', '$
     };
 }]);
 
-angular.module("bls_components").directive('blsCol', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
+angular.module("bls_components").directive('blsCol', ['$log', function ($log) {
     var link = {
         pre: function (scope, element, attrs, ctrls) {
             // var blsTableCtrl = ctrls[0];
@@ -727,16 +727,7 @@ angular.module("bls_components").directive('blsSearchBox', [function () {
             var defaultOptions = {
                 id: $scope.uniqueId,
                 placeholder: 'search...',
-                searchClass: 'form-control',
-                button: {
-                    hide: true,
-                    title: 'search',
-                    btnClass: 'btn btn-default'
-                },
-                minChars: {
-                    enbaled: true,
-                    count: 3
-                }
+                minChars: 3
             };
 
             this.initOptions = function () {
@@ -749,6 +740,17 @@ angular.module("bls_components").directive('blsSearchBox', [function () {
             };
 
             this.initOptions();
+            $scope.model = $scope.ngModel;
+            if ($scope.options.minChars !== 0) {
+                $scope.model = angular.copy($scope.ngModel);
+                var isActiveSearch = false;
+                $scope.$watch('model', function (newVal, oldVal) {
+                    if ((newVal != oldVal && newVal.length >= $scope.options.minChars) || isActiveSearch) {
+                        isActiveSearch = newVal.length !== 0;
+                        $scope.ngModel = newVal;
+                    }
+                });
+            }
         }]
     };
 }]);
@@ -1066,7 +1068,6 @@ angular.module("bls_components").directive('dynamic', ['$compile', '$log', '$tim
             $timeout(function () {
                 if (angular.isDefined(attrs.dynamic)) {
                     var value = eval("scope." + attrs.dynamic);
-                    $log.debug(value);
                     if (value && value !== '' && !value.startsWith('{{') && $(value)[0]) {
                         ele.html(value);
                         $compile(ele.contents())(scope);
