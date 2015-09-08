@@ -19,7 +19,7 @@ angular.module("bls_components").directive('blsToolBar', [function () {
             };
             $scope.toggleSelectAll = function () {
                 $scope.selectedAll = !$scope.selectedAll;
-                $scope.$emit('toggleSelectAllEvent', $scope.selectedAll);
+                $scope.$emit('blsTable.toggleSelectAllEvent', $scope.selectedAll);
             };
             $scope.export = function (type) {
                 $log.debug('    export type => ', type);

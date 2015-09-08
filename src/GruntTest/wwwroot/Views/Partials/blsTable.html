@@ -1,4 +1,5 @@
 <!-- <pre>{{model.data|json}}</pre> -->
+<bls-search-box ng-model="options.toolbar.search.searchedText" options="{ id : 'btn_search_one', placeholder: 'search...', searchClass: 'form-control', button: { hide: true, title: 'search',  btnClass: 'btn btn-default' }, minChars: { enbaled: true, count: 3 }}"></bls-search-box>
 <bls-table ng-model="model.data"
            func-async="query(pageIndex, pageLength, searchedText, orderBy, order,filters)"
            options="options"

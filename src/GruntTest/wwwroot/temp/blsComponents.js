@@ -45,6 +45,12 @@
                             </form>\
                         </div>\
                  </div>');
+        $templateCache.put('templates/blsSearchBox.html', '<div class="form-group navbar-form">\
+					    <input type="text" class="form-control" placeholder="{{options.placeholder}}" ng-model="ngModel">\
+					    <button  ng-show="ngModel==\'\'" type="submit" class="btn btn-search"><i class="fa fa-search"></i></button>\
+                        <span ng-show="ngModel" ng-click="ngModel=null" class="glyphicon glyphicon-remove-sign form-control-feedback form-control-clear" aria-hidden="true"></span>\
+                        <span class="sr-only">Clear input content</span>\
+				   </div>');
         $templateCache.put('templates/blsHeader.html', '<tr>\
                         <th class="colHeader" ng-repeat="c in cols" ng-click="order(c)" style="width:{{getColWidth($index)}}" allow-drag>\
                             <span ng-if="c.headerTpl!==undefined" ng-bind-html="c.headerTpl" ng-init="getTdTpl(c)" dynamic="c.headerTpl"></span>\
@@ -97,7 +103,11 @@
                                 hide: false,
                                 searchedText: '',
                                 searchClass: 'form-control',
-                                heighLight: true
+                                heighLight: true,
+                                minChars: {//a minimum number of characters to enable filter 
+                                    enabled: true, //default Enabled after 3 characters typed
+                                    count: 3
+                                }
                             },
                             export: {
                                 hide: false,
@@ -699,6 +709,50 @@ angular.module("bls_components").directive('blsRows', ['$log', '$compile', '$tem
     };
 }]);
 
+angular.module("bls_components").directive('blsSearchBox', [function () {
+    var uniqueId = 1;
+    return {
+        link: function (scope, element, attrs) {
+            scope.uniqueId = 'btn' + uniqueId++;
+        },
+        priority: 2,
+        scope: {
+            ngModel: '=',
+            options: '='
+        },
+        restrict: 'E',
+        templateUrl: 'templates/blsSearchBox.html',
+        replace: true,
+        controller: ['$scope', '$element', '$log', function ($scope, $element, $log) {
+            $log.debug('=======> blsSearchBox', $scope.options);
+            var defaultOptions = {
+                id: $scope.uniqueId,
+                placeholder: 'search...',
+                searchClass: 'form-control',
+                button: {
+                    hide: true,
+                    title: 'search',
+                    btnClass: 'btn btn-default'
+                },
+                minChars: {
+                    enbaled: true,
+                    count: 3
+                }
+            };
+
+            this.initOptions = function () {
+                var initialOptions = angular.copy($scope.options);
+                angular.merge($scope.options, defaultOptions);
+                angular.merge($scope.options, initialOptions);
+            };
+            $scope.refresh = function () {
+                $scope.$emit('blsTable.RefreshEvent');
+            };
+
+            this.initOptions();
+        }]
+    };
+}]);
 angular.module("bls_components")
 .directive('blsSplitter', ['$log', 'localStorageService', function ($log, localStorageService) {
     /*--- Jquery UI is required ---*/
@@ -925,7 +979,7 @@ angular.module("bls_components").directive('blsToolBar', [function () {
             };
             $scope.toggleSelectAll = function () {
                 $scope.selectedAll = !$scope.selectedAll;
-                $scope.$emit('toggleSelectAllEvent', $scope.selectedAll);
+                $scope.$emit('blsTable.toggleSelectAllEvent', $scope.selectedAll);
             };
             $scope.export = function (type) {
                 $log.debug('    export type => ', type);

@@ -45,6 +45,12 @@
                             </form>\
                         </div>\
                  </div>');
+        $templateCache.put('templates/blsSearchBox.html', '<div class="form-group navbar-form">\
+					    <input type="text" class="form-control" placeholder="{{options.placeholder}}" ng-model="ngModel">\
+					    <button  ng-show="ngModel==\'\'" type="submit" class="btn btn-search"><i class="fa fa-search"></i></button>\
+                        <span ng-show="ngModel" ng-click="ngModel=null" class="glyphicon glyphicon-remove-sign form-control-feedback form-control-clear" aria-hidden="true"></span>\
+                        <span class="sr-only">Clear input content</span>\
+				   </div>');
         $templateCache.put('templates/blsHeader.html', '<tr>\
                         <th class="colHeader" ng-repeat="c in cols" ng-click="order(c)" style="width:{{getColWidth($index)}}" allow-drag>\
                             <span ng-if="c.headerTpl!==undefined" ng-bind-html="c.headerTpl" ng-init="getTdTpl(c)" dynamic="c.headerTpl"></span>\

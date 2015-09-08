@@ -71,7 +71,11 @@
                         hide: false,
                         searchedText: '',
                         searchClass: 'form-control',
-                        heighLight: true
+                        heighLight: true,
+                        minChars: {//a minimum number of characters to enable filter 
+                            enabled: true,
+                            count:3
+                        }
                     },
                     export: {
                         hide: false,
