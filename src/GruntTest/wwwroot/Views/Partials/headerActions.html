@@ -1,5 +1,7 @@
 ﻿<div class=" panel panel-default">
-    <input type="text" class="form-control" name="search" ng-model="options.toolbar.search.searchedText" placeholder="find...">
+    <div class="container-fluid">
+        <bls-search-box ng-model="options.toolbar.search.searchedText" options="{ id : 'btn_search_one', placeholder: 'search...', searchClass: 'form-control', button: { hide: true, title: 'search',  btnClass: 'btn btn-default' }, minChars: { enbaled: true, count: 3 }}"></bls-search-box>
+    </div>
     <input type="button" class="btn btn-default" value="reset table" ng-click="resetTable()" />
     <input type="button" class="btn btn-default" value="refresh table" ng-click="refreshTable()" />
 </div>
