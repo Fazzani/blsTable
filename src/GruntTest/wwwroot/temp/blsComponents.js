@@ -45,7 +45,7 @@
                             </form>\
                         </div>\
                  </div>');
-        $templateCache.put('templates/blsSearchBox.html', '<div class="form-group navbar-form">\
+        $templateCache.put('templates/blsSearchBox.html', '<div class="col-xs-6 col-md-3 navbar-btn form-group navbar-form">\
 					    <input type="text" class="form-control" placeholder="{{options.placeholder}}" ng-model="ngModel">\
 					    <button  ng-show="ngModel==\'\'" type="submit" class="btn btn-search"><i class="fa fa-search"></i></button>\
                         <span ng-show="ngModel" ng-click="ngModel=null" class="glyphicon glyphicon-remove-sign form-control-feedback form-control-clear" aria-hidden="true"></span>\
@@ -715,7 +715,6 @@ angular.module("bls_components").directive('blsSearchBox', [function () {
         link: function (scope, element, attrs) {
             scope.uniqueId = 'btn' + uniqueId++;
         },
-        priority: 2,
         scope: {
             ngModel: '=',
             options: '='

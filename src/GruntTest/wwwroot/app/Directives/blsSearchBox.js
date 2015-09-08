@@ -4,7 +4,6 @@
         link: function (scope, element, attrs) {
             scope.uniqueId = 'btn' + uniqueId++;
         },
-        priority: 2,
         scope: {
             ngModel: '=',
             options: '='
