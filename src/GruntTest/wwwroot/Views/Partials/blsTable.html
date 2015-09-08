@@ -9,7 +9,10 @@
         <bls-col resize dragable sort field-name="name"></bls-col>
         <bls-col resize dragable field-name="company"></bls-col>
         <bls-col resize dragable sort title="Mail" field-name="email">{{::field|lowercase}}</bls-col>
-        <bls-col resize title="Photo Profile" field-name="picture"><img style="height:18px;margin: 0 auto;" class="img-responsive" src="{{::field}}" alt="" /></bls-col>
+        <bls-col resize title="Photo Profile" field-name="picture">
+            <header><i class="fa fa-exclamation-triangle" style="color: #333" title="{{::field.title}}"></i></header>
+            <bls-td><img style="height:18px;margin: 0 auto;" class="img-responsive" src="{{::field}}" alt="" /></bls-td>
+        </bls-col>
         <bls-col resize field-name="age"></bls-col>
         <bls-col resize title="Actions" is-actions="true"></bls-col>
     </bls-cols>

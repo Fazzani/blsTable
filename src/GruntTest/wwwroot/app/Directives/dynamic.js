@@ -4,11 +4,12 @@
         replace: true,
         priority: -20,
         link: function (scope, ele, attrs) {
-            scope.$eval(attrs.dynamic);
             $timeout(function () {
-                if (angular.isDefined(scope.c.tpl)) {
-                    if (scope.c.tpl !== '' && !scope.c.tpl.startsWith('{{') && $(scope.c.tpl)[0]) {
-                        ele.html(scope.c.tpl);
+                if (angular.isDefined(attrs.dynamic)) {
+                    var value = eval("scope." + attrs.dynamic);
+                    $log.debug(value);
+                    if (value && value !== '' && !value.startsWith('{{') && $(value)[0]) {
+                        ele.html(value);
                         $compile(ele.contents())(scope);
                     }
                 }

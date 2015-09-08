@@ -46,19 +46,20 @@
                         </div>\
                  </div>');
         $templateCache.put('templates/blsHeader.html', '<tr>\
-                        <th class="colHeader" ng-repeat="col in cols" ng-click="order(col)" style="width:{{getColWidth($index)}}" allow-drag>\
-                                        {{col.title|uppercase}}\
-                            <i ng-if="col.sortable" class="pull-left fa " ng-class="glyphOrder(col)"></i><i ng-if="col.resize" class="resize"></i>\
+                        <th class="colHeader" ng-repeat="c in cols" ng-click="order(c)" style="width:{{getColWidth($index)}}" allow-drag>\
+                            <span ng-if="c.headerTpl!==undefined" ng-bind-html="c.headerTpl" ng-init="getTdTpl(c)" dynamic="c.headerTpl"></span>\
+                            <span ng-if="c.headerTpl===undefined" ng-bind="c.title|uppercase"></span>\
+                            <i ng-if="c.sortable" class="pull-left fa " ng-class="glyphOrder(c)"></i><i ng-if="c.resize" class="resize"></i>\
                         </th>\
                    </tr>');
         $templateCache.put('templates/blsActions.html', '<td ng-if="c.isActions" class="center">\
                             <a ng-repeat="btn in options.actions" class="btn btn-default {{btn.class}}" ng-click="action(btn,d)" title="{{btn.title}}" ng-class="btn.class"><i class="{{btn.glyphicon}}"></i></a>\
                    </td>');
-        $templateCache.put('templates/blsRows.html', '<tr ng-repeat="d in data" ><td ng-repeat="c in cols" bls-actions dynamic="getTdTpl(c)" ng-bind-html="d[c.fieldName]| highlight:options.toolbar.search.searchedText:options.toolbar.search.heighLight"></td></tr>');
+        $templateCache.put('templates/blsRows.html', '<tr ng-repeat="d in data" ><td ng-repeat="c in cols" bls-actions ng-init="getTdTpl(c)" dynamic="c.tpl" ng-bind-html="d[c.fieldName]| highlight:options.toolbar.search.searchedText:options.toolbar.search.heighLight"></td></tr>');
         $templateCache.put('templates/blsChildRows.html', '<tr ng-repeat="d in data" data-bls-id="{{$id}}" parentId="{{parentId}}" bls-row-child func="getChildren" data-level="{{level}}">\
-                            <td ng-repeat="c in cols" bls-actions dynamic="getTdTpl(c)" ng-bind-html="d[c.fieldName]| highlight:options.toolbar.search.searchedText:options.toolbar.search.heighLight"></td></tr>');
+                            <td ng-repeat="c in cols" bls-actions ng-init="getTdTpl(c)" dynamic="c.tpl" ng-bind-html="d[c.fieldName]| highlight:options.toolbar.search.searchedText:options.toolbar.search.heighLight"></td></tr>');
         $templateCache.put('templates/blsStaticChildRows.html', '<tr ng-repeat="d in data" data-bls-id="{{$id}}" parentId="{{parentId}}" bls-static-child-cells level="{{level}}"></tr>');
-        $templateCache.put('templates/blsStaticChildCells.html', '<td ng-repeat="c in cols" dynamic="getTdTpl(c)">\
+        $templateCache.put('templates/blsStaticChildCells.html', '<td ng-repeat="c in cols" ng-init="getTdTpl(c)" dynamic="c.tpl">\
                                     <i id="{{$id}}" ng-if="isExpandable" class="fa {{expand?\'fa-caret-down\':\'fa-caret-right\'}}" style="padding:0 4px 0 {{5+(15*level)}}px"></i>\
                                     {{ngModel[c.fieldName]}}{{isExpandable}}</td>\
                                 <bls-static-childs-rows ng-model="childs" ng-if="isExpandable"  level={{level++}}></bls-static-childs-rows>');
@@ -397,6 +398,14 @@ angular.module("bls_components").directive('blsCol', ['$log', '$compile', '$temp
             // var blsTableCtrl = ctrls[0];
             var blsColsCtrl = ctrls[1];
             // var blsColCtrl = ctrls[2];
+            //Récupérer les templates du Header et du TD
+            this.getTemplates = function () {
+                var header = element.find('header');
+                return {
+                    headerTpl: header.length ? header.html() : undefined,
+                    tdTpl: element.find('bls-td').html()
+                }
+            }
             $log.debug('        Link => blsCol');
             if (attrs.isActions) {
                 blsColsCtrl.addCol({
@@ -404,18 +413,21 @@ angular.module("bls_components").directive('blsCol', ['$log', '$compile', '$temp
                     isActions: true,
                     resize: angular.isDefined(attrs.resize)
                 });
-            } else
+            } else {
+                var tpls = this.getTemplates();
                 blsColsCtrl.addCol({
                     title: attrs.title || attrs.fieldName,
                     fieldName: attrs.fieldName,
                     resize: angular.isDefined(attrs.resize),
-                    tpl: element.html(),
+                    tpl: tpls.tdTpl,
+                    headerTpl: tpls.headerTpl,
                     sortable: angular.isDefined(attrs.sort),
                     dragable: angular.isDefined(attrs.dragable)
                 });
+            }
         }
     };
-    
+
     return {
         priority: -1,
         require: ['^blsTable', '^blsCols'],
@@ -496,6 +508,12 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
             //$log.debug('    blsHeader controller: in init...');
             $scope.setPredicate = function (predicate) {
                 me.predicate = predicate;
+            };
+            $scope.getTdTpl = function (col) {
+                if (col.headerTpl && col.headerTpl !== '') {
+                    col.headerTpl = col.headerTpl.replace('::field', 'c');
+                    return col.headerTpl;
+                }
             };
             $scope.glyphOrder = function (col) {
                 //$log.debug('    glyphOrder function was called');
@@ -992,11 +1010,12 @@ angular.module("bls_components").directive('dynamic', ['$compile', '$log', '$tim
         replace: true,
         priority: -20,
         link: function (scope, ele, attrs) {
-            scope.$eval(attrs.dynamic);
             $timeout(function () {
-                if (angular.isDefined(scope.c.tpl)) {
-                    if (scope.c.tpl !== '' && !scope.c.tpl.startsWith('{{') && $(scope.c.tpl)[0]) {
-                        ele.html(scope.c.tpl);
+                if (angular.isDefined(attrs.dynamic)) {
+                    var value = eval("scope." + attrs.dynamic);
+                    $log.debug(value);
+                    if (value && value !== '' && !value.startsWith('{{') && $(value)[0]) {
+                        ele.html(value);
                         $compile(ele.contents())(scope);
                     }
                 }

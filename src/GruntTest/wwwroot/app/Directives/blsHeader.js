@@ -30,6 +30,12 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
             $scope.setPredicate = function (predicate) {
                 me.predicate = predicate;
             };
+            $scope.getTdTpl = function (col) {
+                if (col.headerTpl && col.headerTpl !== '') {
+                    col.headerTpl = col.headerTpl.replace('::field', 'c');
+                    return col.headerTpl;
+                }
+            };
             $scope.glyphOrder = function (col) {
                 //$log.debug('    glyphOrder function was called');
                 if (col.fieldName != $scope.predicate) return 'fa-sort';
