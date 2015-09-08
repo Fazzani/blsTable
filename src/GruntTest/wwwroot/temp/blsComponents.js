@@ -87,6 +87,7 @@
                         colReorderDataKey: 'crdKey_' + $scope.uniqueId,
                         colResizeDataKey: 'crsKey_' + $scope.uniqueId
                     };
+
                     var defaultOptions = {
                         multiSelection: true,
                         toolbar: {
