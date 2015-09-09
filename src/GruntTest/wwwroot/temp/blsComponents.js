@@ -243,6 +243,8 @@
                     //init columns disposition from the localStorage if exists else create new Object
                     this.initColConfig = function () {
                         if (localStorageService.isSupported) me.tableConfig = localStorageService.get($scope.storageIds.tableConfig);
+                        if (me.tableConfig !== null && me.tableConfig.cols.length && me.tableConfig.length != $scope.cols.length)
+                            me.tableConfig = null;
                         if (me.tableConfig === null) {
                             me.tableConfig = {
                                 id: $scope.uniqueId,
@@ -967,7 +969,7 @@ angular.module("bls_components").directive('blsToolBar', [function () {
         restrict: 'E', // E = Element, A = Attribute, C = Class, M = Comment
         templateUrl: 'templates/blsToolBar.html',
         replace: true,
-        controller: ['$scope', '$element', '$document', '$log', function ($scope, $element, $document, $log) {
+        controller: ['$scope', '$element','$log', function ($scope, $element, $log) {
             $scope.btnClass = "btn btn-default";
             $scope.searchPlaceHolder = "search...";
             $scope.selectedAll = false;
@@ -1159,7 +1161,7 @@ angular.module("bls_components").service('blsTableServices', ['$log', 'localStor
             localStorageService.set(key, colConfigArray);
         }
     };
-}]).filter('highlight', function ($sce) {
+}]).filter('highlight', ['$sce', function ($sce) {
     return function (text, phrase, isActive) {
         if (!angular.isString(text) || !isActive) return text;
         if (phrase) text = text.replace(new RegExp('(' + phrase + ')', 'gi'),
@@ -1167,7 +1169,7 @@ angular.module("bls_components").service('blsTableServices', ['$log', 'localStor
 
         return $sce.trustAsHtml(text)
     }
-});
+}]);
 
 /*The MIT License (MIT)
 

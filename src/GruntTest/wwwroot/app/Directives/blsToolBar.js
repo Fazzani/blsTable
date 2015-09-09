@@ -6,7 +6,7 @@ angular.module("bls_components").directive('blsToolBar', [function () {
         restrict: 'E', // E = Element, A = Attribute, C = Class, M = Comment
         templateUrl: 'templates/blsToolBar.html',
         replace: true,
-        controller: ['$scope', '$element', '$document', '$log', function ($scope, $element, $document, $log) {
+        controller: ['$scope', '$element','$log', function ($scope, $element, $log) {
             $scope.btnClass = "btn btn-default";
             $scope.searchPlaceHolder = "search...";
             $scope.selectedAll = false;

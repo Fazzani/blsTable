@@ -131,9 +131,19 @@ module.exports = function (grunt) {
                     linebreak: false
                 },
                 files: {
-                    src: ['dist/js/blsComponents.min.js', 'dist/styles/styles.css']
+                    src: ['dist/js/blsComponents.min.js','dist/js/blsComponents.js', 'dist/styles/styles.css']
                 }
             }
+        },
+        copy: {
+            main: {
+                files: [{
+                expand: true,
+                cwd: 'wwwroot/temp/',
+                src: ['**'],
+                dest: 'wwwroot/dist/js/',
+                }]
+            },
         }
     });
 
@@ -144,9 +154,9 @@ module.exports = function (grunt) {
     //grunt.registerTask('minCss', ['cssmin:dev']);
     grunt.registerTask('deployDev', ['s3:dev']);
     grunt.registerTask('deployProd', ['s3:prod']);
-    grunt.registerTask('newVersionWithoutPublish', ['clean', 'concat', 'cssmin:publish', 'uglify:publish', 'usebanner']);
+    grunt.registerTask('newVersionWithoutPublish', ['clean', 'concat', 'cssmin:publish', 'uglify:publish', 'copy:main', 'usebanner']);
     grunt.registerTask("default", ['clean', 'concat', 'cssmin:publish', 'uglify:publish', 'usebanner', 'bump']);
-    grunt.registerTask("publishDev", ['clean', 'concat', 'cssmin:dev', 'uglify:all', 'jshint', 'usebanner']);
+    grunt.registerTask("publishDev", ['clean', 'concat', 'cssmin:dev', 'uglify:all', 'copy:main','jshint',  'usebanner']);
 
     // The following line loads the grunt plugins.
     // This line needs to be at the end of this this file.
@@ -162,5 +172,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-s3');
     grunt.loadNpmTasks('grunt-bump');
     grunt.loadNpmTasks('grunt-banner');
+    grunt.loadNpmTasks('grunt-contrib-copy');
 
 };

@@ -65,7 +65,7 @@ angular.module("bls_components").service('blsTableServices', ['$log', 'localStor
             localStorageService.set(key, colConfigArray);
         }
     };
-}]).filter('highlight', function ($sce) {
+}]).filter('highlight', ['$sce', function ($sce) {
     return function (text, phrase, isActive) {
         if (!angular.isString(text) || !isActive) return text;
         if (phrase) text = text.replace(new RegExp('(' + phrase + ')', 'gi'),
@@ -73,4 +73,4 @@ angular.module("bls_components").service('blsTableServices', ['$log', 'localStor
 
         return $sce.trustAsHtml(text)
     }
-});
+}]);
