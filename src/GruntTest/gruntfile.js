@@ -9,7 +9,7 @@ module.exports = function (grunt) {
                 ' * Copyright 2011-<%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
                 ' * Licensed under the <%= pkg.license %> license\n' +
                 ' */\n',
-        clean: ["wwwroot/dist/*", "wwwroot/temp/*", "dist/js/*", "dist/styles/*"],
+        clean: ["wwwroot/dist/*", "wwwroot/dist/js/*", "wwwroot/dist/styles/*", "wwwroot/temp/*", "dist/js/*", "dist/styles/*"],
         bower: {
             install: {
                 options: {
@@ -35,21 +35,31 @@ module.exports = function (grunt) {
             }
         },
         jshint: {
-            files: ['wwwroot/temp/*.js'],
+            files: ['wwwroot/dist/js/*.js'],
             options: {
                 '-W069': false,
             }
         },
         concat: {
+            options: {
+                sourceMap: true
+            },
             all: {
                 src: ["wwwroot/app/templates/*.js", 'wwwroot/app/Directives/*.js', "wwwroot/app/Services/*.js", "wwwroot/Content/js/*.js"],
-                dest: 'wwwroot/temp/blsComponents.js'
+                dest: 'wwwroot/dist/js/blsComponents.js'
             }
         },
         uglify: {
             all: {
-                src: ['wwwroot/temp/blsComponents.js'],
-                dest: 'wwwroot/dist/js/blsComponents.min.js'
+                options: {
+                    sourceMap: true,
+                    sourceMapIncludeSources: true,
+                    sourceMapIn: 'wwwroot/dist/js/blsComponents.js.map',
+                    banner: '<%= banner %>'
+                },
+                files: {
+                    'wwwroot/dist/js/blsComponents.min.js': '<%= concat.all.dest %>',
+                }
             },
             publish: {
                 src: ['wwwroot/temp/blsComponents.js'],
@@ -123,28 +133,6 @@ module.exports = function (grunt) {
                 tagMessage: 'Version %VERSION%'
             }
         },
-        usebanner: {
-            dist: {
-                options: {
-                    position: 'top',
-                    banner: '<%= banner %>',
-                    linebreak: false
-                },
-                files: {
-                    src: ['dist/js/blsComponents.min.js','dist/js/blsComponents.js', 'dist/styles/styles.css']
-                }
-            }
-        },
-        copy: {
-            main: {
-                files: [{
-                expand: true,
-                cwd: 'wwwroot/temp/',
-                src: ['**'],
-                dest: 'wwwroot/dist/js/',
-                }]
-            },
-        },
         removelogging: {
             dist: {
                 src: "wwwroot/temp/blsComponents.js",
@@ -164,9 +152,9 @@ module.exports = function (grunt) {
     //grunt.registerTask('minCss', ['cssmin:dev']);
     //grunt.registerTask('deployDev', ['s3:dev']);
     //grunt.registerTask('deployProd', ['s3:prod']);
-    grunt.registerTask('newVersionWithoutPublish', ['clean', 'concat', 'cssmin:publish', 'uglify:publish', 'copy:main', 'usebanner']);
-    grunt.registerTask("default", ['clean', 'concat', 'cssmin:publish', 'uglify:publish', 'usebanner', 'bump']);
-    grunt.registerTask("publishDev", ['clean', 'concat','cssmin:dev', 'uglify:all', 'copy:main', 'usebanner', 'jshint']);
+    grunt.registerTask('newVersionWithoutPublish', ['clean', 'concat', 'cssmin:publish', 'uglify:publish']);
+    grunt.registerTask("default", ['clean', 'concat', 'cssmin:publish', 'uglify:publish', 'bump']);
+    grunt.registerTask("publishDev", ['clean', 'concat','cssmin:dev', 'uglify:all', 'jshint']);
 
     // The following line loads the grunt plugins.
     // This line needs to be at the end of this this file.
@@ -181,8 +169,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-s3');
     grunt.loadNpmTasks('grunt-bump');
-    grunt.loadNpmTasks('grunt-banner');
-    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-remove-logging');
 
 };
