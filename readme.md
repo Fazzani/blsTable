@@ -5,7 +5,8 @@ an example</a></p>
 
 ###Default options structure
 ____________________________
->```var defaultOptions = {
+>```javascript
+ var defaultOptions = {
                         functions: [],
                         toolbar: {
                             hide: false,
@@ -42,11 +43,12 @@ ____________________________
                                 range: [10, 20] //list pageLength
                             }
                         }
-                    };```
+                    };
+```
 
 >#####simple example 
 ____________________
-```
+```html
 <bls-table ng-model="model.data"
            func-async="query(pageIndex, pageLength, searchedText, orderBy, order,filters)"
            options="options"
@@ -69,9 +71,11 @@ ____________________
         </bls-col>
         <bls-col resize title="Actions" is-actions="true"></bls-col>
     </bls-cols>
-</bls-table>```
+</bls-table>
+```
 
 >#####simple example with children
+```html
 <bls-table ng-model="model.data"
            func-async="query(pageIndex, pageLength, searchedText, orderBy, order,filters)"
            options="options"
@@ -96,5 +100,5 @@ ____________________
         <bls-col resize title="Actions" is-actions="true"></bls-col>
     </bls-cols>
 </bls-table>
-
+```
 
