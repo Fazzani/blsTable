@@ -117,7 +117,7 @@
                     this.setCols = function (cols) {
                         $scope.cols = cols;
                         $scope.$emit('blsDataGrid_initedEvent');
-                        $log.debug('cols =>', $scope.cols);
+                        //$log.debug('cols =>', $scope.cols);
                         me.initColConfig();
                         me.refreshDataGrid();
                     };
@@ -137,7 +137,7 @@
                         me.refreshDataGrid();//TODO: à virer et corriger le pb du drag and Drop
                     };
                     $scope.setColWidth = function (index, width) {
-                        $log.debug('setColWidth => ', index, ' width = ', width);
+                        //$log.debug('setColWidth => ', index, ' width = ', width);
                         me.tableConfig.cols[index].width = width;
                         $scope.saveUserData({
                             key: $scope.storageIds.tableConfig,
@@ -146,7 +146,7 @@
                     };
 
                     $scope.$watch('options.toolbar.search.searchedText', function (newValue, oldValue) {
-                        $log.debug('searchedText changed => ', newValue);
+                        //$log.debug('searchedText changed => ', newValue);
                         if (me.timerSearch) $timeout.cancel(me.timerSearch);
                         if (newValue != oldValue) {
                             me.timerSearch = $timeout(function () {
@@ -155,10 +155,10 @@
                         }
                     });
                     $scope.$watch('data', function (newValue, oldValue) {
-                        $log.debug('data changed!!!');
+                        //$log.debug('data changed!!!');
                         if (newValue != oldValue) {
                             if ($scope.cols.length > 0) {
-                                $log.debug('init Table config');
+                                //$log.debug('init Table config');
                                 me.initTableConfig();
                             }
                         }
@@ -192,7 +192,7 @@
                             for (var i = 0; i <= me.tableConfig.cols.length - 1; i++) {
                                 if (i != me.tableConfig.cols[i].index) {
                                     if (i > me.tableConfig.cols[i].index) continue;
-                                    $log.debug('swap form ', i, ' to => ', me.tableConfig.cols[i].index);
+                                    //$log.debug('swap form ', i, ' to => ', me.tableConfig.cols[i].index);
                                     $scope.data.swap(i, me.tableConfig.cols[i].index);
                                     $scope.cols.swap(i, me.tableConfig.cols[i].index);
                                 }
@@ -211,18 +211,18 @@
                         return angular.isDefined($scope.childItemsProp) && $scope.childItemsProp.length > 0;
                     };
                     $scope.$on('blsTable.ResetEvent', function (data) {
-                        $log.debug(localStorageService.keys());
-                        $log.debug('clearUserDataEvent intercepted => $scope.uniqueId : ', $scope.uniqueId);
+                        //$log.debug(localStorageService.keys());
+                        //$log.debug('clearUserDataEvent intercepted => $scope.uniqueId : ', $scope.uniqueId);
                         if (localStorageService.isSupported) {
                             localStorageService.clearAll('^(.)+' + $scope.uniqueId + '$');
                         }
                     });
                     $scope.$on('blsTable.RefreshEvent', function (data) {
-                        $log.debug('refreshEvent intercepted');
+                        //$log.debug('refreshEvent intercepted');
                         me.refreshDataGrid();
                     });
                     $scope.$on('blsTable.ExportEvent', function (e, format) {
-                        $log.debug('exportEvent intercepted to type : ', format);
+                        //$log.debug('exportEvent intercepted to type : ', format);
                         $element.find('table').tableExport({
                             type: format
                         });

@@ -13,7 +13,7 @@
                         if (!value.trim().startsWith('{{') && $(value)[0])
                         {
                             ele.html(value);
-                            $log.debug('ele => ', ele.html());
+                            //$log.debug('ele => ', ele.html());
                         }
                         else
                             ele.text(value);

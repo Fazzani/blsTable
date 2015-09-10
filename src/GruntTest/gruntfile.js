@@ -9,7 +9,7 @@ module.exports = function (grunt) {
                 ' * Copyright 2011-<%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
                 ' * Licensed under the <%= pkg.license %> license\n' +
                 ' */\n',
-        clean: ["wwwroot/dist/*", "wwwroot/dist/js/*", "wwwroot/dist/styles/*", "wwwroot/temp/*", "dist/js/*", "dist/styles/*"],
+        clean: ["wwwroot/dist/*", "wwwroot/dist/js/*", "wwwroot/dist/styles/*", "dist/js/*", "dist/styles/*"],
         bower: {
             install: {
                 options: {

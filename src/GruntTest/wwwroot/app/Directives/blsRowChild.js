@@ -1,6 +1,6 @@
 ﻿angular.module("bls_components").directive('blsRowChild', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
     var link = function (scope, element, attrs, ctrls, transclude) {
-        $log.debug('    Link => blsRows');
+        //$log.debug('    Link => blsRows');
         var me = this;
         this.childs = [];
         var elemTplCaret = angular.element($templateCache.get('templates/blsChildRowsCaret.html'));
@@ -30,7 +30,7 @@
                 });
             };
             elemTplCaret.on('click', function (e) {
-                $log.debug('    toggle row');
+                //$log.debug('    toggle row');
                 var $this = $(this);
                 if (scope.firstExpand) {
                     elemTplCaret.addClass('fa-spinner');

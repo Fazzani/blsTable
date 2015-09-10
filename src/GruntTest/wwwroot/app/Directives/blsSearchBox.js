@@ -12,7 +12,7 @@
         templateUrl: 'templates/blsSearchBox.html',
         replace: true,
         controller: ['$scope', '$element', '$log', function ($scope, $element, $log) {
-            $log.debug('=======> blsSearchBox', $scope.options);
+            //$log.debug('=======> blsSearchBox', $scope.options);
             var defaultOptions = {
                 id: $scope.uniqueId,
                 placeholder: 'search...',

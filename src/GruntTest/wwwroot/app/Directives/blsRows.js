@@ -9,7 +9,7 @@ angular.module("bls_components").directive('blsRows', ['$log', '$compile', '$tem
             if (col.tpl && col.tpl !== '') {
                 col.tpl = col.tpl.replace('::data', 'd');
                 col.tpl = col.tpl.replace('::field', predicate);
-                $log.debug('            col.tpl => ', col.tpl);
+                //$log.debug('            col.tpl => ', col.tpl);
                 return col.tpl;
             }
         };

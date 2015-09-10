@@ -2,19 +2,19 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
     var link = {
         pre: function (scope, element, attrs, ctrls) {
             scope.$on('blsDataGrid_initedEvent', function (e) {
-                $log.debug('    blsDataGrid_initedEvent intercepted');
+                //$log.debug('    blsDataGrid_initedEvent intercepted');
                 var blsTableCtrl = ctrls[0];
                 var blsHeaderCtrl = ctrls[1];
                 scope.setPredicate(localStorageService.get(scope.storageIds.predicateId) || (scope.cols[0] === undefined ? "" : scope.cols[0].id));
                 scope.refreshDataGrid = blsTableCtrl.refreshDataGrid;
-                $log.debug('    Link => blsHeader');
+                //$log.debug('    Link => blsHeader');
                 var eleTpl = angular.element($templateCache.get('templates/blsHeader.html'));
                 scope.getColWidth = function (index) {
                     if (blsTableCtrl.tableConfig.cols[index].width > 0) return blsTableCtrl.tableConfig.cols[index].width + 'px';
                 };
                 $timeout(function () {
                     element.siblings('table').find('thead').append(eleTpl);
-                    $log.debug('    compiling blsHeader');
+                    //$log.debug('    compiling blsHeader');
                     $compile(eleTpl)(scope);
                 }, 0);
             });
@@ -73,7 +73,7 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
                     me.resizeData.startWidthSibling = $siblingElm.width();
                     me.resizeData.minWidth = 50;
                     me.resizeData.maxWidth = me.resizeData.startWidth + me.resizeData.startWidthSibling - me.resizeData.minWidth;
-                    $log.debug(me.resizeData);
+                    //$log.debug(me.resizeData);
                     document.addEventListener('mousemove', drag);
                     document.addEventListener('mouseup', $scope.resizeEnd);
                     e.stopPropagation();

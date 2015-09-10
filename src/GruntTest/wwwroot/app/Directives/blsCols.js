@@ -3,13 +3,13 @@ angular.module("bls_components").directive('blsCols', ['$log', '$compile', '$tem
         post: function (scope, element, attrs, ctrls) {
             var blsTableCtrl = ctrls[0];
             var blsColsCtrl = ctrls[1];
-            $log.debug('    Link => blsCols');
+            //$log.debug('    Link => blsCols');
             blsTableCtrl.setCols(blsColsCtrl.getCols());
         }
     };
     var controller = ['$scope', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices',
         function ($scope, $filter, $timeout, $element, $log, localStorageService, blsTableServices) {
-            $log.debug('    controller => blsCols');
+            //$log.debug('    controller => blsCols');
             var cols = [];
             this.addCol = function (col) {
                 cols.push(col);

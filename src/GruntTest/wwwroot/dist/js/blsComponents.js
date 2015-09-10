@@ -195,7 +195,7 @@
                     this.setCols = function (cols) {
                         $scope.cols = cols;
                         $scope.$emit('blsDataGrid_initedEvent');
-                        $log.debug('cols =>', $scope.cols);
+                        //$log.debug('cols =>', $scope.cols);
                         me.initColConfig();
                         me.refreshDataGrid();
                     };
@@ -215,7 +215,7 @@
                         me.refreshDataGrid();//TODO: à virer et corriger le pb du drag and Drop
                     };
                     $scope.setColWidth = function (index, width) {
-                        $log.debug('setColWidth => ', index, ' width = ', width);
+                        //$log.debug('setColWidth => ', index, ' width = ', width);
                         me.tableConfig.cols[index].width = width;
                         $scope.saveUserData({
                             key: $scope.storageIds.tableConfig,
@@ -224,7 +224,7 @@
                     };
 
                     $scope.$watch('options.toolbar.search.searchedText', function (newValue, oldValue) {
-                        $log.debug('searchedText changed => ', newValue);
+                        //$log.debug('searchedText changed => ', newValue);
                         if (me.timerSearch) $timeout.cancel(me.timerSearch);
                         if (newValue != oldValue) {
                             me.timerSearch = $timeout(function () {
@@ -233,10 +233,10 @@
                         }
                     });
                     $scope.$watch('data', function (newValue, oldValue) {
-                        $log.debug('data changed!!!');
+                        //$log.debug('data changed!!!');
                         if (newValue != oldValue) {
                             if ($scope.cols.length > 0) {
-                                $log.debug('init Table config');
+                                //$log.debug('init Table config');
                                 me.initTableConfig();
                             }
                         }
@@ -270,7 +270,7 @@
                             for (var i = 0; i <= me.tableConfig.cols.length - 1; i++) {
                                 if (i != me.tableConfig.cols[i].index) {
                                     if (i > me.tableConfig.cols[i].index) continue;
-                                    $log.debug('swap form ', i, ' to => ', me.tableConfig.cols[i].index);
+                                    //$log.debug('swap form ', i, ' to => ', me.tableConfig.cols[i].index);
                                     $scope.data.swap(i, me.tableConfig.cols[i].index);
                                     $scope.cols.swap(i, me.tableConfig.cols[i].index);
                                 }
@@ -289,18 +289,18 @@
                         return angular.isDefined($scope.childItemsProp) && $scope.childItemsProp.length > 0;
                     };
                     $scope.$on('blsTable.ResetEvent', function (data) {
-                        $log.debug(localStorageService.keys());
-                        $log.debug('clearUserDataEvent intercepted => $scope.uniqueId : ', $scope.uniqueId);
+                        //$log.debug(localStorageService.keys());
+                        //$log.debug('clearUserDataEvent intercepted => $scope.uniqueId : ', $scope.uniqueId);
                         if (localStorageService.isSupported) {
                             localStorageService.clearAll('^(.)+' + $scope.uniqueId + '$');
                         }
                     });
                     $scope.$on('blsTable.RefreshEvent', function (data) {
-                        $log.debug('refreshEvent intercepted');
+                        //$log.debug('refreshEvent intercepted');
                         me.refreshDataGrid();
                     });
                     $scope.$on('blsTable.ExportEvent', function (e, format) {
-                        $log.debug('exportEvent intercepted to type : ', format);
+                        //$log.debug('exportEvent intercepted to type : ', format);
                         $element.find('table').tableExport({
                             type: format
                         });
@@ -477,13 +477,13 @@ angular.module("bls_components").directive('blsCols', ['$log', '$compile', '$tem
         post: function (scope, element, attrs, ctrls) {
             var blsTableCtrl = ctrls[0];
             var blsColsCtrl = ctrls[1];
-            $log.debug('    Link => blsCols');
+            //$log.debug('    Link => blsCols');
             blsTableCtrl.setCols(blsColsCtrl.getCols());
         }
     };
     var controller = ['$scope', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices',
         function ($scope, $filter, $timeout, $element, $log, localStorageService, blsTableServices) {
-            $log.debug('    controller => blsCols');
+            //$log.debug('    controller => blsCols');
             var cols = [];
             this.addCol = function (col) {
                 cols.push(col);
@@ -517,19 +517,19 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
     var link = {
         pre: function (scope, element, attrs, ctrls) {
             scope.$on('blsDataGrid_initedEvent', function (e) {
-                $log.debug('    blsDataGrid_initedEvent intercepted');
+                //$log.debug('    blsDataGrid_initedEvent intercepted');
                 var blsTableCtrl = ctrls[0];
                 var blsHeaderCtrl = ctrls[1];
                 scope.setPredicate(localStorageService.get(scope.storageIds.predicateId) || (scope.cols[0] === undefined ? "" : scope.cols[0].id));
                 scope.refreshDataGrid = blsTableCtrl.refreshDataGrid;
-                $log.debug('    Link => blsHeader');
+                //$log.debug('    Link => blsHeader');
                 var eleTpl = angular.element($templateCache.get('templates/blsHeader.html'));
                 scope.getColWidth = function (index) {
                     if (blsTableCtrl.tableConfig.cols[index].width > 0) return blsTableCtrl.tableConfig.cols[index].width + 'px';
                 };
                 $timeout(function () {
                     element.siblings('table').find('thead').append(eleTpl);
-                    $log.debug('    compiling blsHeader');
+                    //$log.debug('    compiling blsHeader');
                     $compile(eleTpl)(scope);
                 }, 0);
             });
@@ -588,7 +588,7 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
                     me.resizeData.startWidthSibling = $siblingElm.width();
                     me.resizeData.minWidth = 50;
                     me.resizeData.maxWidth = me.resizeData.startWidth + me.resizeData.startWidthSibling - me.resizeData.minWidth;
-                    $log.debug(me.resizeData);
+                    //$log.debug(me.resizeData);
                     document.addEventListener('mousemove', drag);
                     document.addEventListener('mouseup', $scope.resizeEnd);
                     e.stopPropagation();
@@ -640,7 +640,7 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
 
 angular.module("bls_components").directive('blsRowChild', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
     var link = function (scope, element, attrs, ctrls, transclude) {
-        $log.debug('    Link => blsRows');
+        //$log.debug('    Link => blsRows');
         var me = this;
         this.childs = [];
         var elemTplCaret = angular.element($templateCache.get('templates/blsChildRowsCaret.html'));
@@ -670,7 +670,7 @@ angular.module("bls_components").directive('blsRowChild', ['$log', '$compile', '
                 });
             };
             elemTplCaret.on('click', function (e) {
-                $log.debug('    toggle row');
+                //$log.debug('    toggle row');
                 var $this = $(this);
                 if (scope.firstExpand) {
                     elemTplCaret.addClass('fa-spinner');
@@ -718,7 +718,7 @@ angular.module("bls_components").directive('blsRows', ['$log', '$compile', '$tem
             if (col.tpl && col.tpl !== '') {
                 col.tpl = col.tpl.replace('::data', 'd');
                 col.tpl = col.tpl.replace('::field', predicate);
-                $log.debug('            col.tpl => ', col.tpl);
+                //$log.debug('            col.tpl => ', col.tpl);
                 return col.tpl;
             }
         };
@@ -753,7 +753,7 @@ angular.module("bls_components").directive('blsSearchBox', [function () {
         templateUrl: 'templates/blsSearchBox.html',
         replace: true,
         controller: ['$scope', '$element', '$log', function ($scope, $element, $log) {
-            $log.debug('=======> blsSearchBox', $scope.options);
+            //$log.debug('=======> blsSearchBox', $scope.options);
             var defaultOptions = {
                 id: $scope.uniqueId,
                 placeholder: 'search...',
@@ -1104,7 +1104,7 @@ angular.module("bls_components").directive('dynamic', ['$compile', '$log', '$tim
                         if (!value.trim().startsWith('{{') && $(value)[0])
                         {
                             ele.html(value);
-                            $log.debug('ele => ', ele.html());
+                            //$log.debug('ele => ', ele.html());
                         }
                         else
                             ele.text(value);
