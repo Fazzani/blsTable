@@ -1,14 +1,14 @@
 ﻿angular.module("bls_components").directive('blsCol', ['$log', '$timeout', function ($log, $timeout) {
     var tpl = [];
     var link = function (scope, element, attrs, ctrls) {
-        $log.debug('link post => col');
+        //$log.debug('link post => col');
         // var blsTableCtrl = ctrls[0];
         var blsColsCtrl = ctrls[1];
         // var blsColCtrl = ctrls[2];
         //Récupérer les templates du Header et du TD
         this.getTemplates = function () {
             var instanceTpl = tpl[attrs.fieldName];
-            $log.debug('instanceTpl =================> ', instanceTpl, ' for ______  : ', attrs.fieldName);
+            //$log.debug('instanceTpl =================> ', instanceTpl, ' for ______  : ', attrs.fieldName);
             if (instanceTpl !== '' && !instanceTpl.startsWith('{{')) {
                 var tplHtml = $('<div></div>').wrapInner(instanceTpl)
                 var header = tplHtml.find('header');
@@ -27,7 +27,7 @@
                     tdTpl: undefined
                 };
         };
-        $log.debug('        Link => blsCol');
+        //$log.debug('        Link => blsCol');
         if (attrs.isActions) {
             blsColsCtrl.addCol({
                 title: attrs.title || 'Actions',
@@ -36,7 +36,7 @@
             });
         } else {
             var tpls = this.getTemplates();
-            $log.debug('tpls =>: ', tpls);
+            //$log.debug('tpls =>: ', tpls);
             blsColsCtrl.addCol({
                 title: attrs.title || attrs.fieldName,
                 fieldName: attrs.fieldName,

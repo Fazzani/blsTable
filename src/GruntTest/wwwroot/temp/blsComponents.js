@@ -61,7 +61,7 @@
         $templateCache.put('templates/blsActions.html', '<td ng-if="c.isActions" class="center">\
                             <a ng-repeat="btn in options.actions" class="btn btn-default {{btn.class}}" ng-click="action(btn,d)" title="{{btn.title}}" ng-class="btn.class"><i class="{{btn.glyphicon}}"></i></a>\
                    </td>');
-        $templateCache.put('templates/blsRows.html', '<tr ng-repeat="d in data" ><td ng-repeat="c in cols" bls-actions ng-init="getTdTpl(c)" dynamic="c.tpl" ng-bind-html="d[c.fieldName]| highlight:options.toolbar.search.searchedText:options.toolbar.search.heighLight"></td></tr>');
+        $templateCache.put('templates/blsRows.html', '<tr ng-repeat="d in data"><td ng-repeat="c in cols" bls-actions ng-init="getTdTpl(c)" dynamic="c.tpl" ng-bind-html="d[c.fieldName]| highlight:options.toolbar.search.searchedText:options.toolbar.search.heighLight"></td></tr>');
         $templateCache.put('templates/blsChildRows.html', '<tr ng-repeat="d in data" data-bls-id="{{$id}}" parentId="{{parentId}}" bls-row-child func="getChildren" data-level="{{level}}">\
                             <td ng-repeat="c in cols" bls-actions ng-init="getTdTpl(c)" dynamic="c.tpl" ng-bind-html="d[c.fieldName]| highlight:options.toolbar.search.searchedText:options.toolbar.search.heighLight"></td></tr>');
         $templateCache.put('templates/blsStaticChildRows.html', '<tr ng-repeat="d in data" data-bls-id="{{$id}}" parentId="{{parentId}}" bls-static-child-cells level="{{level}}"></tr>');
@@ -97,6 +97,7 @@
 
                     var defaultOptions = {
                         multiSelection: true,
+                        functions: [],
                         toolbar: {
                             hide: false,
                             search: {
@@ -408,14 +409,14 @@ angular.module("bls_components").directive('blsActions', ['$log', '$compile', '$
 angular.module("bls_components").directive('blsCol', ['$log', '$timeout', function ($log, $timeout) {
     var tpl = [];
     var link = function (scope, element, attrs, ctrls) {
-        $log.debug('link post => col');
+        //$log.debug('link post => col');
         // var blsTableCtrl = ctrls[0];
         var blsColsCtrl = ctrls[1];
         // var blsColCtrl = ctrls[2];
         //Récupérer les templates du Header et du TD
         this.getTemplates = function () {
             var instanceTpl = tpl[attrs.fieldName];
-            $log.debug('instanceTpl =================> ', instanceTpl, ' for ______  : ', attrs.fieldName);
+            //$log.debug('instanceTpl =================> ', instanceTpl, ' for ______  : ', attrs.fieldName);
             if (instanceTpl !== '' && !instanceTpl.startsWith('{{')) {
                 var tplHtml = $('<div></div>').wrapInner(instanceTpl)
                 var header = tplHtml.find('header');
@@ -434,7 +435,7 @@ angular.module("bls_components").directive('blsCol', ['$log', '$timeout', functi
                     tdTpl: undefined
                 };
         };
-        $log.debug('        Link => blsCol');
+        //$log.debug('        Link => blsCol');
         if (attrs.isActions) {
             blsColsCtrl.addCol({
                 title: attrs.title || 'Actions',
@@ -443,7 +444,7 @@ angular.module("bls_components").directive('blsCol', ['$log', '$timeout', functi
             });
         } else {
             var tpls = this.getTemplates();
-            $log.debug('tpls =>: ', tpls);
+            //$log.debug('tpls =>: ', tpls);
             blsColsCtrl.addCol({
                 title: attrs.title || attrs.fieldName,
                 fieldName: attrs.fieldName,
@@ -645,6 +646,7 @@ angular.module("bls_components").directive('blsRowChild', ['$log', '$compile', '
         var elemTplCaret = angular.element($templateCache.get('templates/blsChildRowsCaret.html'));
         scope.expand = false;
         scope.firstExpand = true;
+
         this.getRowsChilds = function (id, target) {
             var siblings = target.siblings('tr[parentId="' + id + '"]').toArray();
             me.childs = me.childs.concat(siblings);
@@ -653,17 +655,8 @@ angular.module("bls_components").directive('blsRowChild', ['$log', '$compile', '
             }
             return me.childs;
         };
-        scope.getTdTpl = function (col, d) {
-            
-            var predicate = "d[c.fieldName] ";
-            //
-            if (col.tpl && col.tpl !== '') {
-                col.tpl = col.tpl.replace('::data', 'd');
-                col.tpl = col.tpl.replace('::field', predicate);
-                $log.debug('            col.tpl => ',col.tpl);
-                return col.tpl;
-            }
-        };
+
+        
         var elemTplRow = angular.element($templateCache.get('templates/blsChildRows.html'));
         if (!angular.isDefined(attrs.level)) {
             scope.level = 0;
@@ -718,7 +711,17 @@ angular.module("bls_components").directive('blsRows', ['$log', '$compile', '$tem
     var link = function (scope, element, attrs, ctrls) {
         // var blsTableCtrl = ctrls[0];
         // debugger;
+        scope.getTdTpl = function (col, d) {
 
+            var predicate = "d[c.fieldName] ";
+            //
+            if (col.tpl && col.tpl !== '') {
+                col.tpl = col.tpl.replace('::data', 'd');
+                col.tpl = col.tpl.replace('::field', predicate);
+                $log.debug('            col.tpl => ', col.tpl);
+                return col.tpl;
+            }
+        };
         var eleTpl = angular.element($templateCache.get('templates/blsRows.html'));
         if (scope.isHierarchical())
             eleTpl.attr('bls-row-child', '');
@@ -1094,9 +1097,9 @@ angular.module("bls_components").directive('dynamic', ['$compile', '$log', '$tim
         link: function (scope, ele, attrs) {
             $timeout(function () {
                 if (angular.isDefined(attrs.dynamic)) {
-                    $log.debug('in dynamic');
+                    //$log.debug('in dynamic');
                     var value = eval("scope." + attrs.dynamic);
-                    $log.debug('value => ', value);
+                    //$log.debug('value => ', value);
                     if (value && value !== '') {
                         if (!value.trim().startsWith('{{') && $(value)[0])
                         {

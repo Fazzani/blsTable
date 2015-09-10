@@ -6,9 +6,9 @@
         link: function (scope, ele, attrs) {
             $timeout(function () {
                 if (angular.isDefined(attrs.dynamic)) {
-                    $log.debug('in dynamic');
+                    //$log.debug('in dynamic');
                     var value = eval("scope." + attrs.dynamic);
-                    $log.debug('value => ', value);
+                    //$log.debug('value => ', value);
                     if (value && value !== '') {
                         if (!value.trim().startsWith('{{') && $(value)[0])
                         {

@@ -6,6 +6,7 @@
         var elemTplCaret = angular.element($templateCache.get('templates/blsChildRowsCaret.html'));
         scope.expand = false;
         scope.firstExpand = true;
+
         this.getRowsChilds = function (id, target) {
             var siblings = target.siblings('tr[parentId="' + id + '"]').toArray();
             me.childs = me.childs.concat(siblings);
@@ -14,17 +15,8 @@
             }
             return me.childs;
         };
-        scope.getTdTpl = function (col, d) {
-            
-            var predicate = "d[c.fieldName] ";
-            //
-            if (col.tpl && col.tpl !== '') {
-                col.tpl = col.tpl.replace('::data', 'd');
-                col.tpl = col.tpl.replace('::field', predicate);
-                $log.debug('            col.tpl => ',col.tpl);
-                return col.tpl;
-            }
-        };
+
+        
         var elemTplRow = angular.element($templateCache.get('templates/blsChildRows.html'));
         if (!angular.isDefined(attrs.level)) {
             scope.level = 0;
