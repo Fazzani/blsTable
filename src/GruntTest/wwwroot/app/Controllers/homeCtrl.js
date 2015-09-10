@@ -23,19 +23,19 @@
         };
         //For hierarchique view
         $scope.getChildrens = function(parentId) {
-            $log.debug('in getChildrens request children of parendId : ', parentId);
+            //$log.debug('in getChildrens request children of parendId : ', parentId);
             var url = posts + "/" + parentId.id;
             return $http.get(url, requestOptions);
         };
         //For master Slave view
         $scope.getSlaveView = function(masterId) {
-            $log.debug('masterId => '+masterId.id);
+            //$log.debug('masterId => '+masterId.id);
             // console.dir(masterId);
             var url = root + "/comments?postId=" + masterId.id;
             return {func: $http.get(url, requestOptions), templateUrl:"Views/Partials/slavePostTemplate.html"};
         };
         $scope.getTreeView = function(masterId) {
-            $log.debug('masterId => '+masterId);
+            //$log.debug('masterId => '+masterId);
             // console.dir(masterId);
             var url = root + "/comments?postId=" + masterId;
             return {func: $http.get(url, requestOptions), templateUrl:"Views/Partials/slavePostTemplate.html"};

@@ -50,6 +50,7 @@
                 $log.error(errors);
             });
         };
+        
         $scope.columns = ['id', 'name', 'company', 'email', 'picture', 'phone'];
         
         $scope.callFunction = function () {

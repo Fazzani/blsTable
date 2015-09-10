@@ -114,7 +114,7 @@ module.exports = function (grunt) {
         },
         bump: {
             scripts: {
-                files: ["dist/js/*.js", "dist/styles/*.css"],
+                files: ["wwwroot/dist/js/*.js", "wwwroot/dist/styles/*.css"],
                 updateConfigs: ["pkg"],
                 commitFiles: ["-a"],
                 push: true,
@@ -144,6 +144,16 @@ module.exports = function (grunt) {
                 dest: 'wwwroot/dist/js/',
                 }]
             },
+        },
+        removelogging: {
+            dist: {
+                src: "wwwroot/temp/blsComponents.js",
+                dest: "wwwroot/temp/blsComponents-clean.js",
+                options: {
+                    namespace: ['console', 'window.console', '$log'],
+                    methods:['debug']
+                }
+            }
         }
     });
 
@@ -152,16 +162,16 @@ module.exports = function (grunt) {
     grunt.registerTask('jsonServer', ['shell:json_server']);
     grunt.registerTask('webServer', ['shell:express_server']);
     //grunt.registerTask('minCss', ['cssmin:dev']);
-    grunt.registerTask('deployDev', ['s3:dev']);
-    grunt.registerTask('deployProd', ['s3:prod']);
+    //grunt.registerTask('deployDev', ['s3:dev']);
+    //grunt.registerTask('deployProd', ['s3:prod']);
     grunt.registerTask('newVersionWithoutPublish', ['clean', 'concat', 'cssmin:publish', 'uglify:publish', 'copy:main', 'usebanner']);
     grunt.registerTask("default", ['clean', 'concat', 'cssmin:publish', 'uglify:publish', 'usebanner', 'bump']);
-    grunt.registerTask("publishDev", ['clean', 'concat', 'cssmin:dev', 'uglify:all', 'copy:main','jshint',  'usebanner']);
+    grunt.registerTask("publishDev", ['clean', 'concat','cssmin:dev', 'uglify:all', 'copy:main', 'usebanner', 'jshint']);
 
     // The following line loads the grunt plugins.
     // This line needs to be at the end of this this file.
 
-    grunt.loadNpmTasks('grunt-shell');
+    grunt.loadNpmTasks('grunt-shell'); 
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-concat');
@@ -173,5 +183,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-bump');
     grunt.loadNpmTasks('grunt-banner');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-remove-logging');
 
 };

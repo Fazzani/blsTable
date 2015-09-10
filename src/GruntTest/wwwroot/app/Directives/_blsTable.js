@@ -243,6 +243,7 @@
                 transclude: true,
                 templateUrl: 'templates/blsTable.html',
                 controller: this.controller,
+                
                 scope: {
                     data: '=ngModel',
                     funcAsync: '&',

@@ -1,8 +1,11 @@
 (function (angular) {
     'use strict';
     app.
-    config(['$locationProvider', 'localStorageServiceProvider', '$stateProvider', '$urlRouterProvider',
-        function ($locationProvider, localStorageServiceProvider, $stateProvider, $urlRouterProvider) {
+    config(['$locationProvider', 'localStorageServiceProvider', '$stateProvider', '$urlRouterProvider', '$logProvider',
+        function ($locationProvider, localStorageServiceProvider, $stateProvider, $urlRouterProvider, $logProvider) {
+
+            $logProvider.debugEnabled(true);
+
             localStorageServiceProvider.setStorageType('sessionStorage').setPrefix('').setNotify(true, true);
             $urlRouterProvider.otherwise("/docs");
 
@@ -65,6 +68,7 @@
         return {
             options: {
                 multiSelection: true,
+                functions: [function (row) { alert(row.name+' '+ row.company); }],
                 toolbar: {
                     hide: false,
                     search: {
