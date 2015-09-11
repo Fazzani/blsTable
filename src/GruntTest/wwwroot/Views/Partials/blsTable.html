@@ -21,6 +21,13 @@
         <bls-col resize field-name="isActive" title="Active">
             <i ng-if="::field" class="fa fa-check" style="color: #333"></i>
         </bls-col>
-        <bls-col resize title="Actions" is-actions="true"></bls-col>
+        <bls-col resize title="Actions">
+            <span data-placement="top" data-toggle="tooltip" title="Modifier">
+                <a class="btn btn-primary btn-icon btn-circle btn-sm" ui-sref="docs"><span class="glyphicon glyphicon-pencil"></span></a>
+            </span>
+            <span data-placement="top" data-toggle="tooltip" title="Supprimer">
+                <a class="btn btn-danger btn-icon btn-circle btn-sm" href="javascript: void(0)" ng-click="options.callbacks[1](::data)"><span class="glyphicon glyphicon-trash"></span></a>
+            </span>
+        </bls-col>
     </bls-cols>
 </bls-table>

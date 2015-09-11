@@ -27,26 +27,18 @@
                     tdTpl: undefined
                 };
         };
-        //$log.debug('        Link => blsCol');
-        if (attrs.isActions) {
-            blsColsCtrl.addCol({
-                title: attrs.title || 'Actions',
-                isActions: true,
-                resize: angular.isDefined(attrs.resize)
-            });
-        } else {
-            var tpls = this.getTemplates();
-            //$log.debug('tpls =>: ', tpls);
-            blsColsCtrl.addCol({
-                title: attrs.title || attrs.fieldName,
-                fieldName: attrs.fieldName,
-                resize: angular.isDefined(attrs.resize),
-                tpl: tpls.tdTpl,
-                headerTpl: tpls.headerTpl,
-                sortable: angular.isDefined(attrs.sort),
-                dragable: angular.isDefined(attrs.dragable)
-            });
-        }
+
+        var tpls = this.getTemplates();
+        //$log.debug('tpls =>: ', tpls);
+        blsColsCtrl.addCol({
+            title: attrs.title || attrs.fieldName,
+            fieldName: attrs.fieldName,
+            resize: angular.isDefined(attrs.resize),
+            tpl: tpls.tdTpl,
+            headerTpl: tpls.headerTpl,
+            sortable: angular.isDefined(attrs.sort),
+            dragable: angular.isDefined(attrs.dragable)
+        });
     };
 
     return {

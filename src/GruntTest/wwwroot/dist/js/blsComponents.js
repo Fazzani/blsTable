@@ -58,12 +58,9 @@
                             <i ng-if="c.resize" class="resize"></i>\
                         </th>\
                    </tr>');
-        $templateCache.put('templates/blsActions.html', '<td ng-if="c.isActions" class="center">\
-                            <a ng-repeat="btn in options.actions" class="btn btn-default {{btn.class}}" ng-click="action(btn,d)" title="{{btn.title}}" ng-class="btn.class"><i class="{{btn.glyphicon}}"></i></a>\
-                   </td>');
-        $templateCache.put('templates/blsRows.html', '<tr ng-repeat="d in data"><td ng-repeat="c in cols" bls-actions ng-init="getTdTpl(c)" dynamic="c.tpl" ng-bind-html="d[c.fieldName]| highlight:options.toolbar.search.searchedText:options.toolbar.search.heighLight"></td></tr>');
+        $templateCache.put('templates/blsRows.html', '<tr ng-repeat="d in data"><td ng-repeat="c in cols" ng-init="getTdTpl(c)" dynamic="c.tpl" ng-bind-html="d[c.fieldName]| highlight:options.toolbar.search.searchedText:options.toolbar.search.heighLight"></td></tr>');
         $templateCache.put('templates/blsChildRows.html', '<tr ng-repeat="d in data" data-bls-id="{{$id}}" parentId="{{parentId}}" bls-row-child func="getChildren" data-level="{{level}}">\
-                            <td ng-repeat="c in cols" bls-actions ng-init="getTdTpl(c)" dynamic="c.tpl" ng-bind-html="d[c.fieldName]| highlight:options.toolbar.search.searchedText:options.toolbar.search.heighLight"></td></tr>');
+                            <td ng-repeat="c in cols" ng-init="getTdTpl(c)" dynamic="c.tpl" ng-bind-html="d[c.fieldName]| highlight:options.toolbar.search.searchedText:options.toolbar.search.heighLight"></td></tr>');
         $templateCache.put('templates/blsStaticChildRows.html', '<tr ng-repeat="d in data" data-bls-id="{{$id}}" parentId="{{parentId}}" bls-static-child-cells level="{{level}}"></tr>');
         $templateCache.put('templates/blsStaticChildCells.html', '<td ng-repeat="c in cols" ng-init="getTdTpl(c)" dynamic="c.tpl">\
                                     <i id="{{$id}}" ng-if="isExpandable" class="fa {{expand?\'fa-caret-down\':\'fa-caret-right\'}}" style="padding:0 4px 0 {{5+(15*level)}}px"></i>\
@@ -379,33 +376,6 @@ angular.module("bls_components").directive("allowDrag", function () {
         }
     };
 });
-angular.module("bls_components").directive('blsActions', ['$log', '$compile', '$templateCache', '$timeout', '$q', function ($log, $compile, $templateCache, $timeout, $q) {
-    var link = function (scope, element, attrs, ctrls) {
-        // var blsTableCtrl = ctrls[0];
-        if (scope.c.isActions) {
-            var eleTpl = angular.element($templateCache.get('templates/blsActions.html'));
-            $timeout(function () {
-                element.replaceWith(eleTpl);
-                $compile(eleTpl)(scope);
-            }, 0);
-        }
-        scope.action = function (btn, d) {
-            $q.when(btn.action(d)).then(function (res) {
-                if (btn.isRemoveAction) {
-                    scope.data.splice(scope.data.indexOf(d), 1);
-                }
-            });
-        };
-    };
-
-    return {
-        //require: ['^blsTable'],
-        priority: -18,
-        restrict: 'A',
-        link: link
-    };
-}]);
-
 angular.module("bls_components").directive('blsCol', ['$log', '$timeout', function ($log, $timeout) {
     var tpl = [];
     var link = function (scope, element, attrs, ctrls) {
@@ -436,25 +406,18 @@ angular.module("bls_components").directive('blsCol', ['$log', '$timeout', functi
                 };
         };
         //$log.debug('        Link => blsCol');
-        if (attrs.isActions) {
-            blsColsCtrl.addCol({
-                title: attrs.title || 'Actions',
-                isActions: true,
-                resize: angular.isDefined(attrs.resize)
-            });
-        } else {
-            var tpls = this.getTemplates();
-            //$log.debug('tpls =>: ', tpls);
-            blsColsCtrl.addCol({
-                title: attrs.title || attrs.fieldName,
-                fieldName: attrs.fieldName,
-                resize: angular.isDefined(attrs.resize),
-                tpl: tpls.tdTpl,
-                headerTpl: tpls.headerTpl,
-                sortable: angular.isDefined(attrs.sort),
-                dragable: angular.isDefined(attrs.dragable)
-            });
-        }
+
+        var tpls = this.getTemplates();
+        //$log.debug('tpls =>: ', tpls);
+        blsColsCtrl.addCol({
+            title: attrs.title || attrs.fieldName,
+            fieldName: attrs.fieldName,
+            resize: angular.isDefined(attrs.resize),
+            tpl: tpls.tdTpl,
+            headerTpl: tpls.headerTpl,
+            sortable: angular.isDefined(attrs.sort),
+            dragable: angular.isDefined(attrs.dragable)
+        });
     };
 
     return {
