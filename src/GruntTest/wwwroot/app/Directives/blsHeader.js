@@ -38,6 +38,7 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
             };
             $scope.glyphOrder = function (col) {
                 //$log.debug('    glyphOrder function was called');
+                if (!col.sortable) return '';
                 if (col.fieldName != $scope.predicate) return 'fa-sort';
                 return me.reverse ? 'fa-sort-asc' : 'fa-sort-desc';
             };

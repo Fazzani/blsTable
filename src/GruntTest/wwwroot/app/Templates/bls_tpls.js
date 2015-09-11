@@ -52,10 +52,10 @@
                         <span class="sr-only">Clear input content</span>\
 				   </div>');
         $templateCache.put('templates/blsHeader.html', '<tr>\
-                        <th class="colHeader" ng-repeat="c in cols" ng-click="order(c)" style="width:{{getColWidth($index)}}" allow-drag>\
+                        <th class="colHeader" ng-class="glyphOrder(c)" ng-repeat="c in cols" ng-click="order(c)" style="width:{{getColWidth($index)}}" allow-drag>\
                             <span ng-if="c.headerTpl!==undefined" ng-bind-html="c.headerTpl" ng-init="getTdTpl(c)" dynamic="c.headerTpl"></span>\
                             <span ng-if="c.headerTpl===undefined" ng-bind="c.title|uppercase"></span>\
-                            <i ng-if="c.sortable" class="pull-left fa " ng-class="glyphOrder(c)"></i><i ng-if="c.resize" class="resize"></i>\
+                            <i ng-if="c.resize" class="resize"></i>\
                         </th>\
                    </tr>');
         $templateCache.put('templates/blsActions.html', '<td ng-if="c.isActions" class="center">\

@@ -7,14 +7,14 @@
            get-children="getChildren" child-items-prop="Friends">
     <bls-cols>
         <bls-col resize dragable sort field-name="id"></bls-col>
-        <bls-col resize dragable sort field-name="name"></bls-col>
+        <bls-col resize dragable title="Le nom" sort field-name="name"></bls-col>
         <bls-col resize dragable field-name="company">
             <a href="javascript: void(0)" ng-click="options.callbacks[0](::data)">
                 {{::field}}
             </a>
         </bls-col>
-        <bls-col resize dragable sort title="Mail" field-name="email">{{::field|uppercase}}</bls-col>
-        <bls-col resize title="Photo Profile" field-name="picture">
+        <bls-col resize dragable sort title="Mailing de Monsieur" field-name="email">{{::field|uppercase}}</bls-col>
+        <bls-col resize title="Photo de Profile" field-name="picture">
             <header><i class="fa fa-exclamation-triangle" style="color: #333" title="{{::field.title}}"></i></header>
             <bls-td><img style="height:18px;margin: 0 auto;" class="img-responsive" src="{{::field}}" alt="" /></bls-td>
         </bls-col>

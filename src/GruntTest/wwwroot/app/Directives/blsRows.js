@@ -1,7 +1,6 @@
 angular.module("bls_components").directive('blsRows', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
     var link = function (scope, element, attrs, ctrls) {
         // var blsTableCtrl = ctrls[0];
-        // debugger;
         scope.getTdTpl = function (col, d) {
 
             var predicate = "d[c.fieldName] ";

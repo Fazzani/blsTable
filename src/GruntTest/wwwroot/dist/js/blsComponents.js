@@ -52,10 +52,10 @@
                         <span class="sr-only">Clear input content</span>\
 				   </div>');
         $templateCache.put('templates/blsHeader.html', '<tr>\
-                        <th class="colHeader" ng-repeat="c in cols" ng-click="order(c)" style="width:{{getColWidth($index)}}" allow-drag>\
+                        <th class="colHeader" ng-class="glyphOrder(c)" ng-repeat="c in cols" ng-click="order(c)" style="width:{{getColWidth($index)}}" allow-drag>\
                             <span ng-if="c.headerTpl!==undefined" ng-bind-html="c.headerTpl" ng-init="getTdTpl(c)" dynamic="c.headerTpl"></span>\
                             <span ng-if="c.headerTpl===undefined" ng-bind="c.title|uppercase"></span>\
-                            <i ng-if="c.sortable" class="pull-left fa " ng-class="glyphOrder(c)"></i><i ng-if="c.resize" class="resize"></i>\
+                            <i ng-if="c.resize" class="resize"></i>\
                         </th>\
                    </tr>');
         $templateCache.put('templates/blsActions.html', '<td ng-if="c.isActions" class="center">\
@@ -553,6 +553,7 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
             };
             $scope.glyphOrder = function (col) {
                 //$log.debug('    glyphOrder function was called');
+                if (!col.sortable) return '';
                 if (col.fieldName != $scope.predicate) return 'fa-sort';
                 return me.reverse ? 'fa-sort-asc' : 'fa-sort-desc';
             };
@@ -710,7 +711,6 @@ angular.module("bls_components").directive('blsRowChild', ['$log', '$compile', '
 angular.module("bls_components").directive('blsRows', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
     var link = function (scope, element, attrs, ctrls) {
         // var blsTableCtrl = ctrls[0];
-        // debugger;
         scope.getTdTpl = function (col, d) {
 
             var predicate = "d[c.fieldName] ";
