@@ -166,7 +166,7 @@
                     //init columns disposition from the localStorage if exists else create new Object
                     this.initColConfig = function () {
                         if (localStorageService.isSupported) me.tableConfig = localStorageService.get($scope.storageIds.tableConfig);
-                        if (me.tableConfig !== null && me.tableConfig.cols.length && me.tableConfig.length != $scope.cols.length)
+                        if (me.tableConfig !== null && me.tableConfig.cols.length && me.tableConfig.cols.length != $scope.cols.length)
                             me.tableConfig = null;
                         if (me.tableConfig === null) {
                             me.tableConfig = {

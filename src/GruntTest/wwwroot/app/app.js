@@ -4,7 +4,7 @@
     config(['$locationProvider', 'localStorageServiceProvider', '$stateProvider', '$urlRouterProvider', '$logProvider',
         function ($locationProvider, localStorageServiceProvider, $stateProvider, $urlRouterProvider, $logProvider) {
 
-            $logProvider.debugEnabled(true);
+           // $logProvider.debugEnabled(true);
 
             localStorageServiceProvider.setStorageType('sessionStorage').setPrefix('').setNotify(true, true);
             $urlRouterProvider.otherwise("/docs");

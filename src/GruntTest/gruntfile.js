@@ -9,6 +9,15 @@ module.exports = function (grunt) {
                 ' * Copyright 2011-<%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
                 ' * Licensed under the <%= pkg.license %> license\n' +
                 ' */\n',
+        watch: {
+            all: {
+                files: ["wwwroot/app/Directives/*.js", "wwwroot/app/Services/*.js", "wwwroot/app/templates/*.js", "wwwroot/Content/Styles/*.css"],
+                tasks: ['publishDev'],
+                options: {
+                    livereload: true
+                }
+            }
+        },
         clean: ["wwwroot/dist/*", "wwwroot/dist/js/*", "wwwroot/dist/styles/*", "dist/js/*", "dist/styles/*"],
         bower: {
             install: {
@@ -66,15 +75,7 @@ module.exports = function (grunt) {
                 dest: 'dist/js/blsComponents.min.js'
             }
         },
-        watch: {
-            all: {
-                files: ["wwwroot/app/Directives/*.js", "wwwroot/app/Services/*.js", "wwwroot/app/templates/*.js", "wwwroot/Content/Styles/*.css"],
-                tasks: ['publishDev'],
-                options: {
-                    livereload: true
-                }
-            }
-        },
+        
         shell: {
             express_server: {
                 command: 'node wwwroot/Server.js'
