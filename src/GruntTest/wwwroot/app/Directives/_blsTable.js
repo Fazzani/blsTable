@@ -19,7 +19,7 @@
 
                     var defaultOptions = {
                         multiSelection: true,
-                        functions: [],
+                        callbacks: [],
                         toolbar: {
                             hide: false,
                             search: {

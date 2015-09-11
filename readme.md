@@ -7,7 +7,7 @@ an example</a></p>
 ____________________________
 >```javascript
  var defaultOptions = {
-                        functions: [],
+                        callbacks: [],
                         toolbar: {
                             hide: false,
                             search: {
@@ -57,7 +57,7 @@ ____________________
         <bls-col resize dragable sort field-name="id"></bls-col>
         <bls-col resize dragable sort field-name="name"></bls-col>
         <bls-col resize dragable field-name="company">
-            <a href="javascript: void(0)" ng-click="options.functions[0](::data)">
+            <a href="javascript: void(0)" ng-click="options.callbacks[0](::data)">
                 {{::field}}
             </a>
         </bls-col>
@@ -85,7 +85,7 @@ ____________________
         <bls-col resize dragable sort field-name="id"></bls-col>
         <bls-col resize dragable sort field-name="name"></bls-col>
         <bls-col resize dragable field-name="company">
-            <a href="javascript: void(0)" ng-click="options.functions[0](::data)">
+            <a href="javascript: void(0)" ng-click="options.callbacks[0](::data)">
                 {{::field}}
             </a>
         </bls-col>

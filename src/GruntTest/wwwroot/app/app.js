@@ -68,7 +68,7 @@
         return {
             options: {
                 multiSelection: true,
-                functions: [function (row) { alert(row.name+' '+ row.company); }],
+                callbacks: [function (row) { alert(row.name + ' ' + row.company); }],
                 toolbar: {
                     hide: false,
                     search: {
