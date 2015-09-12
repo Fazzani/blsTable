@@ -118,6 +118,7 @@ bls-grid {
     -ms-text-overflow: ellipsis;
     -o-text-overflow: ellipsis;
     text-overflow: ellipsis;
+    cursor: pointer
 }
 
     .blsGrid th.colHeader a:hover {
