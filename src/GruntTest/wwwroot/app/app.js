@@ -24,6 +24,13 @@
                     "main@": { templateUrl: "Views/Partials/blsTable.html", controller: 'testCtrl' },
                     "footer@": { template: '<div class="nav">BLS components</div>' }
                 }
+            }).state('root.blsTableSample', {
+                url: "/blsTableSample",
+                views: {
+                    "header@": { templateUrl: "Views/Partials/headerActions.html", controller: 'testCtrl' },
+                    "main@": { templateUrl: "Views/Partials/blsTable_Sample.html", controller: 'testCtrl' },
+                    "footer@": { template: '<div class="nav">BLS components</div>' }
+                }
             }).state('root.blsSplitter', {
                 url: "/blsSplitter",
                 views: {
