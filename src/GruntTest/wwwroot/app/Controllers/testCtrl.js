@@ -26,13 +26,16 @@
             var url = root + "/persons/" + obj.id + resource;
             return $http.get(url, requestOptions);
         };
-        $scope.query = function (pageIndex, pageLength, searchedText, orderBy, order, filters) {
+        $scope.query = function (pageIndex, pageLength, searchedText, sortTable, filters) {
             var offset = (pageIndex - 1) * pageLength;
             var url = root + "/persons" + "?_start=" + offset + "&_end=" + (offset + pageLength);
             if (angular.isDefined(searchedText) && searchedText !== "") url += "&q=" + searchedText;
-            if (angular.isDefined(orderBy)) {
-                url += '&_sort=' + orderBy;
-                url += '&_order=' + (order == 0 ? 'ASC' : 'DESC');
+            if (angular.isDefined(sortTable)) {
+                sortTable.forEach(function (order) {
+                    url += '&_sort=' + order.fieldName;
+                    url += '&_order=' + order.sortDirection.toUpperCase();
+                });
+                
             }
             $log.debug('in query');
             if (angular.isDefined(filters) && angular.isArray(filters)) {

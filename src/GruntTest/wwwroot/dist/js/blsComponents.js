@@ -75,261 +75,220 @@
 
 (function (angular) {
     angular.module("bls_components", ['bls_tpls', 'ngSanitize'])
-        .directive('blsTable', ['$log', '$compile', '$templateCache', '$timeout', '$parse', 'blsTableServices', function ($log, $compile, $templateCache, $timeout, $parse, blsTableServices) {
-            var me = this;
-            this.controller = ['$scope', '$attrs', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices',
-                function ($scope, $attrs, $filter, $timeout, $element, $log, localStorageService, blsTableServices) {
-                    var me = this;
-                    me.initialLoad = $scope.isLoading = true;
-                    this.tableConfig = {};
-                    $scope.uniqueId = "blsContainer_" + $scope.$id;
-                    $scope.storageIds = {
-                        predicateId: 'prd_' + $scope.uniqueId,
-                        reverseId: 'rvs_' + $scope.uniqueId,
-                        itemsPerPageId: 'ipp_' + $scope.uniqueId,
-                        tableConfig: 'tblConfig_' + $scope.uniqueId,
-                        colReorderDataKey: 'crdKey_' + $scope.uniqueId,
-                        colResizeDataKey: 'crsKey_' + $scope.uniqueId
-                    };
+        .directive('blsTable', ['$log', '$compile', '$templateCache', '$timeout', '$parse', 'blsTableServices', 
+            function ($log, $compile, $templateCache, $timeout, $parse, blsTableServices ) {
+                var me = this;
+                var id = 0;
+                this.controller = ['$scope', '$attrs', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices', 'blsTableConfigManager',
+                    function ($scope, $attrs, $filter, $timeout, $element, $log, localStorageService, blsTableServices, blsTableConfigManager) {
+                        var me = this;
+                        me.initialLoad = $scope.isLoading = true;
+                        $scope.uniqueId = "blsContainer_" + (angular.isDefined($attrs.id) ? $attrs.id : id++);
 
-                    var defaultOptions = {
-                        multiSelection: true,
-                        callbacks: [],
-                        toolbar: {
-                            hide: false,
-                            search: {
+                        this.tableConfigManager = new blsTableConfigManager($scope.uniqueId);
+
+                        var defaultOptions = {
+                            multiSelection: true,
+                            callbacks: [],
+                            toolbar: {
                                 hide: false,
-                                searchedText: '',
-                                searchClass: 'form-control',
-                                heighLight: true,
-                                minChars: {//a minimum number of characters to enable filter 
-                                    enabled: true, //default Enabled after 3 characters typed
-                                    count: 3
+                                search: {
+                                    hide: false,
+                                    searchedText: '',
+                                    searchClass: 'form-control',
+                                    heighLight: true,
+                                    minChars: {//a minimum number of characters to enable filter 
+                                        enabled: true, //default Enabled after 3 characters typed
+                                        count: 3
+                                    }
+                                },
+                                export: {
+                                    hide: false,
+                                    formats: ['excel', 'xml', 'csv', 'sql', 'json']
+                                }, reset: {
+                                    hide: false
+                                }, refresh: {
+                                    hide: false
                                 }
                             },
-                            export: {
-                                hide: false,
-                                formats: ['excel', 'xml', 'csv', 'sql', 'json']
-                            }, reset: {
-                                hide: false
-                            }, refresh: {
-                                hide: false
+                            pagination: {
+                                pageLength: 5,
+                                pageIndex: 1,
+                                pager: {
+                                    nextTitle: 'Suivant',
+                                    perviousTitle: 'Précédent',
+                                    maxSize: 3
+                                },
+                                itemsPerPage: {
+                                    prefixStorage: 'ipp_', //itemsPerPage storage prefix 
+                                    selected: 10, // default selected pageLength
+                                    range: [10, 20] //list pageLength
+                                }
                             }
-                        },
-                        pagination: {
-                            pageLength: 5,
-                            pageIndex: 1,
-                            pager: {
-                                nextTitle: 'Suivant',
-                                perviousTitle: 'Précédent',
-                                maxSize: 3
-                            },
-                            itemsPerPage: {
-                                prefixStorage: 'ipp_', //itemsPerPage storage prefix 
-                                selected: 10, // default selected pageLength
-                                range: [10, 20] //list pageLength
-                            }
-                        }
-                    };
-                    //Init option's array before merging with defaultOptions
-
-                    this.initOptions = function () {
-                        me.initOptionsArray = function () {
-                            try {
-                                if (angular.isDefined($scope.options.toolbar.export.formats))
-                                    defaultOptions.toolbar.export.formats = $scope.options.toolbar.export.formats;
-                            } catch (e) {
-                            }
-                            try {
-                                if (angular.isDefined($scope.options.pagination.itemsPerPage.range))
-                                    defaultOptions.pagination.itemsPerPage.range = $scope.options.pagination.itemsPerPage.range;
-                            } catch (e) {
-                            }
-
                         };
-                        me.initOptionsArray();
-                        var initialOptions = angular.copy($scope.options);
-                        angular.merge($scope.options, defaultOptions);
-                        angular.merge($scope.options, initialOptions);
+                        //Init option's array before merging with defaultOptions
 
-                        $scope.options.toolbar.export.formats = $scope.options.toolbar.export.formats.distinct();
-                        $scope.options.pagination.itemsPerPage.range = $scope.options.pagination.itemsPerPage.range.distinct();
-                        $scope.options.pagination.itemsPerPage.selected = localStorageService.get($scope.storageIds.itemsPerPageId) || $scope.options.pagination.itemsPerPage.range[0];
-                    };
+                        this.initOptions = function () {
+                            me.initOptionsArray = function () {
+                                try {
+                                    if (angular.isDefined($scope.options.toolbar.export.formats))
+                                        defaultOptions.toolbar.export.formats = $scope.options.toolbar.export.formats;
+                                } catch (e) {
+                                }
+                                try {
+                                    if (angular.isDefined($scope.options.pagination.itemsPerPage.range))
+                                        defaultOptions.pagination.itemsPerPage.range = $scope.options.pagination.itemsPerPage.range;
+                                } catch (e) {
+                                }
 
-                    $scope.$watch('options.pagination.pageIndex', function (newValue, oldValue) {
-                        if (newValue != oldValue) {
-                            $scope.options.pagination.pageIndex = newValue++;
-                            me.refreshDataGrid();
-                        }
-                    });
-                    $scope.updateRecordsCount = function () {
-                        $scope.saveUserData({
-                            key: $scope.storageIds.itemsPerPageId,
-                            val: $scope.options.pagination.itemsPerPage.selected
-                        });
-                        $scope.options.pagination.pageLength = $scope.options.pagination.itemsPerPage.selected;
-                        me.refreshDataGrid();
-                    };
-
-                    //Reload ngModel by the Func
-                    this.refreshDataGrid = function () {
-                        if (angular.isDefined($scope.funcAsync)) {
-                            me.initColConfig();
-                            $scope.isLoading = true;
-                            $scope.reverse = localStorageService.get($scope.storageIds.reverseId);
-                            $scope.predicate = localStorageService.get($scope.storageIds.predicateId) || ($scope.cols[0] === undefined ? "" : $scope.cols[0].id);
-                            $scope.funcAsync({
-                                pageIndex: $scope.options.pagination.pageIndex,
-                                pageLength: $scope.options.pagination.itemsPerPage.selected,
-                                searchedText: $scope.options.toolbar.search.searchedText,
-                                orderBy: $scope.predicate,
-                                order: $scope.reverse
-                                //,filters:[{name:'age',value:10}]
-                            });
-                        }
-                    };
-                    this.setCols = function (cols) {
-                        $scope.cols = cols;
-                        $scope.$emit('blsDataGrid_initedEvent');
-                        //$log.debug('cols =>', $scope.cols);
-                        me.initColConfig();
-                        me.refreshDataGrid();
-                    };
-                    this.getCols = function () {
-                        return $scope.cols;
-                    };
-                    this.changeColumnsOrder = function (from, to) {
-                        $scope.$applyAsync(function () {
-                            $scope.data.swap(from, to);
-                            $scope.cols.swap(from, to);
-                            me.tableConfig.cols.swap(from, to);
-                            $scope.saveUserData({
-                                key: $scope.storageIds.tableConfig,
-                                val: me.tableConfig
-                            });
-                        });
-                        me.refreshDataGrid();//TODO: à virer et corriger le pb du drag and Drop
-                    };
-                    $scope.setColWidth = function (index, width) {
-                        //$log.debug('setColWidth => ', index, ' width = ', width);
-                        me.tableConfig.cols[index].width = width;
-                        $scope.saveUserData({
-                            key: $scope.storageIds.tableConfig,
-                            val: me.tableConfig
-                        });
-                    };
-
-                    $scope.$watch('options.toolbar.search.searchedText', function (newValue, oldValue) {
-                        //$log.debug('searchedText changed => ', newValue);
-                        if (me.timerSearch) $timeout.cancel(me.timerSearch);
-                        if (newValue != oldValue) {
-                            me.timerSearch = $timeout(function () {
-                                me.refreshDataGrid();
-                            }, 500);
-                        }
-                    });
-                    $scope.$watch('data', function (newValue, oldValue) {
-                        //$log.debug('data changed!!!');
-                        if (newValue != oldValue) {
-                            if ($scope.cols.length > 0) {
-                                //$log.debug('init Table config');
-                                me.initTableConfig();
-                            }
-                        }
-                    });
-                    //init columns disposition from the localStorage if exists else create new Object
-                    this.initColConfig = function () {
-                        if (localStorageService.isSupported) me.tableConfig = localStorageService.get($scope.storageIds.tableConfig);
-                        if (me.tableConfig !== null && me.tableConfig.cols.length && me.tableConfig.cols.length != $scope.cols.length)
-                            me.tableConfig = null;
-                        if (me.tableConfig === null) {
-                            me.tableConfig = {
-                                id: $scope.uniqueId,
-                                cols: []
                             };
-                            var defaulColWidth = Math.round($element[0].offsetWidth / $scope.cols.length);
-                            for (var i = 0; i <= $scope.cols.length - 1; i++) {
-                                me.tableConfig.cols.push({
-                                    index: i,
-                                    width: defaulColWidth
+                            me.initOptionsArray();
+                            var initialOptions = angular.copy($scope.options);
+                            angular.merge($scope.options, defaultOptions);
+                            angular.merge($scope.options, initialOptions);
+
+                            $scope.options.toolbar.export.formats = $scope.options.toolbar.export.formats.distinct();
+                            $scope.options.pagination.itemsPerPage.range = $scope.options.pagination.itemsPerPage.range.distinct();
+                            $scope.options.pagination.itemsPerPage.selected = this.tableConfigManager.get().itemsByPage
+                                || $scope.options.pagination.itemsPerPage.range[0];
+                        };
+
+                        $scope.$watch('options.pagination.pageIndex', function (newValue, oldValue) {
+                            if (newValue != oldValue) {
+                                $scope.options.pagination.pageIndex = newValue++;
+                                me.refreshDataGrid();
+                            }
+                        });
+                        $scope.updateRecordsCount = function () {
+                            this.tableConfigManager.saveItemsByPage($scope.options.pagination.itemsPerPage.selected);
+                            $scope.options.pagination.pageLength = $scope.options.pagination.itemsPerPage.selected;
+                            me.refreshDataGrid();
+                        };
+
+                        //Reload ngModel by the Func
+                        this.refreshDataGrid = function () {
+                            if (angular.isDefined($scope.funcAsync)) {
+                                me.tableConfigManager.init($scope.cols, $element[0].offsetWidth);
+                                //me.initColConfig();
+                                $scope.isLoading = true;
+                                $scope.funcAsync({
+                                    pageIndex: $scope.options.pagination.pageIndex,
+                                    pageLength: $scope.options.pagination.itemsPerPage.selected,
+                                    searchedText: $scope.options.toolbar.search.searchedText,
+                                    sortTable: me.tableConfigManager.listSortedCols()
+                                    //,filters:[{name:'age',value:10}]
                                 });
                             }
-                            $scope.saveUserData({
-                                key: $scope.storageIds.tableConfig,
-                                val: me.tableConfig
+                        };
+                        this.setCols = function (cols) {
+                            $scope.cols = cols;
+                            $scope.$emit('blsDataGrid_initedEvent');
+                            //$log.debug('cols =>', $scope.cols);
+                            me.tableConfigManager.init($scope.cols, $element[0].offsetWidth);
+                            me.refreshDataGrid();
+                        };
+                        this.getCols = function () {
+                            return $scope.cols;
+                        };
+                        $scope.setSortDirection = function (index, sortDirection) {
+                            me.tableConfigManager.setSortDirection(index, sortDirection);
+                        };
+                        this.changeColumnsOrder = function (from, to) {
+                            $scope.$applyAsync(function () {
+                                $scope.data.swap(from, to);
+                                $scope.cols.swap(from, to);
+                                me.tableConfigManager.swapCol(from, to);
                             });
-                        }
-                    };
-                    //Swap data columns according to tableConfig 
-                    this.initTableConfig = function () {
-                        if (me.initialLoad) {
-                            for (var i = 0; i <= me.tableConfig.cols.length - 1; i++) {
-                                if (i != me.tableConfig.cols[i].index) {
-                                    if (i > me.tableConfig.cols[i].index) continue;
-                                    //$log.debug('swap form ', i, ' to => ', me.tableConfig.cols[i].index);
-                                    $scope.data.swap(i, me.tableConfig.cols[i].index);
-                                    $scope.cols.swap(i, me.tableConfig.cols[i].index);
+                            me.refreshDataGrid();//TODO: à virer et corriger le pb du drag and Drop
+                        };
+
+                        $scope.setColWidth = function (index, width) {
+                            me.tableConfigManager.setColWidth(index, width);
+                        };
+
+                        $scope.$watch('options.toolbar.search.searchedText', function (newValue, oldValue) {
+                            //$log.debug('searchedText changed => ', newValue);
+                            if (me.timerSearch) $timeout.cancel(me.timerSearch);
+                            if (newValue != oldValue) {
+                                me.timerSearch = $timeout(function () {
+                                    me.refreshDataGrid();
+                                }, 500);
+                            }
+                        });
+                        $scope.$watch('data', function (newValue, oldValue) {
+                            //$log.debug('data changed!!!');
+                            if (newValue != oldValue) {
+                                if ($scope.cols.length > 0) {
+                                    //$log.debug('init Table config');
+                                    me.initFromTableConfig();
                                 }
                             }
-                            me.initialLoad = false;
-                        }
-                        $scope.isLoading = false;
-                    };
-                    $scope.saveUserData = function (data) {
-                        if (localStorageService.isSupported) localStorageService.set(data.key, data.val);
-                    };
-                    this.getChildItemsProp = function () {
-                        return $scope.childItemsProp;
-                    };
-                    $scope.isStaticHierarchic = function () {
-                        return angular.isDefined($scope.childItemsProp) && $scope.childItemsProp.length > 0;
-                    };
-                    $scope.$on('blsTable.ResetEvent', function (data) {
-                        //$log.debug(localStorageService.keys());
-                        //$log.debug('clearUserDataEvent intercepted => $scope.uniqueId : ', $scope.uniqueId);
-                        if (localStorageService.isSupported) {
-                            localStorageService.clearAll('^(.)+' + $scope.uniqueId + '$');
-                        }
-                    });
-                    $scope.$on('blsTable.RefreshEvent', function (data) {
-                        //$log.debug('refreshEvent intercepted');
-                        me.refreshDataGrid();
-                    });
-                    $scope.$on('blsTable.ExportEvent', function (e, format) {
-                        //$log.debug('exportEvent intercepted to type : ', format);
-                        $element.find('table').tableExport({
-                            type: format
                         });
-                    });
 
-                    $scope.$on("$destroy", function (event) {
-                        $timeout.cancel(me.timerSearch);
-                    });
-                    $scope.isHierarchical = function () {
-                        return angular.isDefined($attrs.getChildren);
-                    };
-                    this.initOptions();
-                }
-            ];
+                        //Swap data columns according to tableConfig 
+                        this.initFromTableConfig = function () {
+                            if (me.initialLoad) {
+                                for (var i = 0; i <= me.tableConfigManager.get().cols.length - 1; i++) {
+                                    if (i != me.tableConfigManager.get().cols[i].index) {
+                                        if (i > me.tableConfigManager.get().cols[i].index) continue;
+                                        //$log.debug('swap form ', i, ' to => ', me.tableConfigManager.get().cols[i].index);
+                                        $scope.data.swap(i, me.tableConfigManager.get().cols[i].index);
+                                        $scope.cols.swap(i, me.tableConfigManager.get().cols[i].index);
+                                    }
+                                }
+                                me.initialLoad = false;
+                            }
+                            $scope.isLoading = false;
+                        };
+                        this.getChildItemsProp = function () {
+                            return $scope.childItemsProp;
+                        };
+                        $scope.isStaticHierarchic = function () {
+                            return angular.isDefined($scope.childItemsProp) && $scope.childItemsProp.length > 0;
+                        };
+                        $scope.$on('blsTable.ResetEvent', function (data) {
+                            //$log.debug(localStorageService.keys());
+                            //$log.debug('clearUserDataEvent intercepted => $scope.uniqueId : ', $scope.uniqueId);
+                            me.tableConfigManager.destroy();
+                        });
+                        $scope.$on('blsTable.RefreshEvent', function (data) {
+                            //$log.debug('refreshEvent intercepted');
+                            me.refreshDataGrid();
+                        });
+                        $scope.$on('blsTable.ExportEvent', function (e, format) {
+                            //$log.debug('exportEvent intercepted to type : ', format);
+                            $element.find('table').tableExport({
+                                type: format
+                            });
+                        });
 
-            return {
-                restrict: 'E',
-                replace: true,
-                transclude: true,
-                templateUrl: 'templates/blsTable.html',
-                controller: this.controller,
-                
-                scope: {
-                    data: '=ngModel',
-                    funcAsync: '&',
-                    getChildren: '&',
-                    options: '=',
-                    totalItems: '=',
-                    childItemsProp: '@'
-                }
-            };
-        }]);
+                        $scope.$on("$destroy", function (event) {
+                            $timeout.cancel(me.timerSearch);
+                        });
+                        $scope.isHierarchical = function () {
+                            return angular.isDefined($attrs.getChildren);
+                        };
+                        this.initOptions();
+                    }
+                ];
+
+                return {
+                    restrict: 'E',
+                    replace: true,
+                    transclude: true,
+                    templateUrl: 'templates/blsTable.html',
+                    controller: this.controller,
+
+                    scope: {
+                        data: '=ngModel',
+                        funcAsync: '&',
+                        getChildren: '&',
+                        options: '=',
+                        totalItems: '=',
+                        childItemsProp: '@'
+                    }
+                };
+            }]);
 })(window.angular);
 angular.module("bls_components").directive("allowDrag", function () {
     return {
@@ -405,7 +364,6 @@ angular.module("bls_components").directive('blsCol', ['$log', '$timeout', functi
                     tdTpl: undefined
                 };
         };
-        //$log.debug('        Link => blsCol');
 
         var tpls = this.getTemplates();
         //$log.debug('tpls =>: ', tpls);
@@ -476,131 +434,133 @@ angular.module("bls_components").directive('blsDropDown', [function () {
         }
     };
 }]);
-angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$templateCache', '$timeout', 'localStorageService', function ($log, $compile, $templateCache, $timeout, localStorageService) {
-    var link = {
-        pre: function (scope, element, attrs, ctrls) {
-            scope.$on('blsDataGrid_initedEvent', function (e) {
-                //$log.debug('    blsDataGrid_initedEvent intercepted');
-                var blsTableCtrl = ctrls[0];
-                var blsHeaderCtrl = ctrls[1];
-                scope.setPredicate(localStorageService.get(scope.storageIds.predicateId) || (scope.cols[0] === undefined ? "" : scope.cols[0].id));
-                scope.refreshDataGrid = blsTableCtrl.refreshDataGrid;
-                //$log.debug('    Link => blsHeader');
-                var eleTpl = angular.element($templateCache.get('templates/blsHeader.html'));
-                scope.getColWidth = function (index) {
-                    if (blsTableCtrl.tableConfig.cols[index].width > 0) return blsTableCtrl.tableConfig.cols[index].width + 'px';
-                };
-                $timeout(function () {
-                    element.siblings('table').find('thead').append(eleTpl);
-                    //$log.debug('    compiling blsHeader');
-                    $compile(eleTpl)(scope);
-                }, 0);
-            });
-        }
-    };
-    var controller = ['$scope', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices',
-        function ($scope, $filter, $timeout, $element, $log, localStorageService, blsTableServices) {
-            var me = this;
-            me.reverse = localStorageService.get($scope.storageIds.reverseId) || me.reverse;
-            me.resizeColData = null;
-            me.resizePressed = false;
-            //$log.debug('    blsHeader controller: in init...');
-            $scope.setPredicate = function (predicate) {
-                me.predicate = predicate;
-            };
-            $scope.getTdTpl = function (col) {
-                if (col.headerTpl && col.headerTpl !== '') {
-                    col.headerTpl = col.headerTpl.replace('::field', 'c');
-                    return col.headerTpl;
-                }
-            };
-            $scope.glyphOrder = function (col) {
-                //$log.debug('    glyphOrder function was called');
-                if (!col.sortable) return '';
-                if (col.fieldName != $scope.predicate) return 'fa-sort';
-                return me.reverse ? 'fa-sort-asc' : 'fa-sort-desc';
-            };
-            $scope.order = function (col) {
-                if (!me.resizePressed)
-                    if (col.sortable) {
-                        //$log.debug('    order function was called');
-                        me.reverse = ($scope.predicate === col.fieldName) ? !me.reverse : false;
-                        me.predicate = col.fieldName;
-                        $scope.saveUserData({
-                            key: $scope.storageIds.predicateId,
-                            val: me.predicate
-                        });
-                        $scope.saveUserData({
-                            key: $scope.storageIds.reverseId,
-                            val: me.reverse
-                        });
-                        $scope.refreshDataGrid();
+angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$templateCache', '$timeout', 'localStorageService',
+    function ($log, $compile, $templateCache, $timeout, localStorageService) {
+        var sortDirectionEnum = { asc: 'asc', desc: 'desc' };
+        var link = {
+            pre: function (scope, element, attrs, ctrls) {
+                scope.$on('blsDataGrid_initedEvent', function (e) {
+                    //$log.debug('    blsDataGrid_initedEvent intercepted');
+                    var blsTableCtrl = ctrls[0];
+                    var blsHeaderCtrl = ctrls[1];
+                    scope.refreshDataGrid = blsTableCtrl.refreshDataGrid;
+                    //$log.debug('    Link => blsHeader');
+                    var eleTpl = angular.element($templateCache.get('templates/blsHeader.html'));
+                    scope.getColWidth = function (index) {
+                        if (blsTableCtrl.tableConfigManager.get().cols[index].width > 0) return blsTableCtrl.tableConfigManager.get().cols[index].width + 'px';
+                    };
+                    scope.getColConfig = function (fieldName) {
+                        return blsTableCtrl.tableConfigManager.get().cols.filter(function (col, index) {
+                            if (col.fieldName === fieldName) return true;
+                        })[0];
+                    };
+                    scope.getColConfigIndex = function (fieldName) {
+                        var colConfig = scope.getColConfig(fieldName);
+                        return colConfig ? blsTableCtrl.tableConfigManager.get().cols.indexOf(colConfig) : null; // or undefined
+                    };
+                    scope.glyphOrder = function (col) {
+                        //$log.debug('    glyphOrder function was called');
+                        if (!col.sortable) return '';
+                        var colConfig = scope.getColConfig(col.fieldName);
+                        if (colConfig.sortDirection)
+                            return 'fa-sort' + (colConfig.sortDirection == 'none' ? '' : ('-' + colConfig.sortDirection));
+                        return 'fa-sort';
+                    };
+                    $timeout(function () {
+                        element.siblings('table').find('thead').append(eleTpl);
+                        //$log.debug('    compiling blsHeader');
+                        $compile(eleTpl)(scope);
+                    }, 0);
+                });
+            }
+        };
+        var controller = ['$scope', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices',
+            function ($scope, $filter, $timeout, $element, $log, localStorageService, blsTableServices) {
+                var me = this;
+                me.resizeColData = null;
+                me.resizePressed = false;
+
+                $scope.getTdTpl = function (col) {
+                    if (col.headerTpl && col.headerTpl !== '') {
+                        col.headerTpl = col.headerTpl.replace('::field', 'c');
+                        return col.headerTpl;
                     }
-            };
-            me.resizeData = {};
-            $scope.resizeStart = function (e) {
-                var target = e.target ? e.target : e.srcElement;
-                if (target.classList.contains("resize")) {
-                    me.resizeData.target = target.parentNode;
-                    me.resizeData.siblingTarget = target.parentNode.nextElementSibling;
+                };
+
+                $scope.order = function (col) {
+                    if (!me.resizePressed)
+                        if (col.sortable) {
+                            var colConfig = $scope.getColConfig(col.fieldName);
+                            colConfig.sortDirection = colConfig.sortDirection == sortDirectionEnum.asc ? sortDirectionEnum.desc : sortDirectionEnum.asc;
+                            $scope.setSortDirection($scope.getColConfigIndex(col.fieldName), colConfig.sortDirection);
+                            $scope.refreshDataGrid();
+                        }
+                };
+
+                me.resizeData = {};
+                $scope.resizeStart = function (e) {
+                    var target = e.target ? e.target : e.srcElement;
+                    if (target.classList.contains("resize")) {
+                        me.resizeData.target = target.parentNode;
+                        me.resizeData.siblingTarget = target.parentNode.nextElementSibling;
+                        var $siblingElm = $(me.resizeData.siblingTarget);
+                        var $targetElm = $(me.resizeData.target);
+
+                        me.resizeData.resizePressed = true;
+                        me.resizeData.startX = e.pageX;
+                        me.resizeData.startWidth = $targetElm.width();
+                        me.resizeData.startWidthSibling = $siblingElm.width();
+                        me.resizeData.minWidth = 50;
+                        me.resizeData.maxWidth = me.resizeData.startWidth + me.resizeData.startWidthSibling - me.resizeData.minWidth;
+                        //$log.debug(me.resizeData);
+                        document.addEventListener('mousemove', drag);
+                        document.addEventListener('mouseup', $scope.resizeEnd);
+                        e.stopPropagation();
+                        e.preventDefault();
+                    }
+                };
+
+                function drag(e) {
                     var $siblingElm = $(me.resizeData.siblingTarget);
                     var $targetElm = $(me.resizeData.target);
-
-                    me.resizeData.resizePressed = true;
-                    me.resizeData.startX = e.pageX;
-                    me.resizeData.startWidth = $targetElm.width();
-                    me.resizeData.startWidthSibling = $siblingElm.width();
-                    me.resizeData.minWidth = 50;
-                    me.resizeData.maxWidth = me.resizeData.startWidth + me.resizeData.startWidthSibling - me.resizeData.minWidth;
-                    //$log.debug(me.resizeData);
-                    document.addEventListener('mousemove', drag);
-                    document.addEventListener('mouseup', $scope.resizeEnd);
-                    e.stopPropagation();
-                    e.preventDefault();
-                }
-            };
-
-            function drag(e) {
-                var $siblingElm = $(me.resizeData.siblingTarget);
-                var $targetElm = $(me.resizeData.target);
-                var offset = e.pageX - me.resizeData.startX;
-                var newWidth = me.resizeData.startWidth + offset;
-                if (me.resizeData.resizePressed && me.resizeData.maxWidth > newWidth && me.resizeData.minWidth < newWidth) {
-                    $targetElm.width(newWidth);
-                    $siblingElm.width(me.resizeData.startWidthSibling - offset);
-                    me.resizeColData = {
-                        index: me.resizeData.target.cellIndex,
-                        width: $targetElm.width(),
-                        indexSibling: me.resizeData.siblingTarget.cellIndex,
-                        widthSibling: $siblingElm.width()
-                    };
-                }
-            }
-            $scope.resizeEnd = function (e) {
-                if (me.resizeData.resizePressed) {
-                    document.removeEventListener('mousemove', drag);
-                    document.removeEventListener('mouseup', $scope.resizeEnd);
-                    e.stopPropagation();
-                    e.preventDefault();
-                    if (me.resizeColData !== null) {
-                        $scope.setColWidth(me.resizeColData.index, me.resizeColData.width);
-                        $scope.setColWidth(me.resizeColData.indexSibling, me.resizeColData.widthSibling);
-                        me.resizeColData = null;
+                    var offset = e.pageX - me.resizeData.startX;
+                    var newWidth = me.resizeData.startWidth + offset;
+                    if (me.resizeData.resizePressed && me.resizeData.maxWidth > newWidth && me.resizeData.minWidth < newWidth) {
+                        $targetElm.width(newWidth);
+                        $siblingElm.width(me.resizeData.startWidthSibling - offset);
+                        me.resizeColData = {
+                            index: me.resizeData.target.cellIndex,
+                            width: $targetElm.width(),
+                            indexSibling: me.resizeData.siblingTarget.cellIndex,
+                            widthSibling: $siblingElm.width()
+                        };
                     }
-                    me.resizeData = {};
-                    return false;
                 }
-            };
-        }
-    ];
-    return {
-        priority: -20,
-        require: ['^?blsTable', 'blsHeader'],
-        restrict: 'E',
-        link: link,
-        controller: controller
-    };
-}]);
+                $scope.resizeEnd = function (e) {
+                    if (me.resizeData.resizePressed) {
+                        document.removeEventListener('mousemove', drag);
+                        document.removeEventListener('mouseup', $scope.resizeEnd);
+                        e.stopPropagation();
+                        e.preventDefault();
+                        if (me.resizeColData !== null) {
+                            $scope.setColWidth(me.resizeColData.index, me.resizeColData.width);
+                            $scope.setColWidth(me.resizeColData.indexSibling, me.resizeColData.widthSibling);
+                            me.resizeColData = null;
+                        }
+                        me.resizeData = {};
+                        return false;
+                    }
+                };
+            }
+        ];
+        return {
+            priority: -20,
+            require: ['^?blsTable', 'blsHeader'],
+            restrict: 'E',
+            link: link,
+            controller: controller
+        };
+    }]);
 
 angular.module("bls_components").directive('blsRowChild', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
     var link = function (scope, element, attrs, ctrls, transclude) {
@@ -1169,6 +1129,79 @@ angular.module("bls_components").service('blsTableServices', ['$log', 'localStor
         return $sce.trustAsHtml(text)
     }
 }]);
+
+angular.module("bls_components").factory('blsTableConfigManager', ['$log', 'localStorageService', function ($log, localStorageService) {
+
+    function blsTableConfigManager(storageKey) {
+        this.storageKey = storageKey;
+        this.tableConfig = {};
+    }
+
+    blsTableConfigManager.prototype = {
+        get: function () { return this.tableConfig; },
+        //init columns disposition from the localStorage if exists else create new Object
+        init: function (columns, elementOffsetWidth) {
+            if (localStorageService.isSupported) this.tableConfig = localStorageService.get(this.storageKey);
+            if (this.tableConfig !== null && this.tableConfig.cols.length && this.tableConfig.cols.length != columns.length)
+                this.tableConfig = null;
+            if (this.tableConfig === null) {
+                this.tableConfig = {
+                    id: this.storageKey,
+                    cols: []
+                };
+                var defaulColWidth = Math.round(elementOffsetWidth / columns.length);
+                for (var i = 0; i <= columns.length - 1; i++) {
+                    this.tableConfig.cols.push({
+                        index: i,
+                        fieldName: columns[i].fieldName,
+                        width: defaulColWidth,
+                        sortDirection: 'none'//Enum: none, asc, desc
+                    });
+                }
+                this.save(this.tableConfig);
+            }
+            return this.tableConfig;
+        },
+        saveItemsByPage: function (itemsByPage) {
+            this.tableConfig.itemsByPage = itemsByPage;
+            this.save(this.tableConfig);
+        },
+        swapCol: function (from, to) {
+            this.tableConfig.cols.swap(from, to);
+            this.save(this.tableConfig);
+        },
+        setSortDirection: function (index, sortDirection) {
+            this.tableConfig.cols[index].sortDirection = sortDirection;
+            this.save(this.tableConfig);
+        },
+        setColWidth: function (index, width) {
+            //$log.debug('setColWidth => ', index, ' width = ', width);
+            this.tableConfig.cols[index].width = width;
+            this.save(this.tableConfig);
+            return this.tableConfig;
+        },
+        listSortedCols: function () {
+            var sortTable = [];
+            this.tableConfig.cols.forEach(function (col) {
+                if (col.sortDirection !== 'none' && angular.isDefined(col.fieldName))
+                    sortTable.push(col);
+            });
+            return sortTable;
+        },
+        save: function (val) {
+            if (localStorageService.isSupported) localStorageService.set(this.storageKey, val);
+        },
+        destroy: function () {
+            if (localStorageService.isSupported) {
+                localStorageService.clearAll('^(.)+' + this.storageKey + '$');
+            }
+        }
+    };
+    return (blsTableConfigManager);
+
+}]);
+
+
 
 /*The MIT License (MIT)
 

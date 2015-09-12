@@ -1,7 +1,7 @@
 <!-- <pre>{{model.data|json}}</pre> -->
     
 <bls-table ng-model="model.data"
-           func-async="query(pageIndex, pageLength, searchedText, orderBy, order,filters)"
+           func-async="query(pageIndex, pageLength, searchedText, sortTable, filters)"
            options="options"
            total-items="model.totalItems"
            get-children="getChildren" child-items-prop="Friends">
