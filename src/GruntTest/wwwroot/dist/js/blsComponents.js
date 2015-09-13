@@ -250,7 +250,7 @@
                         };
                         $scope.$on('blsTable.ResetEvent', function (data) {
                             //$log.debug(localStorageService.keys());
-                            //$log.debug('clearUserDataEvent intercepted => $scope.uniqueId : ', $scope.uniqueId);
+                            $log.debug('clearUserDataEvent intercepted => $scope.uniqueId : ', $scope.uniqueId);
                             me.tableConfigManager.destroy();
                         });
                         $scope.$on('blsTable.RefreshEvent', function (data) {
@@ -1192,7 +1192,8 @@ angular.module("bls_components").factory('blsTableConfigManager', ['$log', 'loca
         },
         destroy: function () {
             if (localStorageService.isSupported) {
-                localStorageService.clearAll('^(.)+' + this.storageKey + '$');
+                $log.debug('clear all regex => ', '^(.)+' + this.storageKey + '$');
+                localStorageService.clearAll(this.storageKey + '$');
             }
         }
     };

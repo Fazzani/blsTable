@@ -1,12 +1,13 @@
 (function (angular) {
     'use strict';
-    app.
-    config(['$locationProvider', 'localStorageServiceProvider', '$stateProvider', '$urlRouterProvider', '$logProvider',
-        function ($locationProvider, localStorageServiceProvider, $stateProvider, $urlRouterProvider, $logProvider) {
+    app
+    .constant('PREFIX_STORAGE', 'bls.')
+    .config(['$locationProvider', 'localStorageServiceProvider', '$stateProvider', '$urlRouterProvider', '$logProvider', 'PREFIX_STORAGE',
+        function ($locationProvider, localStorageServiceProvider, $stateProvider, $urlRouterProvider, $logProvider, PREFIX_STORAGE) {
 
-           // $logProvider.debugEnabled(true);
+            // $logProvider.debugEnabled(true);
 
-            localStorageServiceProvider.setStorageType('localStorage').setPrefix('bls.').setNotify(true, true);
+            localStorageServiceProvider.setStorageType('localStorage').setPrefix(PREFIX_STORAGE).setNotify(true, true);
             $urlRouterProvider.otherwise("/docs");
 
             $stateProvider.state('docs', {
@@ -85,7 +86,7 @@
                         heighLight: true,
                         minChars: {//a minimum number of characters to enable filter 
                             enabled: true,
-                            count:3
+                            count: 3
                         }
                     },
                     export: {

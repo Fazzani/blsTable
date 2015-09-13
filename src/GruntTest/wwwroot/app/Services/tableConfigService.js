@@ -61,7 +61,8 @@
         },
         destroy: function () {
             if (localStorageService.isSupported) {
-                localStorageService.clearAll('^(.)+' + this.storageKey + '$');
+                $log.debug('clear all regex => ', '^(.)+' + this.storageKey + '$');
+                localStorageService.clearAll(this.storageKey + '$');
             }
         }
     };
