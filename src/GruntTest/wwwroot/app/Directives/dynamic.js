@@ -10,7 +10,8 @@
                     var value = eval("scope." + attrs.dynamic);
                     //$log.debug('value => ', value);
                     if (value && value !== '') {
-                        if (!value.trim().startsWith('{{') && $(value)[0])
+                        value = value.trim();
+                        if (!value.startsWith('{{') && $(value)[0])
                         {
                             ele.html(value);
                             //$log.debug('ele => ', ele.html());

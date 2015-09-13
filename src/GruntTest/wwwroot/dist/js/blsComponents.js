@@ -58,7 +58,9 @@
                             <i ng-if="c.resize" class="resize"></i>\
                         </th>\
                    </tr>');
-        $templateCache.put('templates/blsRows.html', '<tr ng-repeat="d in data"><td ng-repeat="c in cols" ng-init="getTdTpl(c)" dynamic="c.tpl" ng-bind-html="d[c.fieldName]| highlight:options.toolbar.search.searchedText:options.toolbar.search.heighLight"></td></tr>');
+        $templateCache.put('templates/blsRows.html', '<tr ng-repeat="d in data">\
+                 <td ng-repeat="c in cols" ng-init="getTdTpl(c)" dynamic="c.tpl" ng-bind-html="d[c.fieldName]| highlight:options.toolbar.search.searchedText:options.toolbar.search.heighLight"></td>\
+            </tr>');
         $templateCache.put('templates/blsChildRows.html', '<tr ng-repeat="d in data" data-bls-id="{{$id}}" parentId="{{parentId}}" bls-row-child func="getChildren" data-level="{{level}}">\
                             <td ng-repeat="c in cols" ng-init="getTdTpl(c)" dynamic="c.tpl" ng-bind-html="d[c.fieldName]| highlight:options.toolbar.search.searchedText:options.toolbar.search.heighLight"></td></tr>');
         $templateCache.put('templates/blsStaticChildRows.html', '<tr ng-repeat="d in data" data-bls-id="{{$id}}" parentId="{{parentId}}" bls-static-child-cells level="{{level}}"></tr>');
@@ -579,7 +581,6 @@ angular.module("bls_components").directive('blsRowChild', ['$log', '$compile', '
             }
             return me.childs;
         };
-
         
         var elemTplRow = angular.element($templateCache.get('templates/blsChildRows.html'));
         if (!angular.isDefined(attrs.level)) {
@@ -636,11 +637,8 @@ angular.module("bls_components").directive('blsRows', ['$log', '$compile', '$tem
         // var blsTableCtrl = ctrls[0];
         scope.getTdTpl = function (col, d) {
 
-            var predicate = "d[c.fieldName] ";
-            //
             if (col.tpl && col.tpl !== '') {
-                col.tpl = col.tpl.replace('::data', 'd');
-                col.tpl = col.tpl.replace('::field', predicate);
+                col.tpl = col.tpl.replace('::row', 'd');
                 //$log.debug('            col.tpl => ', col.tpl);
                 return col.tpl;
             }
@@ -812,7 +810,7 @@ angular.module("bls_components").directive('blsStaticChildsRows', ['$log', '$com
         //};
         scope.getTdTpl = function (col, d) {
             if (col.tpl && col.tpl !== '') {
-                col.tpl = col.tpl.replace('::data', 'd');
+                col.tpl = col.tpl.replace('::row', 'd');
                 return col.tpl.replace('::field', "d[c.fieldName]");
             }
         };
@@ -1024,7 +1022,8 @@ angular.module("bls_components").directive('dynamic', ['$compile', '$log', '$tim
                     var value = eval("scope." + attrs.dynamic);
                     //$log.debug('value => ', value);
                     if (value && value !== '') {
-                        if (!value.trim().startsWith('{{') && $(value)[0])
+                        value = value.trim();
+                        if (!value.startsWith('{{') && $(value)[0])
                         {
                             ele.html(value);
                             //$log.debug('ele => ', ele.html());

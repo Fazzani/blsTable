@@ -58,7 +58,9 @@
                             <i ng-if="c.resize" class="resize"></i>\
                         </th>\
                    </tr>');
-        $templateCache.put('templates/blsRows.html', '<tr ng-repeat="d in data"><td ng-repeat="c in cols" ng-init="getTdTpl(c)" dynamic="c.tpl" ng-bind-html="d[c.fieldName]| highlight:options.toolbar.search.searchedText:options.toolbar.search.heighLight"></td></tr>');
+        $templateCache.put('templates/blsRows.html', '<tr ng-repeat="d in data">\
+                 <td ng-repeat="c in cols" ng-init="getTdTpl(c)" dynamic="c.tpl" ng-bind-html="d[c.fieldName]| highlight:options.toolbar.search.searchedText:options.toolbar.search.heighLight"></td>\
+            </tr>');
         $templateCache.put('templates/blsChildRows.html', '<tr ng-repeat="d in data" data-bls-id="{{$id}}" parentId="{{parentId}}" bls-row-child func="getChildren" data-level="{{level}}">\
                             <td ng-repeat="c in cols" ng-init="getTdTpl(c)" dynamic="c.tpl" ng-bind-html="d[c.fieldName]| highlight:options.toolbar.search.searchedText:options.toolbar.search.heighLight"></td></tr>');
         $templateCache.put('templates/blsStaticChildRows.html', '<tr ng-repeat="d in data" data-bls-id="{{$id}}" parentId="{{parentId}}" bls-static-child-cells level="{{level}}"></tr>');

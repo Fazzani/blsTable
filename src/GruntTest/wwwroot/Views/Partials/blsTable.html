@@ -9,24 +9,24 @@
         <bls-col resize dragable sort field-name="id"></bls-col>
         <bls-col resize dragable title="Le nom" sort field-name="name"></bls-col>
         <bls-col resize dragable field-name="company">
-            <a href="javascript: void(0)" ng-click="options.callbacks[0](::data)">
-                {{::field}}
+            <a href="javascript: void(0)" ng-click="options.callbacks[0](::row)">
+                {{::row.company}}
             </a>
         </bls-col>
-        <bls-col resize dragable sort title="Mailing de Monsieur" field-name="email">{{::field|uppercase}}</bls-col>
+        <bls-col resize dragable sort title="Mailing de Monsieur" field-name="email">{{::row.email|uppercase}}</bls-col>
         <bls-col resize title="Photo de Profile" field-name="picture">
-            <header><i class="fa fa-exclamation-triangle" style="color: #333" title="{{::field.title}}"></i></header>
-            <bls-td><img style="height:18px;margin: 0 auto;" class="img-responsive" src="{{::field}}" alt="" /></bls-td>
+            <header><i class="fa fa-exclamation-triangle" style="color: #333" title="{{::field}}"></i></header>
+            <bls-td><img style="height:18px;margin: 0 auto;" class="img-responsive" src="{{::row.picture}}" alt="" /></bls-td>
         </bls-col>
         <bls-col resize field-name="isActive" title="Active">
-            <i ng-if="::field" class="fa fa-check" style="color: #333"></i>
+            <i ng-if="::row.isActive" class="fa fa-check" style="color: #333"></i>
         </bls-col>
         <bls-col resize title="Actions">
             <span data-placement="top" data-toggle="tooltip" title="Modifier">
                 <a class="btn btn-primary btn-icon btn-circle btn-sm" ui-sref="docs"><span class="glyphicon glyphicon-pencil"></span></a>
             </span>
             <span data-placement="top" data-toggle="tooltip" title="Supprimer">
-                <a class="btn btn-danger btn-icon btn-circle btn-sm" href="javascript: void(0)" ng-click="options.callbacks[1](::data)"><span class="glyphicon glyphicon-trash"></span></a>
+                <a class="btn btn-danger btn-icon btn-circle btn-sm" href="javascript: void(0)" ng-click="options.callbacks[1](::row)"><span class="glyphicon glyphicon-trash"></span></a>
             </span>
         </bls-col>
     </bls-cols>

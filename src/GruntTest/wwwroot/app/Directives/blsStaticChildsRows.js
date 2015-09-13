@@ -25,7 +25,7 @@
         //};
         scope.getTdTpl = function (col, d) {
             if (col.tpl && col.tpl !== '') {
-                col.tpl = col.tpl.replace('::data', 'd');
+                col.tpl = col.tpl.replace('::row', 'd');
                 return col.tpl.replace('::field', "d[c.fieldName]");
             }
         };

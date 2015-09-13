@@ -6,7 +6,7 @@
 
            // $logProvider.debugEnabled(true);
 
-            localStorageServiceProvider.setStorageType('sessionStorage').setPrefix('').setNotify(true, true);
+            localStorageServiceProvider.setStorageType('localStorage').setPrefix('bls.').setNotify(true, true);
             $urlRouterProvider.otherwise("/docs");
 
             $stateProvider.state('docs', {

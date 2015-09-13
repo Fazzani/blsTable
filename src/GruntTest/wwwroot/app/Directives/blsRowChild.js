@@ -15,7 +15,6 @@
             }
             return me.childs;
         };
-
         
         var elemTplRow = angular.element($templateCache.get('templates/blsChildRows.html'));
         if (!angular.isDefined(attrs.level)) {
