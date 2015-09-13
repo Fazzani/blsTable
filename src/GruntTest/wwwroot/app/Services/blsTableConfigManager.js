@@ -1,10 +1,10 @@
 ﻿angular.module("bls_components").factory('blsTableConfigManager', ['$log', 'localStorageService', function ($log, localStorageService) {
-
+    
     function blsTableConfigManager(storageKey) {
         this.storageKey = storageKey;
         this.tableConfig = {};
     }
-
+    
     blsTableConfigManager.prototype = {
         get: function () { return this.tableConfig; },
         //init columns disposition from the localStorage if exists else create new Object

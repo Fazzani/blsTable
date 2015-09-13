@@ -1,7 +1,7 @@
 (function (angular) {
     angular.module("bls_components", ['bls_tpls', 'ngSanitize'])
         .directive('blsTable', ['$log', '$compile', '$templateCache', '$timeout', '$parse', 'blsTableServices', 
-            function ($log, $compile, $templateCache, $timeout, $parse, blsTableServices ) {
+            function ($log, $compile, $templateCache, $timeout, $parse, blsTableServices) {
                 var me = this;
                 var id = 0;
                 this.controller = ['$scope', '$attrs', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices', 'blsTableConfigManager',

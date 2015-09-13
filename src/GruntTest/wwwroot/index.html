@@ -21,9 +21,6 @@
     <script src="lib/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="lib/angular-local-storage/dist/angular-local-storage.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="dist/js/blsComponents.js" type="text/javascript" charset="utf-8"></script>
-    <script type="text/javascript">
-        var app = angular.module('app', ['bls_components', 'ui.bootstrap', 'LocalStorageModule', 'ngRoute', 'ngAnimate', 'ui.router']);
-    </script>
     <script src="app/app.js" type="text/javascript" charset="utf-8"></script>
     <script src="app/Controllers/rootCtrl.js" type="text/javascript" charset="utf-8"></script>
     <script src="app/Controllers/homeCtrl.js" type="text/javascript" charset="utf-8"></script>
@@ -62,5 +59,6 @@
             <div ui-view="main" class="row"></div>
             <div ui-view="footer" class="footer row"></div>
         </div>
+    </div>
 </body>
 </html>
