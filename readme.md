@@ -1,5 +1,9 @@
 #BLSTable
 ========
+##Installation 
+========
+
+>>>Install-Package blsComponents
 <p>This is <a href="http://www.blsgrid.herokuapp.com/" title="Title">
 an example</a></p>
 

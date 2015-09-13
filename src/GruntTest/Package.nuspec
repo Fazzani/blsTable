@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>blsComponents</id>
+    <version>1.0.0</version>
+    <authors>Heni Fazzani</authors>
+    <owners>Businessline</owners>
+    <!--<licenseUrl>http://LICENSE_URL_HERE_OR_DELETE_THIS_LINE</licenseUrl>-->
+    <projectUrl>https://github.com/Fazzani/blsTable</projectUrl>
+    <iconUrl>http://www.businessline.fr/fr/assets/img/sliders/elastislide/6.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>blsComponents</description>
+    <releaseNotes>blsComponents suite</releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags>blsComponents blsTable anuglar blsSplitter blsSearchBox</tags>
+    <dependencies>
+      <dependency id="jQuery" version="2.0" />
+      <dependency id="AngularJS.Core" version="1.4" />
+      <dependency id="AngularJS.Sanitize" version="1.4" />
+      <dependency id="font-awesome" version="4.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="wwwroot\dist\js\blsComponents.min.js" target="Content\Scripts\blsComponents" />
+    <file src="wwwroot\dist\js\blsComponents.js" target="Content\Scripts\blsComponents" />
+    <file src="wwwroot\dist\js\blsComponents.js.map" target="Content\Scripts\blsComponents" />
+    <file src="wwwroot\dist\styles\styles.min.css" target="Content\Content\blsComponents" />
+  </files>
+</package>

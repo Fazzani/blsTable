@@ -155,8 +155,74 @@ module.exports = function (grunt) {
     //grunt.registerTask('deployProd', ['s3:prod']);
     grunt.registerTask('newVersionWithoutPublish', ['clean', 'concat', 'cssmin:publish', 'uglify:publish']);
     grunt.registerTask("default", ['clean', 'concat', 'cssmin:publish', 'uglify:publish', 'bump']);
-    grunt.registerTask("publishDev", ['clean', 'concat','cssmin:dev', 'uglify:all', 'jshint']);
+    grunt.registerTask("publishDev", ['clean', 'concat', 'cssmin:dev', 'uglify:all', 'jshint']);
+    grunt.registerTask("publish_new_version_nuget", ['clean', 'concat', 'cssmin:dev', 'uglify:all', 'bump', 'nuget_pack', 'nuget_publish']);
+    grunt.registerTask("nuget_pack", "Create a nuget package", function () {
+        //we're running asynchronously so we need to grab
+        //a callback
+        var done = this.async();
 
+        //invoke nuget.exe
+        grunt.util.spawn({
+            cmd: "nuget.exe",
+            args: [
+                //specify the .nuspec file
+                "pack",
+                "Package.nuspec",
+
+                //specify where we want the package to be created
+                "-OutputDirectory",
+                "dist",
+
+                //override the version with whatever is currently defined
+                //in package.json
+                "-Version",
+                grunt.file.readJSON('package.json').version
+            ]
+        }, function (error, result) {
+            //output either result text or error message...
+            if (error) {
+                grunt.log.error(error);
+            } else {
+                grunt.log.write(result);
+            }
+            //...and notify grunt that the async task has
+            //finished
+            done();
+        });
+    });
+    //"C:\Nuget\nuget.exe" push "$(TargetDir)BLS.Infrastructure.@(VersionNumber).nupkg" 440bc87f-c8b3-4410-b57b-192c649bcadd -src https://www.nuget.org
+    grunt.registerTask("nuget_publish", "publish a nuget package", function () {
+        //we're running asynchronously so we need to grab
+        //a callback
+        var done = this.async();
+
+        //invoke nuget.exe
+        //"C:\Nuget\nuget.exe" push "$(TargetDir)BLS.Infrastructure.@(VersionNumber).nupkg" 440bc87f-c8b3-4410-b57b-192c649bcadd -src https://www.nuget.org
+        grunt.util.spawn({
+            cmd: "nuget.exe",
+            args: [
+                //specify the .nuspec file
+                "push",
+                "dist/blsComponents." + grunt.file.readJSON('package.json').version + ".nupkg",
+                "440bc87f-c8b3-4410-b57b-192c649bcadd",
+
+                //specify where we want the package to be created
+                "-src",
+                "https://www.nuget.org"
+            ]
+        }, function (error, result) {
+            //output either result text or error message...
+            if (error) {
+                grunt.log.error(error);
+            } else {
+                grunt.log.write(result);
+            }
+            //...and notify grunt that the async task has
+            //finished
+            done();
+        });
+    });
     // The following line loads the grunt plugins.
     // This line needs to be at the end of this this file.
 
