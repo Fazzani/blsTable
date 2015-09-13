@@ -25,5 +25,6 @@
     <file src="wwwroot\dist\js\blsComponents.js" target="Content\Scripts\blsComponents" />
     <file src="wwwroot\dist\js\blsComponents.js.map" target="Content\Scripts\blsComponents" />
     <file src="wwwroot\dist\styles\styles.min.css" target="Content\Content\blsComponents" />
+    <file src="wwwroot\dist\styles\styles.css" target="Content\Content\blsComponents" />
   </files>
 </package>

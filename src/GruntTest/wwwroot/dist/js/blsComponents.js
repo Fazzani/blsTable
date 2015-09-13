@@ -1064,7 +1064,7 @@ angular.module("bls_components").factory('blsTableConfigManager', ['$log', 'loca
         //init columns disposition from the localStorage if exists else create new Object
         init: function (columns, elementOffsetWidth) {
             if (localStorageService.isSupported) this.tableConfig = localStorageService.get(this.storageKey);
-            if (this.tableConfig !== null && this.tableConfig.cols.length && this.tableConfig.cols.length != columns.length)
+            if (this.tableConfig !== null && angular.isDefined(this.tableConfig.cols) && this.tableConfig.cols.length != columns.length)
                 this.tableConfig = null;
             if (this.tableConfig === null) {
                 this.tableConfig = {

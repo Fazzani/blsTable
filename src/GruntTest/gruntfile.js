@@ -75,7 +75,6 @@ module.exports = function (grunt) {
                 dest: 'dist/js/blsComponents.min.js'
             }
         },
-        
         shell: {
             express_server: {
                 command: 'node wwwroot/Server.js'
@@ -133,6 +132,13 @@ module.exports = function (grunt) {
                 tagName: 'v%VERSION%',
                 tagMessage: 'Version %VERSION%'
             }
+        }, copy: {
+            css: {
+                files: [
+                  // includes files within path
+                  { expand: true, src: ['wwwroot/Content/Styles/*'], flatten: true, dest: 'wwwroot/dist/Styles/', filter: 'isFile' },
+                ],
+            },
         },
         removelogging: {
             dist: {
@@ -155,8 +161,8 @@ module.exports = function (grunt) {
     //grunt.registerTask('deployProd', ['s3:prod']);
     grunt.registerTask('newVersionWithoutPublish', ['clean', 'concat', 'cssmin:publish', 'uglify:publish']);
     grunt.registerTask("default", ['clean', 'concat', 'cssmin:publish', 'uglify:publish', 'bump']);
-    grunt.registerTask("publishDev", ['clean', 'concat', 'cssmin:dev', 'uglify:all', 'jshint']);
-    grunt.registerTask("publish_new_version_nuget", ['clean', 'concat', 'cssmin:dev', 'uglify:all', 'bump', 'nuget_pack', 'nuget_publish']);
+    grunt.registerTask("publishDev", ['clean', 'concat', 'cssmin:dev', 'uglify:all', 'copy:css', 'jshint']);
+    grunt.registerTask("publish_new_version_nuget", ['clean', 'concat', 'cssmin:dev', 'uglify:all', 'copy:css', 'bump', 'nuget_pack', 'nuget_publish']);
     grunt.registerTask("nuget_pack", "Create a nuget package", function () {
         //we're running asynchronously so we need to grab
         //a callback
@@ -237,5 +243,5 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-s3');
     grunt.loadNpmTasks('grunt-bump');
     grunt.loadNpmTasks('grunt-remove-logging');
-
+    grunt.loadNpmTasks('grunt-contrib-copy');
 };
