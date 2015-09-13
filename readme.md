@@ -1,7 +1,5 @@
 #BLSTable
-____________________________
 ##Installation 
-____________________________
 ###Nuget
 ____________________________
 Install-Package blsComponents
