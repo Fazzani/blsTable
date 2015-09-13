@@ -2,12 +2,15 @@
 ========
 ##Installation 
 ========
-
->>>Install-Package blsComponents
+###Nuget
+____________________________
+Install-Package blsComponents
+###Examples
+____________________________
 <p>This is <a href="http://www.blsgrid.herokuapp.com/" title="Title">
 an example</a></p>
 
-###Default options structure
+####Default options structure
 ____________________________
 >```javascript
  var defaultOptions = {
