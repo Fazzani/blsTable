@@ -5,7 +5,7 @@ var app = angular.module('app', ['bls_components', 'ui.bootstrap', 'LocalStorage
 .constant('PREFIX_STORAGE', 'bls.')
 .config(['$locationProvider', 'localStorageServiceProvider', '$stateProvider', '$urlRouterProvider', '$logProvider', 'PREFIX_STORAGE',
     function ($locationProvider, localStorageServiceProvider, $stateProvider, $urlRouterProvider, $logProvider, PREFIX_STORAGE) {
-        
+
         // $logProvider.debugEnabled(true);
         localStorageServiceProvider.setStorageType('localStorage').setPrefix(PREFIX_STORAGE).setNotify(true, true);
         $urlRouterProvider.otherwise("/docs");
@@ -23,6 +23,13 @@ var app = angular.module('app', ['bls_components', 'ui.bootstrap', 'LocalStorage
             views: {
                 "header@": { templateUrl: "Views/Partials/headerActions.html", controller: 'testCtrl' },
                 "main@": { templateUrl: "Views/Partials/blsTable.html", controller: 'testCtrl' },
+                "footer@": { template: '<div class="nav">BLS components</div>' }
+            }
+        }).state('root.blsTable.detail', {
+            url: "^/detail/{id:int}",
+            views: {
+                "header@": { template: "<span></span>", controller: 'testCtrl' },
+                "main@": { templateUrl: "Views/Partials/detailPerson.html", controller: 'detailCtrl' },
                 "footer@": { template: '<div class="nav">BLS components</div>' }
             }
         }).state('root.blsTableSample', {
