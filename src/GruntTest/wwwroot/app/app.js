@@ -25,10 +25,13 @@ var app = angular.module('app', ['bls_components', 'ui.bootstrap', 'LocalStorage
                 "main@": { templateUrl: "Views/Partials/blsTable.html", controller: 'testCtrl' },
                 "footer@": { template: '<div class="nav">BLS components</div>' }
             }
-        }).state('root.blsTable.detail', {
+        }).state('root.blsTableSample.detail', {
             url: "^/detail/{id:int}",
             views: {
-                "header@": { template: "<span></span>", controller: 'testCtrl' },
+                "header@": {
+                    template: '<span> <a class="btn btn-default" ui-sref="^"> <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Retour</a></span>',
+                    controller: 'testCtrl'
+                },
                 "main@": { templateUrl: "Views/Partials/detailPerson.html", controller: 'detailCtrl' },
                 "footer@": { template: '<div class="nav">BLS components</div>' }
             }
@@ -49,7 +52,8 @@ var app = angular.module('app', ['bls_components', 'ui.bootstrap', 'LocalStorage
             controller: 'testCtrl'
         });
 
-        $locationProvider.html5Mode(true);
+       
+            $locationProvider.html5Mode(true);
     }
 ]).filter('getByProperty', function () {
     return function (propertyName, propertyValue, collection) {

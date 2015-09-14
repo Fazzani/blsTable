@@ -575,9 +575,9 @@
       "friendId": 172,
       "balance": "$1,135.28",
       "picture": "http://cdns2.freepik.com/image/th/318-63228.png",
-      "age": 26,
-      "eyeColor": "blue",
-      "name": "Jill Gibson",
+      "age": 27,
+      "eyeColor": "#64dbae",
+      "name": "Jill Gibsons",
       "gender": "female",
       "Friends": [
         {
@@ -837,7 +837,7 @@
           "favoriteFruit": "banana"
         }
       ],
-      "company": "RECOGNIA",
+      "company": "RECOGNIAa",
       "email": "jillgibson@recognia.com",
       "phone": "+1 (883) 430-2148",
       "address": "756 Boulevard Court, Kimmell, Maryland, 3002",
