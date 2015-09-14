@@ -151,8 +151,7 @@
 
                             $scope.options.toolbar.export.formats = $scope.options.toolbar.export.formats.distinct();
                             $scope.options.pagination.itemsPerPage.range = $scope.options.pagination.itemsPerPage.range.distinct();
-                            $scope.options.pagination.itemsPerPage.selected = this.tableConfigManager.get().itemsByPage
-                                || $scope.options.pagination.itemsPerPage.range[0];
+                            
                         };
 
                         $scope.$watch('options.pagination.pageIndex', function (newValue, oldValue) {
@@ -162,7 +161,7 @@
                             }
                         });
                         $scope.updateRecordsCount = function () {
-                            this.tableConfigManager.saveItemsByPage($scope.options.pagination.itemsPerPage.selected);
+                            me.tableConfigManager.saveItemsByPage($scope.options.pagination.itemsPerPage.selected);
                             $scope.options.pagination.pageLength = $scope.options.pagination.itemsPerPage.selected;
                             me.refreshDataGrid();
                         };
@@ -171,6 +170,8 @@
                         this.refreshDataGrid = function () {
                             if (angular.isDefined($scope.funcAsync)) {
                                 me.tableConfigManager.init($scope.cols, $element[0].offsetWidth);
+                                $scope.options.pagination.itemsPerPage.selected = me.tableConfigManager.get().itemsByPage
+                                || $scope.options.pagination.itemsPerPage.range[0];
                                 //me.initColConfig();
                                 $scope.isLoading = true;
                                 $scope.funcAsync({
@@ -1015,7 +1016,7 @@ angular.module("bls_components").directive('dynamic', ['$compile', '$log', '$tim
         restrict: 'A',
         replace: true,
         priority: -20,
-        link: function (scope, ele, attrs) {
+        link: ['scope','ele','attrs', function (scope, ele, attrs) {
             $timeout(function () {
                 if (angular.isDefined(attrs.dynamic)) {
                     //$log.debug('in dynamic');
@@ -1034,7 +1035,7 @@ angular.module("bls_components").directive('dynamic', ['$compile', '$log', '$tim
                     }
                 }
             });
-        }
+        }]
     };
 }]);
 
