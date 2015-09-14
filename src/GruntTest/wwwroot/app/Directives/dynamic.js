@@ -3,11 +3,11 @@
         restrict: 'A',
         replace: true,
         priority: -20,
-        link: ['scope','ele','attrs', function (scope, ele, attrs) {
+        link: function (scope, ele, attrs) {
             $timeout(function () {
                 if (angular.isDefined(attrs.dynamic)) {
                     //$log.debug('in dynamic');
-                    var value = eval("scope." + attrs.dynamic);
+                    var value = scope.$eval(attrs.dynamic);
                     //$log.debug('value => ', value);
                     if (value && value !== '') {
                         value = value.trim();
@@ -22,6 +22,6 @@
                     }
                 }
             });
-        }]
+        }
     };
 }]);
