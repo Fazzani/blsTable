@@ -1019,7 +1019,7 @@ angular.module("bls_components").directive('dynamic', ['$compile', '$log', '$tim
         link: function (scope, ele, attrs) {
             $timeout(function () {
                 if (angular.isDefined(attrs.dynamic)) {
-                    $log.debug('in dynamic');
+                    //$log.debug('in dynamic');
                     var value = scope.$eval(attrs.dynamic);
                     //$log.debug('value => ', value);
                     if (value && value !== '') {
@@ -1149,6 +1149,13 @@ angular.module("bls_components").service('blsTableServices', ['$log', 'localStor
         }
         return a;
     };
+
+    if (!String.prototype.startsWith) {
+        String.prototype.startsWith = function (searchString, position) {
+            position = position || 0;
+            return this.indexOf(searchString, position) === position;
+        };
+    }
 
     this.defaultColConfig = function (length) {
         var array = new Array(length);
