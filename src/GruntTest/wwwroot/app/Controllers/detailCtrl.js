@@ -18,6 +18,7 @@
             return $http.put(root + "/persons/" + person.id, person, requestOptions).then(function (response) {
                 $scope.master = response.data;
                 $scope.reset();
+               
 
             }, function (errors) {
                 $log.error(errors);
@@ -35,6 +36,10 @@
         return $http.get(url, requestOptions).then(function (response) {
             $scope.master = response.data;
             $scope.reset();
+            $timeout(function () {
+                $scope.myForm.$setPristine();
+            }, 200);
+
         }, function (errors) {
             $log.error(errors);
         });

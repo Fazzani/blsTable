@@ -8,5 +8,6 @@
         $scope.resetTable = function () {
             $rootScope.$broadcast('blsTable.ResetEvent');
         };
+
     }]);
 })(window.angular);

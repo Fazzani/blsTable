@@ -1,7 +1,7 @@
 /// <reference path="../_references.js" />
 'use strict';
 console.log('creating app');
-var app = angular.module('app', ['bls_components', 'ui.bootstrap', 'LocalStorageModule', 'ngRoute', 'ngAnimate', 'ui.router'])
+var app = angular.module('app', ['bls_components', 'ui.bootstrap', 'LocalStorageModule', 'ngRoute', 'ngAnimate', 'ui.router','ngInputModified','unsavedChanges'])
 .constant('PREFIX_STORAGE', 'bls.')
 .config(['$locationProvider', 'localStorageServiceProvider', '$stateProvider', '$urlRouterProvider', '$logProvider', 'PREFIX_STORAGE',
     function ($locationProvider, localStorageServiceProvider, $stateProvider, $urlRouterProvider, $logProvider, PREFIX_STORAGE) {
@@ -53,7 +53,8 @@ var app = angular.module('app', ['bls_components', 'ui.bootstrap', 'LocalStorage
         });
 
        
-            $locationProvider.html5Mode(true);
+
+        $locationProvider.html5Mode(true);
     }
 ]).filter('getByProperty', function () {
     return function (propertyName, propertyValue, collection) {

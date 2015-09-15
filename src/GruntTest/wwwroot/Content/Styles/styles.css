@@ -1,3 +1,6 @@
+input.ng-valid.ng-modified {
+    border-color: green;
+}
 .navbar-form {
     padding: 0 !important;
     margin: 10px 2px !important;

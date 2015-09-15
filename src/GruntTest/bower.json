@@ -3,7 +3,7 @@
     "private": true,
     "description": "All js bls's Components",
     "version": "0.0.1",
-    "main":[ "dist/js/blsComponents.min.js","dist/styles/styles.css"],
+    "main": [ "dist/js/blsComponents.min.js", "dist/styles/styles.css" ],
     "dependencies": {
         "angular": "^1.4.5",
         "angular-local-storage": "^0.2.2",
@@ -17,7 +17,8 @@
         "angular-sanitize": "^1.4.5",
         "bootstrap": "^3.3.5",
         "jquery-ui": "^1.11.4",
-        "angular-ui-router": "^0.2.15"
+        "angular-ui-router": "^0.2.15",
+        "angular-input-modified": "2.2.5"
     },
     "keywords": [
         "grid",
