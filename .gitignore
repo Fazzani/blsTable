@@ -212,3 +212,4 @@ _Pvt_Extensions/
 ModelManifest.xml
 /src/GruntTest/.~dbPersons.json
 lib/
+/src/GruntTest/wwwroot/lib
