@@ -1,4 +1,3 @@
-
 (function (window, angular) {
     'use strict';
     /*jshint globalstrict: true*/
@@ -6,7 +5,7 @@
 
 
     // Registering Angular.js module.
-    angular.module('ngInputModified', [])
+    angular.module('blsFormModified', [])
         .provider('unsavedWarningsConfig', function () {
 
             var _this = this;
@@ -224,7 +223,7 @@
             });
         }
     }
-])
+        ])
         .directive('bsModifiable', ModifiableDirective);
 
     /**
@@ -247,7 +246,7 @@
     }
 
     // Extending Angular.js module.
-    angular.module('ngInputModified')
+    angular.module('blsFormModified')
       .provider('inputModifiedConfig', configProviderFactory)
     ;
 
@@ -290,7 +289,7 @@
     }
 
     // Extending Angular.js module.
-    angular.module('ngInputModified')
+    angular.module('blsFormModified')
       .directive('form', ['unsavedWarningSharedService', '$animate', 'inputModifiedConfig', function (unsavedWarningSharedService, $animate, inputModifiedConfig) {
 
           return formDirectiveFactory(unsavedWarningSharedService, $animate, inputModifiedConfig, false);
@@ -434,14 +433,8 @@
         };
     }
 
-})(window, angular);
-
-(function (window, angular) {
-
-    'use strict';
-
     // Extending Angular.js module.
-    angular.module('ngInputModified')
+    angular.module('blsFormModified')
       .directive('ngModel', ngModelModifiedFactory)
     ;
 
@@ -613,7 +606,7 @@
                     }, 0);
                 }
 
-              
+
 
             }
         };
