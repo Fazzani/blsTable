@@ -1,7 +1,7 @@
 /// <reference path="../_references.js" />
 'use strict';
 console.log('creating app');
-var app = angular.module('app', ['bls_components', 'ui.bootstrap', 'LocalStorageModule', 'ngRoute', 'ngAnimate', 'ui.router','ngInputModified','unsavedChanges'])
+var app = angular.module('app', ['bls_components', 'ui.bootstrap', 'LocalStorageModule', 'ngRoute', 'ngAnimate', 'ui.router','ngInputModified'])
 .constant('PREFIX_STORAGE', 'bls.')
 .config(['$locationProvider', 'localStorageServiceProvider', '$stateProvider', '$urlRouterProvider', '$logProvider', 'PREFIX_STORAGE',
     function ($locationProvider, localStorageServiceProvider, $stateProvider, $urlRouterProvider, $logProvider, PREFIX_STORAGE) {

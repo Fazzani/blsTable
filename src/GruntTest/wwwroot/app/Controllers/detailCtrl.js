@@ -15,27 +15,22 @@
         };
 
         $scope.update = function (person) {
+            $log.debug('update person ');
             return $http.put(root + "/persons/" + person.id, person, requestOptions).then(function (response) {
-                $scope.master = response.data;
-                $scope.reset();
-               
-
+                $scope.model = response.data;
             }, function (errors) {
                 $log.error(errors);
             });
         };
 
-        $scope.reset = function () {
-            $log.debug('reset');
-            $scope.model = angular.copy($scope.master);
-        };
+     
 
         $log.debug('id => ', $stateParams.id);
         var root = 'http://localhost:3000';
         var url = root + "/persons/" + $stateParams.id;
         return $http.get(url, requestOptions).then(function (response) {
-            $scope.master = response.data;
-            $scope.reset();
+            $scope.model = response.data;
+           
             $timeout(function () {
                 $scope.myForm.$setPristine();
             }, 200);
