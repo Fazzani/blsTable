@@ -1,4 +1,24 @@
-﻿angular.module("bls_components").directive('blsCol', ['$log', '$timeout', function ($log, $timeout) {
+﻿/**
+ * @ngdoc directive
+* @name bls_components.directive:blsCol
+ * @requires $log 
+ * @requires $timeout
+ * @priority -1
+ * @restrict E
+ * @description
+ * Resize textarea automatically to the size of its text content.
+ *
+ * **Note:** ie<9 needs polyfill for window.getComputedStyle
+ *
+ * @example
+   <example module="bls_components">
+     <file name="index.html">
+         <textarea ng-model="text"rx-autogrow class="input-block-level"></textarea>
+         <pre>{{text}}</pre>
+     </file>
+   </example>
+ */
+angular.module("bls_components").directive('blsCol', ['$log', '$timeout', function ($log, $timeout) {
     var tpl = [];
     var link = function (scope, element, attrs, ctrls) {
         //$log.debug('link post => col');

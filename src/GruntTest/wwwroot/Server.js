@@ -9,6 +9,7 @@ app.use('/Views', express.static(__dirname + '/Views'));
 //app.use('/templates', express.static(__dirname + '/templates'));
 app.use('/temp', express.static(__dirname + '/temp'));
 app.use('/dist', express.static(__dirname + '/dist'));
+app.use('/docs', express.static(__dirname + '/docs'));
 
 //Store all HTML files in view folder.
 app.get('/favicon.ico', function (req, res) {
@@ -18,6 +19,22 @@ app.get('/favicon.ico', function (req, res) {
 app.get('/',function(req,res){
     res.sendFile(path.join(__dirname + '/index.html'));
   //__dirname : It will resolve to your project folder.
+});
+
+app.get('/docs', function (req, res) {
+    res.sendFile(path.join(__dirname + '/docs/index.html'));
+    //__dirname : It will resolve to your project folder.
+});
+
+app.get('/docs/api/*', function (req, res) {
+    console.log('/docs/api/*');
+    res.sendFile(path.join(__dirname + '/docs/index.html'));
+    //__dirname : It will resolve to your project folder.
+});
+
+app.get('/docs/api', function (req, res) {
+    res.sendFile(path.join(__dirname + '/docs/index.html'));
+    //__dirname : It will resolve to your project folder.
 });
 
 app.get('*',function(req,res){

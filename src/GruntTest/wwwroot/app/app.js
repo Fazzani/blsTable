@@ -8,12 +8,9 @@ var app = angular.module('app', ['bls_components', 'ui.bootstrap', 'LocalStorage
 
         // $logProvider.debugEnabled(true);
         localStorageServiceProvider.setStorageType('localStorage').setPrefix(PREFIX_STORAGE).setNotify(true, true);
-        $urlRouterProvider.otherwise("/docs");
+        $urlRouterProvider.otherwise("/docs/api");
 
-        $stateProvider.state('docs', {
-            url: "/docs",
-            templateUrl: "Views/Partials/docs.html",
-        }).state('root', {
+        $stateProvider.state('root', {
             abstract: true,
             url: "/examples",
             template: '<ui-view></ui-view>',

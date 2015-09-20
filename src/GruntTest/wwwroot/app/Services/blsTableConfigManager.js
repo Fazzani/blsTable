@@ -1,11 +1,31 @@
-﻿angular.module("bls_components").factory('blsTableConfigManager', ['$log', 'localStorageService', function ($log, localStorageService) {
-    
+﻿/**
+* @ngdoc service
+* @name bls_components.blsTableConfigManager
+* @description
+* blsTableConfigManager service
+*/
+angular.module("bls_components").factory('blsTableConfigManager', ['$log', 'localStorageService', function ($log, localStorageService) {
+    /*
+     * @ngdoc method
+     * @constructs bls_components.blsTableConfigManager
+     * @description constructor of blsTableConfigManager
+     */
     function blsTableConfigManager(storageKey) {
         this.storageKey = storageKey;
         this.tableConfig = {};
     }
     
     blsTableConfigManager.prototype = {
+        /**
+        * @ngdoc function
+        * @name get
+        * @methodOf bls_components.blsTableConfigManager
+        * @description
+        * This is called when we need the count of records by page change
+        *
+        * @param {*} value The value of the input to check for emptiness.
+        * @returns {Array} tableConfig.
+        */
         get: function () { return this.tableConfig; },
         //init columns disposition from the localStorage if exists else create new Object
         init: function (columns, elementOffsetWidth) {
@@ -30,10 +50,24 @@
             }
             return this.tableConfig;
         },
+        /*
+        * @ngdoc function
+        * @name saveItemsByPage
+        * @methodOf bls_components.blsTableConfigManager
+        * @description 
+        * save Items By page on localstorage
+        */
         saveItemsByPage: function (itemsByPage) {
             this.tableConfig.itemsByPage = itemsByPage;
             this.save(this.tableConfig);
         },
+        /*
+        * @ngdoc method
+        * @name swapCol
+        * @methodOf bls_components.blsTableConfigManager
+        * @description 
+        * save Items By page on localstorage
+        */
         swapCol: function (from, to) {
             this.tableConfig.cols.swap(from, to);
             this.save(this.tableConfig);
