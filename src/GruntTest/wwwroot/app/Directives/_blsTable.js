@@ -1,10 +1,10 @@
+/**
+     * @ngdoc overview
+     * @name bls_components
+     */
 (function (angular) {
-    angular.module("bls_components", ['bls_tpls', 'ngSanitize'])
-        .directive('blsTable', ['$log', '$compile', '$templateCache', '$timeout', '$parse', 'blsTableServices', 
-            function ($log, $compile, $templateCache, $timeout, $parse, blsTableServices) {
-                var me = this;
-                var id = 0;
-                this.controller = ['$scope', '$attrs', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices', 'blsTableConfigManager',
+  
+    var blsTableController = ['$scope', '$attrs', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices', 'blsTableConfigManager',
                     function ($scope, $attrs, $filter, $timeout, $element, $log, localStorageService, blsTableServices, blsTableConfigManager) {
                         var me = this;
                         me.initialLoad = $scope.isLoading = true;
@@ -74,7 +74,7 @@
 
                             $scope.options.toolbar.export.formats = $scope.options.toolbar.export.formats.distinct();
                             $scope.options.pagination.itemsPerPage.range = $scope.options.pagination.itemsPerPage.range.distinct();
-                            
+
                         };
 
                         $scope.$watch('options.pagination.pageIndex', function (newValue, oldValue) {
@@ -83,6 +83,7 @@
                                 me.refreshDataGrid();
                             }
                         });
+                        
                         $scope.updateRecordsCount = function () {
                             me.tableConfigManager.saveItemsByPage($scope.options.pagination.itemsPerPage.selected);
                             $scope.options.pagination.pageLength = $scope.options.pagination.itemsPerPage.selected;
@@ -106,6 +107,7 @@
                                 });
                             }
                         };
+                       
                         this.setCols = function (cols) {
                             $scope.cols = cols;
                             $scope.$emit('blsDataGrid_initedEvent');
@@ -196,14 +198,43 @@
                         };
                         this.initOptions();
                     }
-                ];
+    ];
+    /**
+    * @ngdoc directive
+    * @name bls_components.directive:blsTable
+    * @property {string} data The value in the model that the control is bound to.
+    * @property {*} $modelValue The value in the model that the control is bound to.
+    * 
+    * data: '=ngModel',
+                            funcAsync: '&',
+                            getChildren: '&',
+                            options: '=',
+                            totalItems: '=',
+                            childItemsProp: '@'
+
+    * @requires $log 
+    * @requires $timeout
+    * @scope
+    * @priority -1
+    * @restrict E
+    * @description
+    * blsTable directive
+    *
+    * **Note:** note
+    */
+    angular.module("bls_components", ['bls_tpls', 'ngSanitize'])
+        .directive('blsTable', ['$log', '$compile', '$templateCache', '$timeout', '$parse', 'blsTableServices',
+            function ($log, $compile, $templateCache, $timeout, $parse, blsTableServices) {
+                var me = this;
+                var id = 0;
+                
 
                 return {
                     restrict: 'E',
                     replace: true,
                     transclude: true,
                     templateUrl: 'templates/blsTable.html',
-                    controller: this.controller,
+                    controller: blsTableController,
 
                     scope: {
                         data: '=ngModel',

@@ -1,3 +1,11 @@
+/**
+* @ngdoc directive
+* @name bls_components.directive:allowDrag
+* @requires blsTable 
+* @restrict A
+* @description
+* allowDrag directive
+**/
 angular.module("bls_components").directive("allowDrag", function () {
     return {
         restrict: "A",

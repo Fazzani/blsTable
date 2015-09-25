@@ -16,14 +16,15 @@
         "angular-route": "^1.4.5",
         "angular-sanitize": "^1.4.5",
         "bootstrap": "^3.3.5",
-        "jquery-ui": "^1.11.4",
-        "angular-ui-router": "^0.2.15"
+        "jquery-ui": "1.11.4",
+        "angular-ui-router": "0.2.15"
     },
     "keywords": [
         "grid",
         "angular",
         "Table",
-        "splitter page"
+        "splitter page",
+        "form modified"
     ],
     "authors": [
         "Heni Fazzani <heni.fazzani@businessline.fr>"

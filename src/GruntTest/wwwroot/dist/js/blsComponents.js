@@ -75,13 +75,13 @@
 
 
 
+/**
+     * @ngdoc overview
+     * @name bls_components
+     */
 (function (angular) {
-    angular.module("bls_components", ['bls_tpls', 'ngSanitize'])
-        .directive('blsTable', ['$log', '$compile', '$templateCache', '$timeout', '$parse', 'blsTableServices', 
-            function ($log, $compile, $templateCache, $timeout, $parse, blsTableServices) {
-                var me = this;
-                var id = 0;
-                this.controller = ['$scope', '$attrs', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices', 'blsTableConfigManager',
+  
+    var blsTableController = ['$scope', '$attrs', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices', 'blsTableConfigManager',
                     function ($scope, $attrs, $filter, $timeout, $element, $log, localStorageService, blsTableServices, blsTableConfigManager) {
                         var me = this;
                         me.initialLoad = $scope.isLoading = true;
@@ -151,7 +151,7 @@
 
                             $scope.options.toolbar.export.formats = $scope.options.toolbar.export.formats.distinct();
                             $scope.options.pagination.itemsPerPage.range = $scope.options.pagination.itemsPerPage.range.distinct();
-                            
+
                         };
 
                         $scope.$watch('options.pagination.pageIndex', function (newValue, oldValue) {
@@ -160,6 +160,7 @@
                                 me.refreshDataGrid();
                             }
                         });
+                        
                         $scope.updateRecordsCount = function () {
                             me.tableConfigManager.saveItemsByPage($scope.options.pagination.itemsPerPage.selected);
                             $scope.options.pagination.pageLength = $scope.options.pagination.itemsPerPage.selected;
@@ -183,6 +184,7 @@
                                 });
                             }
                         };
+                       
                         this.setCols = function (cols) {
                             $scope.cols = cols;
                             $scope.$emit('blsDataGrid_initedEvent');
@@ -273,14 +275,43 @@
                         };
                         this.initOptions();
                     }
-                ];
+    ];
+    /**
+    * @ngdoc directive
+    * @name bls_components.directive:blsTable
+    * @property {string} data The value in the model that the control is bound to.
+    * @property {*} $modelValue The value in the model that the control is bound to.
+    * 
+    * data: '=ngModel',
+                            funcAsync: '&',
+                            getChildren: '&',
+                            options: '=',
+                            totalItems: '=',
+                            childItemsProp: '@'
+
+    * @requires $log 
+    * @requires $timeout
+    * @scope
+    * @priority -1
+    * @restrict E
+    * @description
+    * blsTable directive
+    *
+    * **Note:** note
+    */
+    angular.module("bls_components", ['bls_tpls', 'ngSanitize'])
+        .directive('blsTable', ['$log', '$compile', '$templateCache', '$timeout', '$parse', 'blsTableServices',
+            function ($log, $compile, $templateCache, $timeout, $parse, blsTableServices) {
+                var me = this;
+                var id = 0;
+                
 
                 return {
                     restrict: 'E',
                     replace: true,
                     transclude: true,
                     templateUrl: 'templates/blsTable.html',
-                    controller: this.controller,
+                    controller: blsTableController,
 
                     scope: {
                         data: '=ngModel',
@@ -293,6 +324,14 @@
                 };
             }]);
 })(window.angular);
+/**
+* @ngdoc directive
+* @name bls_components.directive:allowDrag
+* @requires blsTable 
+* @restrict A
+* @description
+* allowDrag directive
+**/
 angular.module("bls_components").directive("allowDrag", function () {
     return {
         restrict: "A",
@@ -338,6 +377,26 @@ angular.module("bls_components").directive("allowDrag", function () {
         }
     };
 });
+/**
+ * @ngdoc directive
+* @name bls_components.directive:blsCol
+ * @requires $log 
+ * @requires $timeout
+ * @priority -1
+ * @restrict E
+ * @description
+ * Resize textarea automatically to the size of its text content.
+ *
+ * **Note:** ie<9 needs polyfill for window.getComputedStyle
+ *
+ * @example
+   <example module="bls_components">
+     <file name="index.html">
+         <textarea ng-model="text"rx-autogrow class="input-block-level"></textarea>
+         <pre>{{text}}</pre>
+     </file>
+   </example>
+ */
 angular.module("bls_components").directive('blsCol', ['$log', '$timeout', function ($log, $timeout) {
     var tpl = [];
     var link = function (scope, element, attrs, ctrls) {
@@ -1708,14 +1767,34 @@ angular.module("bls_components").directive("panel", function () {
     };
 });
 
+/**
+* @ngdoc service
+* @name bls_components.blsTableConfigManager
+* @description
+* blsTableConfigManager service
+*/
 angular.module("bls_components").factory('blsTableConfigManager', ['$log', 'localStorageService', function ($log, localStorageService) {
-    
+    /*
+     * @ngdoc method
+     * @constructs bls_components.blsTableConfigManager
+     * @description constructor of blsTableConfigManager
+     */
     function blsTableConfigManager(storageKey) {
         this.storageKey = storageKey;
         this.tableConfig = {};
     }
     
     blsTableConfigManager.prototype = {
+        /**
+        * @ngdoc function
+        * @name get
+        * @methodOf bls_components.blsTableConfigManager
+        * @description
+        * This is called when we need the count of records by page change
+        *
+        * @param {*} value The value of the input to check for emptiness.
+        * @returns {Array} tableConfig.
+        */
         get: function () { return this.tableConfig; },
         //init columns disposition from the localStorage if exists else create new Object
         init: function (columns, elementOffsetWidth) {
@@ -1740,10 +1819,24 @@ angular.module("bls_components").factory('blsTableConfigManager', ['$log', 'loca
             }
             return this.tableConfig;
         },
+        /*
+        * @ngdoc function
+        * @name saveItemsByPage
+        * @methodOf bls_components.blsTableConfigManager
+        * @description 
+        * save Items By page on localstorage
+        */
         saveItemsByPage: function (itemsByPage) {
             this.tableConfig.itemsByPage = itemsByPage;
             this.save(this.tableConfig);
         },
+        /*
+        * @ngdoc method
+        * @name swapCol
+        * @methodOf bls_components.blsTableConfigManager
+        * @description 
+        * save Items By page on localstorage
+        */
         swapCol: function (from, to) {
             this.tableConfig.cols.swap(from, to);
             this.save(this.tableConfig);

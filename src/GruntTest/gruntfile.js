@@ -1,6 +1,11 @@
 /// <binding ProjectOpened='jsonServer, webServer, watch:all' />
 module.exports = function (grunt) {
     'use strict';
+
+    var generatedDocsPath = 'wwwroot/docs/',
+        
+        _root='wwwroot';
+
     grunt.initConfig({
         // Metadata.
         pkg: grunt.file.readJSON('package.json'),
@@ -149,6 +154,30 @@ module.exports = function (grunt) {
                     methods:['debug']
                 }
             }
+        },
+        ngdocs: {
+            all: { src: 'wwwroot/app/**/*.js'},
+            options: {
+                src:'wwwroot/app/**/*.js',
+                dest: generatedDocsPath,
+                //scripts: ['../app.min.js'],
+                html5Mode: true,
+                startPage: '/api',
+                title: "BLS Components",
+                //image: "path/to/my/image.png",
+                //imageLink: "http://my-domain.com",
+                //titleLink: "/api",
+                //inlinePartials: true,
+                //bestMatch: true,
+            },
+            //tutorial: {
+            //    src: ['wwwroot/app/Directives/*.js'],
+            //    title: 'Tutorial'
+            //},
+            //api: {
+            //    src: ['wwwroot/app/**/*.js'],
+            //    title: 'API Documentation'
+            //}
         }
     });
 
@@ -229,8 +258,9 @@ module.exports = function (grunt) {
             done();
         });
     });
-    // The following line loads the grunt plugins.
-    // This line needs to be at the end of this this file.
+
+    //ngdocs 
+    grunt.registerTask('docs', ['ngdocs']);
 
     grunt.loadNpmTasks('grunt-shell'); 
     grunt.loadNpmTasks("grunt-contrib-clean");
@@ -244,4 +274,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-bump');
     grunt.loadNpmTasks('grunt-remove-logging');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    // Load the plugin that provides the "docular" tasks.
+    grunt.loadNpmTasks('grunt-ngdocs');
 };
