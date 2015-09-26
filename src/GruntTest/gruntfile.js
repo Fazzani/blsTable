@@ -82,7 +82,7 @@ module.exports = function (grunt) {
         },
         shell: {
             express_server: {
-                command: 'node wwwroot/Server.js'
+                command: 'node wwwroot/app.js'
             },
             json_server: {
                 command: 'json-server --watch dbPersons.json'

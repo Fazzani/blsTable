@@ -1,18 +1,19 @@
 ﻿{
-  "webroot": "wwwroot",
-  "version": "1.0.0-*",
+    "webroot": "wwwroot",
+    "version": "1.0.0-*",
 
-  "dependencies": {
-    "Microsoft.AspNet.Server.IIS": "1.0.0-beta4",
-        "Microsoft.AspNet.Server.WebListener": "1.0.0-beta4",
-        "Microsoft.AspNet.StaticFiles": "1.0.0-beta4",
-        "Microsoft.AspNet.Diagnostics": "1.0.0-beta4"
-  },
-  "scripts": {
+    "dependencies": {
+        "Microsoft.AspNet.Server.IIS": "1.0.0-beta5",
+        "Microsoft.AspNet.Server.WebListener": "1.0.0-beta5",
+        "Microsoft.AspNet.StaticFiles": "1.0.0-beta5",
+        "Microsoft.AspNet.Diagnostics": "1.0.0-beta5"
+    },
+    "scripts": {
+        
         "postrestore": [
             "npm install",
             "bower install",
-            "grunt build"
+            "grunt publishDev"
         ]
     },
   "commands": {
@@ -29,6 +30,10 @@
     "bower_components",
     "**.xproj",
     "**.user",
+    "**.sln",
+    "**.git",
+    "**.gitattributes",
+    "**.gitignore",
     "**.vspscc"
   ],
   "exclude": [
