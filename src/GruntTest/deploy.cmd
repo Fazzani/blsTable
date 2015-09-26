@@ -110,6 +110,7 @@ if [ -e "$DEPLOYMENT_TARGET/bower.json" ]; then
   cd "$DEPLOYMENT_TARGET"
   eval $NPM_CMD install bower
   exitWithMessageOnError "installing bower failed"
+  rm -rf public/bower_components
   ./node_modules/.bin/bower install
   exitWithMessageOnError "bower failed"
   cd - > /dev/null
