@@ -106,8 +106,6 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
                         e.preventDefault();
                         e.returnValue = false;
                         e.cancelBubble = true;
-                        $log.debug('resizeEnd');
-                        me.resizePressed = true;
 
                         document.removeEventListener('mousemove', drag);
                         document.removeEventListener('mouseup', $scope.resizeEnd);
@@ -117,6 +115,9 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
                             $scope.setColWidth(me.resizeColData.indexSibling, me.resizeColData.widthSibling);
                             me.resizeColData = null;
                         }
+                        $timeout(function () {
+                            me.resizePressed = false;
+                        });
                         me.resizeData = {};
                         return false;
                     }
