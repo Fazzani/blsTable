@@ -8,16 +8,17 @@
         "angular": "^1.4.5",
         "angular-local-storage": "^0.2.2",
         "Font-Awesome": "^4.4.0",
-        "jquery": "^2.1.4"
-    },
-    "devDependencies": {
-        "angular-bootstrap": "^0.13.3",
+        "jquery": "^2.1.4",
+         "angular-bootstrap": "^0.13.3",
         "angular-animate": "^1.4.5",
         "angular-route": "^1.4.5",
         "angular-sanitize": "^1.4.5",
         "bootstrap": "^3.3.5",
         "jquery-ui": "1.11.4",
         "angular-ui-router": "0.2.15"
+    },
+    "devDependencies": {
+       
     },
     "keywords": [
         "grid",
