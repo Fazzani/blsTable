@@ -69,7 +69,7 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
                         me.resizeData.siblingTarget = target.parentNode.nextElementSibling;
                         var $siblingElm = $(me.resizeData.siblingTarget);
                         var $targetElm = $(me.resizeData.target);
-
+                        me.resizePressed = true;
                         me.resizeData.resizePressed = true;
                         me.resizeData.startX = e.pageX;
                         me.resizeData.startWidth = $targetElm.width();
@@ -102,10 +102,16 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
                 }
                 $scope.resizeEnd = function (e) {
                     if (me.resizeData.resizePressed) {
-                        document.removeEventListener('mousemove', drag);
-                        document.removeEventListener('mouseup', $scope.resizeEnd);
                         e.stopPropagation();
                         e.preventDefault();
+                        e.returnValue = false;
+                        e.cancelBubble = true;
+                        $log.debug('resizeEnd');
+                        me.resizePressed = true;
+
+                        document.removeEventListener('mousemove', drag);
+                        document.removeEventListener('mouseup', $scope.resizeEnd);
+                        
                         if (me.resizeColData !== null) {
                             $scope.setColWidth(me.resizeColData.index, me.resizeColData.width);
                             $scope.setColWidth(me.resizeColData.indexSibling, me.resizeColData.widthSibling);
