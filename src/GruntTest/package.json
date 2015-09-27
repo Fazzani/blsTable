@@ -6,7 +6,7 @@
     "express": "4.11.0"
   },
   "scripts": {
-    "start": "node app.js"
+    "start": "node wwwroot/app.js"
   },
   "main": "app.js",
   "keywords": [
