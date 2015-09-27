@@ -9,6 +9,7 @@
                     <bls-header></bls-header>\
                 </thead>\
                 <tbody>\
+                    <div class="colLineOnResize"></div>\
                     <bls-rows></bls-rows>\
                 </tbody>\
             </table>\

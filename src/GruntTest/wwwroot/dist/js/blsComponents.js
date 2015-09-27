@@ -9,6 +9,7 @@
                     <bls-header></bls-header>\
                 </thead>\
                 <tbody>\
+                    <div class="colLineOnResize"></div>\
                     <bls-rows></bls-rows>\
                 </tbody>\
             </table>\
@@ -1196,6 +1197,8 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
                 var me = this;
                 me.resizeColData = null;
                 me.resizePressed = false;
+                var $resizeLine = $($element[0].nextElementSibling);
+                $resizeLine.hide();
 
                 $scope.getTdTpl = function (col) {
                     if (col.headerTpl && col.headerTpl !== '') {
@@ -1218,6 +1221,8 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
                 $scope.resizeStart = function (e) {
                     var target = e.target ? e.target : e.srcElement;
                     if (target.classList.contains("resize")) {
+                        $resizeLine.height($($resizeLine.siblings('table')[0]).height());
+
                         me.resizeData.target = target.parentNode;
                         me.resizeData.siblingTarget = target.parentNode.nextElementSibling;
                         var $siblingElm = $(me.resizeData.siblingTarget);
@@ -1241,6 +1246,8 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
                     var $siblingElm = $(me.resizeData.siblingTarget);
                     var $targetElm = $(me.resizeData.target);
                     var offset = e.pageX - me.resizeData.startX;
+                    $resizeLine.show();
+                    $resizeLine.css('left', me.resizeData.siblingTarget.offsetLeft);
                     var newWidth = me.resizeData.startWidth + offset;
                     if (me.resizeData.resizePressed && me.resizeData.maxWidth > newWidth && me.resizeData.minWidth < newWidth) {
                         $targetElm.width(newWidth);
@@ -1259,10 +1266,10 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
                         e.preventDefault();
                         e.returnValue = false;
                         e.cancelBubble = true;
-
+                        $resizeLine.hide();
                         document.removeEventListener('mousemove', drag);
                         document.removeEventListener('mouseup', $scope.resizeEnd);
-                        
+
                         if (me.resizeColData !== null) {
                             $scope.setColWidth(me.resizeColData.index, me.resizeColData.width);
                             $scope.setColWidth(me.resizeColData.indexSibling, me.resizeColData.widthSibling);

@@ -1,6 +1,13 @@
+.colLineOnResize {
+    position: absolute;
+    z-index: 100;
+    border-left: 1px dotted #000;
+}
+
 input.ng-valid.ng-modified {
     border-color: green;
 }
+
 .navbar-form {
     padding: 0 !important;
     margin: 10px 2px !important;
@@ -68,7 +75,7 @@ input.ng-valid.ng-modified {
             position: absolute;
             bottom: 8px;
             left: 8px;
-            opacity:0.7;
+            opacity: 0.7;
         }
 
 bls-grid {
@@ -121,7 +128,7 @@ bls-grid {
     -ms-text-overflow: ellipsis;
     -o-text-overflow: ellipsis;
     text-overflow: ellipsis;
-    cursor: pointer
+    cursor: pointer;
 }
 
     .blsGrid th.colHeader a:hover {
