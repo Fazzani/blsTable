@@ -1,4 +1,16 @@
-﻿angular.module("bls_components").directive('blsSearchBox', [function () {
+﻿/**
+* @ngdoc directive
+* @name bls_components.directive:blsSearchBox
+* @scope
+* @restrict E
+* @description
+* Create searchBox component
+* @example
+* <pre>      
+* <bls-search-box ng-model="options.toolbar.search.searchedText" options="{ id : 'btn_search_one', placeholder: 'chercher...', minChars: 3}"></bls-search-box>
+* </pre>
+*/
+angular.module("bls_components").directive('blsSearchBox', [function () {
     var uniqueId = 1;
     return {
         link: function (scope, element, attrs) {

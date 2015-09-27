@@ -1,4 +1,13 @@
-﻿angular.module("bls_components").directive('blsStaticChildsRows', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
+﻿/**
+* @ngdoc directive
+* @name bls_components.directive:blsStaticChildsRows
+* @scope
+* @priority -16 
+* @restrict E
+* @description
+* blsStaticChildsRows
+*/
+angular.module("bls_components").directive('blsStaticChildsRows', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
     var link = function (scope, element, attrs, ctrls, transclude) {
         $log.debug('    Link => blsStaticChildsRows');
         var me = this;
@@ -99,7 +108,16 @@
             level: '='
         }
     };
-}]).directive('blsStaticChildCells', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
+}]);
+/**
+* @requires bls_components.directive:blsStaticChildCells
+* @scope
+* @priority -16 
+* @restrict E
+* @description
+* blsStaticChildCells
+*/
+angular.module("bls_components").directive('blsStaticChildCells', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
     var link = function (scope, element, attrs, ctrls) {
         $log.debug('        Link => blsStaticChildData');
         scope.expand = false;

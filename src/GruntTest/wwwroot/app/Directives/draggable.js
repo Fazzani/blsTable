@@ -1,7 +1,10 @@
-﻿//
-// http://litutech.blogspot.fr/2014/02/an-angular-table-directive-having.html
-//
-//---------------------------------------------------------------------------
+﻿/**
+* @ngdoc directive
+* @name bls_components.directive:draggable
+* @restrict AEC
+* @description
+* add drag capability to the component
+*/
 angular.module("bls_components").directive('draggable', function () {
     return {
         link: function (scope, elem, attr) {

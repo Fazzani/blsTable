@@ -81,7 +81,7 @@
      * @name bls_components
      */
 (function (angular) {
-  
+
     var blsTableController = ['$scope', '$attrs', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices', 'blsTableConfigManager',
                     function ($scope, $attrs, $filter, $timeout, $element, $log, localStorageService, blsTableServices, blsTableConfigManager) {
                         var me = this;
@@ -161,7 +161,7 @@
                                 me.refreshDataGrid();
                             }
                         });
-                        
+
                         $scope.updateRecordsCount = function () {
                             me.tableConfigManager.saveItemsByPage($scope.options.pagination.itemsPerPage.selected);
                             $scope.options.pagination.pageLength = $scope.options.pagination.itemsPerPage.selected;
@@ -185,7 +185,7 @@
                                 });
                             }
                         };
-                       
+
                         this.setCols = function (cols) {
                             $scope.cols = cols;
                             $scope.$emit('blsDataGrid_initedEvent');
@@ -293,19 +293,55 @@
     * @requires $log 
     * @requires $timeout
     * @scope
-    * @priority -1
     * @restrict E
     * @description
     * blsTable directive
+    * **Note:** Id must be specified
+    *  @example
+   *    
+   * <pre>
+   *   <bls-table ng-model="model.data"
+   *        func-async="query(pageIndex, pageLength, searchedText, sortTable, filters)"
+   *        options="options"
+   *        total-items="model.totalItems"
+   *        id="btbSampleExample">
+    *   <bls-cols>
+    *    <bls-col resize dragable sort field-name="id"></bls-col>
+    *    <bls-col resize dragable title="Le nom" sort field-name="name"></bls-col>
+    *    <bls-col resize dragable field-name="company">
+    *        <a title="company!" href="javascript: void(0)" ng-click="options.callbacks[0](::row)">
+    *            {{::row.company}}
+    *        </a>
+    *    </bls-col>
+    *    <bls-col resize dragable sort title="Mailing de Monsieur" field-name="email">{{::row.email|uppercase}}</bls-col>
+    *    <bls-col resize title="Photo de Profile" field-name="picture">
+    *        <header><i class="fa fa-exclamation-triangle" style="color: #333" title="{{::row.picture}}"></i></header>
+    *        <bls-td><img style="height:18px;margin: 0 auto;" class="img-responsive" src="{{::row.picture}}" alt="" /></bls-td>
+    *    </bls-col>
+    *    <bls-col resize field-name="isActive" title="Active">
+    *        <i ng-if="::row.isActive" class="fa fa-check" style="color: #333"></i>
+    *    </bls-col>
+    *    <bls-col resize title="Actions">
+    *        <span data-placement="top" data-toggle="tooltip" title="Modifier">
+    *            <a class="btn btn-primary btn-icon btn-circle btn-sm" ui-sref=".detail({id: ::row.id})"><span class="glyphicon glyphicon-pencil"></span></a>
+    *        </span>
+    *        <span data-placement="top" data-toggle="tooltip" title="Supprimer">
+    *            <a class="btn btn-danger btn-icon btn-circle btn-sm" href="javascript: void(0)" ng-click="options.callbacks[1](::row)"><span class="glyphicon glyphicon-trash"></span></a>
+    *        </span>
+    *    </bls-col>
+    * </bls-cols>
+    * </bls-table>
+    * </pre>
     *
-    * **Note:** note
+    *
+    * **Note:** problem with save localStorage settings on ie
     */
     angular.module("bls_components", ['bls_tpls', 'ngSanitize'])
         .directive('blsTable', ['$log', '$compile', '$templateCache', '$timeout', '$parse', 'blsTableServices',
             function ($log, $compile, $templateCache, $timeout, $parse, blsTableServices) {
                 var me = this;
                 var id = 0;
-                
+
 
                 return {
                     restrict: 'E',
@@ -328,7 +364,7 @@
 /**
 * @ngdoc directive
 * @name bls_components.directive:allowDrag
-* @requires blsTable 
+* @requires bls_components.directive:blsTable 
 * @restrict A
 * @description
 * allowDrag directive
@@ -380,23 +416,17 @@ angular.module("bls_components").directive("allowDrag", function () {
 });
 /**
  * @ngdoc directive
-* @name bls_components.directive:blsCol
- * @requires $log 
- * @requires $timeout
+ * @name bls_components.directive:blsCol
+ * @requires bls_components.directive:blsTable
+ * @requires bls_components.directive:blsCols 
  * @priority -1
  * @restrict E
  * @description
- * Resize textarea automatically to the size of its text content.
- *
- * **Note:** ie<9 needs polyfill for window.getComputedStyle
- *
+ * Collect information's column
  * @example
-   <example module="bls_components">
-     <file name="index.html">
-         <textarea ng-model="text"rx-autogrow class="input-block-level"></textarea>
-         <pre>{{text}}</pre>
-     </file>
-   </example>
+ * <pre>
+ * <bls-col resize dragable title="Le nom" sort field-name="name"></bls-col>
+ * </pre>
  */
 angular.module("bls_components").directive('blsCol', ['$log', '$timeout', function ($log, $timeout) {
     var tpl = [];
@@ -442,7 +472,6 @@ angular.module("bls_components").directive('blsCol', ['$log', '$timeout', functi
     };
 
     return {
-        //transclude:true,
         priority: -1,
         require: ['^blsTable', '^blsCols'],
         restrict: 'E',
@@ -456,7 +485,19 @@ angular.module("bls_components").directive('blsCol', ['$log', '$timeout', functi
     };
 }]);
 
-angular.module("bls_components").directive('blsCols', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
+/**
+ * @ngdoc directive
+ * @name bls_components.directive:blsCols
+ * @requires bls_components.directive:blsTable
+ * @requires bls_components.directive:blsCols 
+ * @priority 0
+ * @restrict E
+ * @description
+ * Collect all columns
+ *
+ * **Note:** This is internal directive
+ */
+angular.module("bls_components").directive('blsCols', ['$log', function ($log) {
     var link = {
         post: function (scope, element, attrs, ctrls) {
             var blsTableCtrl = ctrls[0];
@@ -465,8 +506,8 @@ angular.module("bls_components").directive('blsCols', ['$log', '$compile', '$tem
             blsTableCtrl.setCols(blsColsCtrl.getCols());
         }
     };
-    var controller = ['$scope', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices',
-        function ($scope, $filter, $timeout, $element, $log, localStorageService, blsTableServices) {
+    var controller = ['$scope', '$log',
+        function ($scope, $log ) {
             //$log.debug('    controller => blsCols');
             var cols = [];
             this.addCol = function (col) {
@@ -486,6 +527,17 @@ angular.module("bls_components").directive('blsCols', ['$log', '$compile', '$tem
     };
 }]);
 
+/**
+ * @ngdoc directive
+ * @name bls_components.directive:blsDropDown
+ * @requires blsTable
+ * @requires blsCols 
+ * @description
+ * DropDown from list of links
+ * @requires links (Array)
+ * @scope
+ * @example <bls-drop-down links="['pdf','xml', 'json']" func="export" title="titleExportButton" ng-hide="False"></bls-drop-down>
+ */
 angular.module("bls_components").directive('blsDropDown', [function () {
     return {
         templateUrl: 'templates/blsDropDown.html',
@@ -1152,6 +1204,18 @@ angular.module("bls_components").directive('blsDropDown', [function () {
 
 })(window, angular);
 
+/**
+ * @ngdoc directive
+ * @name bls_components.directive:blsHeader
+ * @requires blsTable
+ * @requires blsHeader 
+ * @priority -20
+ * @restrict E
+ * @description
+ * Compile Headers
+ *
+ * **Note:** This is internal directive
+ */
 angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$templateCache', '$timeout', 'localStorageService',
     function ($log, $compile, $templateCache, $timeout, localStorageService) {
         var sortDirectionEnum = { asc: 'asc', desc: 'desc' };
@@ -1293,6 +1357,17 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
         };
     }]);
 
+/**
+ * @ngdoc directive
+ * @name bls_components.directive:blsRowChild
+ * @requires bls_components.directive:blsTable
+ * @scope
+ * @priority -16
+ * @restrict A
+ * @description
+ * compile recursive rows
+ * **Note:** This is internal directive
+ */
 angular.module("bls_components").directive('blsRowChild', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
     var link = function (scope, element, attrs, ctrls, transclude) {
         //$log.debug('    Link => blsRows');
@@ -1361,6 +1436,17 @@ angular.module("bls_components").directive('blsRowChild', ['$log', '$compile', '
     };
 }]);
 
+/**
+ * @ngdoc directive
+ * @name bls_components.directive:blsRows
+ * @requires bls_components.directive:blsTable
+ * @scope
+ * @priority -17
+ * @restrict E
+ * @description
+ * compile recursive rows
+ * **Note:** This is internal directive
+ */
 angular.module("bls_components").directive('blsRows', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
     var link = function (scope, element, attrs, ctrls) {
         // var blsTableCtrl = ctrls[0];
@@ -1389,6 +1475,18 @@ angular.module("bls_components").directive('blsRows', ['$log', '$compile', '$tem
     };
 }]);
 
+/**
+* @ngdoc directive
+* @name bls_components.directive:blsSearchBox
+* @scope
+* @restrict E
+* @description
+* Create searchBox component
+* @example
+* <pre>      
+* <bls-search-box ng-model="options.toolbar.search.searchedText" options="{ id : 'btn_search_one', placeholder: 'chercher...', minChars: 3}"></bls-search-box>
+* </pre>
+*/
 angular.module("bls_components").directive('blsSearchBox', [function () {
     var uniqueId = 1;
     return {
@@ -1434,6 +1532,45 @@ angular.module("bls_components").directive('blsSearchBox', [function () {
         }]
     };
 }]);
+/**
+* @ngdoc directive
+* @name bls_components.directive:blsSplitter
+* @scope
+* @restrict E
+* @description
+* dynamic splitter page
+* @example
+* <pre>      
+*  <bls-splitter>
+        <bls-splitter-region>
+            <p>
+                How can this be used to make a divider fill the height of the browser?
+                For this question, we can make use of vh: 1vh is equal to 1% of the viewport's height. That is to say, 100vh is equal to the height of the browser window, regardless of where the element is situated in the DOM tree:
+                HTML
+            </p><p>
+                transclude - compile the content of the element and make it available to the directive. Typically used with ngTransclude. The advantage of transclusion is that the linking function receives a transclusion function which is pre-bound to the correct scope. In a typical setup the widget creates an isolate scope, but the transclusion is not a child, but a sibling of the isolate scope. This makes it possible for the widget to have private state, and the transclusion to be bound to the parent (pre-isolate) scope.
+
+                true - transclude the content of the directive.
+                'element' - transclude the whole element including any directives defined at lower priority.
+            </p>
+            <p>
+                transclude - compile the content of the element and make it available to the directive. Typically used with ngTransclude. The advantage of transclusion is that the linking function receives a transclusion function which is pre-bound to the correct scope. In a typical setup the widget creates an isolate scope, but the transclusion is not a child, but a sibling of the isolate scope. This makes it possible for the widget to have private state, and the transclusion to be bound to the parent (pre-isolate) scope.
+
+                true - transclude the content of the directive.
+                'element' - transclude the whole element including any directives defined at lower priority.
+            </p>
+            <p>
+                transclude - compile the content of the element and make it available to the directive. Typically used with ngTransclude. The advantage of transclusion is that the linking function receives a transclusion function which is pre-bound to the correct scope. In a typical setup the widget creates an isolate scope, but the transclusion is not a child, but a sibling of the isolate scope. This makes it possible for the widget to have private state, and the transclusion to be bound to the parent (pre-isolate) scope.
+
+                true - transclude the content of the directive.
+                'element' - transclude the whole element including any directives defined at lower priority.
+            </p>
+        </bls-splitter-region>
+        <bls-splitter-region>
+        </bls-splitter-region>
+    </bls-splitter>
+* </pre>
+*/
 angular.module("bls_components")
 .directive('blsSplitter', ['$log', 'localStorageService', function ($log, localStorageService) {
     /*--- Jquery UI is required ---*/
@@ -1512,6 +1649,15 @@ angular.module("bls_components")
         template: '<div style="width:49%;height:500px;background-color:aliceblue;float:left;overflow-x:hidden;overflow-y:hidden" ng-transclude><div>'
     };
 }]);
+/**
+* @ngdoc directive
+* @name bls_components.directive:blsStaticChildsRows
+* @scope
+* @priority -16 
+* @restrict E
+* @description
+* blsStaticChildsRows
+*/
 angular.module("bls_components").directive('blsStaticChildsRows', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
     var link = function (scope, element, attrs, ctrls, transclude) {
         $log.debug('    Link => blsStaticChildsRows');
@@ -1613,7 +1759,16 @@ angular.module("bls_components").directive('blsStaticChildsRows', ['$log', '$com
             level: '='
         }
     };
-}]).directive('blsStaticChildCells', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
+}]);
+/**
+* @requires bls_components.directive:blsStaticChildCells
+* @scope
+* @priority -16 
+* @restrict E
+* @description
+* blsStaticChildCells
+*/
+angular.module("bls_components").directive('blsStaticChildCells', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
     var link = function (scope, element, attrs, ctrls) {
         $log.debug('        Link => blsStaticChildData');
         scope.expand = false;
@@ -1639,6 +1794,19 @@ angular.module("bls_components").directive('blsStaticChildsRows', ['$log', '$com
     };
 }]);
 
+/**
+* @ngdoc directive
+* @name bls_components.directive:blsToolBar
+* @scope
+* @priority 2 
+* @restrict E
+* @description
+* ToolBar for blsTable
+* @example
+* <pre>      
+* <bls-tool-bar ng-hide="options.toolbar.hide"></bls-tool-bar>
+* </pre>
+*/
 angular.module("bls_components").directive('blsToolBar', [function () {
     // Runs during compile
     return {
@@ -1669,10 +1837,12 @@ angular.module("bls_components").directive('blsToolBar', [function () {
         }]
     };
 }]);
-//
-// http://litutech.blogspot.fr/2014/02/an-angular-table-directive-having.html
-//
-//---------------------------------------------------------------------------
+/**
+* @requires bls_components.directive:draggable
+* @restrict AEC
+* @description
+* add drag capability to the component
+*/
 angular.module("bls_components").directive('draggable', function () {
     return {
         link: function (scope, elem, attr) {
@@ -1698,10 +1868,12 @@ angular.module("bls_components").directive('draggable', function () {
         }
     };
 });
-//
-// http://litutech.blogspot.fr/2014/02/an-angular-table-directive-having.html
-//
-//---------------------------------------------------------------------------
+/**
+* @requires bls_components.directive:droppable
+* @restrict AEC
+* @description
+* add drop capability to the component
+*/
 angular.module("bls_components").directive('droppable', ['$parse',
     function($parse) {
         return {
@@ -1739,6 +1911,15 @@ angular.module("bls_components").directive('droppable', ['$parse',
     }
 ]);
 
+/**
+* @ngdoc directive
+* @name bls_components.directive:dynamic
+* @scope
+* @priority -20 
+* @restrict A
+* @description
+* comile dynamic html on current scope
+*/
 angular.module("bls_components").directive('dynamic', ['$compile', '$log', '$timeout', function ($compile, $log, $timeout) {
     return {
         restrict: 'A',
@@ -1767,6 +1948,14 @@ angular.module("bls_components").directive('dynamic', ['$compile', '$log', '$tim
     };
 }]);
 
+/**
+* @ngdoc directive
+* @name bls_components.directive:panel
+* @scope
+* @restrict E
+* @description
+* create panel
+*/
 angular.module("bls_components").directive("panel", function () {
     return {
         link: function (scope, element, attrs) {
@@ -1889,6 +2078,12 @@ angular.module("bls_components").factory('blsTableConfigManager', ['$log', 'loca
 
 
 
+/**
+* @ngdoc service
+* @name bls_components.blsTableServices
+* @description
+* blsTableServices service
+*/
 angular.module("bls_components").service('blsTableServices', ['$log', 'localStorageService', function ($log, localStorageService) {
     Array.prototype.swap = function (new_index, old_index) {
         if (new_index >= this.length) {

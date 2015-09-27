@@ -1,4 +1,13 @@
-﻿angular.module("bls_components").directive('dynamic', ['$compile', '$log', '$timeout', function ($compile, $log, $timeout) {
+﻿/**
+* @ngdoc directive
+* @name bls_components.directive:dynamic
+* @scope
+* @priority -20 
+* @restrict A
+* @description
+* comile dynamic html on current scope
+*/
+angular.module("bls_components").directive('dynamic', ['$compile', '$log', '$timeout', function ($compile, $log, $timeout) {
     return {
         restrict: 'A',
         replace: true,

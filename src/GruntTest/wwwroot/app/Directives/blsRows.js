@@ -1,3 +1,14 @@
+/**
+ * @ngdoc directive
+ * @name bls_components.directive:blsRows
+ * @requires bls_components.directive:blsTable
+ * @scope
+ * @priority -17
+ * @restrict E
+ * @description
+ * compile recursive rows
+ * **Note:** This is internal directive
+ */
 angular.module("bls_components").directive('blsRows', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
     var link = function (scope, element, attrs, ctrls) {
         // var blsTableCtrl = ctrls[0];

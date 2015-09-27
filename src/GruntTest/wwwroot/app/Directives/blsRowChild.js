@@ -1,4 +1,15 @@
-﻿angular.module("bls_components").directive('blsRowChild', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
+﻿/**
+ * @ngdoc directive
+ * @name bls_components.directive:blsRowChild
+ * @requires bls_components.directive:blsTable
+ * @scope
+ * @priority -16
+ * @restrict A
+ * @description
+ * compile recursive rows
+ * **Note:** This is internal directive
+ */
+angular.module("bls_components").directive('blsRowChild', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
     var link = function (scope, element, attrs, ctrls, transclude) {
         //$log.debug('    Link => blsRows');
         var me = this;

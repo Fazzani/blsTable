@@ -1,4 +1,16 @@
-angular.module("bls_components").directive('blsCols', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
+/**
+ * @ngdoc directive
+ * @name bls_components.directive:blsCols
+ * @requires bls_components.directive:blsTable
+ * @requires bls_components.directive:blsCols 
+ * @priority 0
+ * @restrict E
+ * @description
+ * Collect all columns
+ *
+ * **Note:** This is internal directive
+ */
+angular.module("bls_components").directive('blsCols', ['$log', function ($log) {
     var link = {
         post: function (scope, element, attrs, ctrls) {
             var blsTableCtrl = ctrls[0];
@@ -7,8 +19,8 @@ angular.module("bls_components").directive('blsCols', ['$log', '$compile', '$tem
             blsTableCtrl.setCols(blsColsCtrl.getCols());
         }
     };
-    var controller = ['$scope', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices',
-        function ($scope, $filter, $timeout, $element, $log, localStorageService, blsTableServices) {
+    var controller = ['$scope', '$log',
+        function ($scope, $log ) {
             //$log.debug('    controller => blsCols');
             var cols = [];
             this.addCol = function (col) {

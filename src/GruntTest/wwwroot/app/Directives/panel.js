@@ -1,3 +1,11 @@
+/**
+* @ngdoc directive
+* @name bls_components.directive:panel
+* @scope
+* @restrict E
+* @description
+* create panel
+*/
 angular.module("bls_components").directive("panel", function () {
     return {
         link: function (scope, element, attrs) {

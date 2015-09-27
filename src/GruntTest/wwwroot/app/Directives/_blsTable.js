@@ -3,7 +3,7 @@
      * @name bls_components
      */
 (function (angular) {
-  
+
     var blsTableController = ['$scope', '$attrs', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices', 'blsTableConfigManager',
                     function ($scope, $attrs, $filter, $timeout, $element, $log, localStorageService, blsTableServices, blsTableConfigManager) {
                         var me = this;
@@ -83,7 +83,7 @@
                                 me.refreshDataGrid();
                             }
                         });
-                        
+
                         $scope.updateRecordsCount = function () {
                             me.tableConfigManager.saveItemsByPage($scope.options.pagination.itemsPerPage.selected);
                             $scope.options.pagination.pageLength = $scope.options.pagination.itemsPerPage.selected;
@@ -107,7 +107,7 @@
                                 });
                             }
                         };
-                       
+
                         this.setCols = function (cols) {
                             $scope.cols = cols;
                             $scope.$emit('blsDataGrid_initedEvent');
@@ -215,19 +215,55 @@
     * @requires $log 
     * @requires $timeout
     * @scope
-    * @priority -1
     * @restrict E
     * @description
     * blsTable directive
+    * **Note:** Id must be specified
+    *  @example
+   *    
+   * <pre>
+   *   <bls-table ng-model="model.data"
+   *        func-async="query(pageIndex, pageLength, searchedText, sortTable, filters)"
+   *        options="options"
+   *        total-items="model.totalItems"
+   *        id="btbSampleExample">
+    *   <bls-cols>
+    *    <bls-col resize dragable sort field-name="id"></bls-col>
+    *    <bls-col resize dragable title="Le nom" sort field-name="name"></bls-col>
+    *    <bls-col resize dragable field-name="company">
+    *        <a title="company!" href="javascript: void(0)" ng-click="options.callbacks[0](::row)">
+    *            {{::row.company}}
+    *        </a>
+    *    </bls-col>
+    *    <bls-col resize dragable sort title="Mailing de Monsieur" field-name="email">{{::row.email|uppercase}}</bls-col>
+    *    <bls-col resize title="Photo de Profile" field-name="picture">
+    *        <header><i class="fa fa-exclamation-triangle" style="color: #333" title="{{::row.picture}}"></i></header>
+    *        <bls-td><img style="height:18px;margin: 0 auto;" class="img-responsive" src="{{::row.picture}}" alt="" /></bls-td>
+    *    </bls-col>
+    *    <bls-col resize field-name="isActive" title="Active">
+    *        <i ng-if="::row.isActive" class="fa fa-check" style="color: #333"></i>
+    *    </bls-col>
+    *    <bls-col resize title="Actions">
+    *        <span data-placement="top" data-toggle="tooltip" title="Modifier">
+    *            <a class="btn btn-primary btn-icon btn-circle btn-sm" ui-sref=".detail({id: ::row.id})"><span class="glyphicon glyphicon-pencil"></span></a>
+    *        </span>
+    *        <span data-placement="top" data-toggle="tooltip" title="Supprimer">
+    *            <a class="btn btn-danger btn-icon btn-circle btn-sm" href="javascript: void(0)" ng-click="options.callbacks[1](::row)"><span class="glyphicon glyphicon-trash"></span></a>
+    *        </span>
+    *    </bls-col>
+    * </bls-cols>
+    * </bls-table>
+    * </pre>
     *
-    * **Note:** note
+    *
+    * **Note:** problem with save localStorage settings on ie
     */
     angular.module("bls_components", ['bls_tpls', 'ngSanitize'])
         .directive('blsTable', ['$log', '$compile', '$templateCache', '$timeout', '$parse', 'blsTableServices',
             function ($log, $compile, $templateCache, $timeout, $parse, blsTableServices) {
                 var me = this;
                 var id = 0;
-                
+
 
                 return {
                     restrict: 'E',

@@ -1,3 +1,16 @@
+/**
+* @ngdoc directive
+* @name bls_components.directive:blsToolBar
+* @scope
+* @priority 2 
+* @restrict E
+* @description
+* ToolBar for blsTable
+* @example
+* <pre>      
+* <bls-tool-bar ng-hide="options.toolbar.hide"></bls-tool-bar>
+* </pre>
+*/
 angular.module("bls_components").directive('blsToolBar', [function () {
     // Runs during compile
     return {

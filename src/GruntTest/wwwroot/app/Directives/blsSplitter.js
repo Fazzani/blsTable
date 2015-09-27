@@ -1,4 +1,43 @@
-﻿angular.module("bls_components")
+﻿/**
+* @ngdoc directive
+* @name bls_components.directive:blsSplitter
+* @scope
+* @restrict E
+* @description
+* dynamic splitter page
+* @example
+* <pre>      
+*  <bls-splitter>
+        <bls-splitter-region>
+            <p>
+                How can this be used to make a divider fill the height of the browser?
+                For this question, we can make use of vh: 1vh is equal to 1% of the viewport's height. That is to say, 100vh is equal to the height of the browser window, regardless of where the element is situated in the DOM tree:
+                HTML
+            </p><p>
+                transclude - compile the content of the element and make it available to the directive. Typically used with ngTransclude. The advantage of transclusion is that the linking function receives a transclusion function which is pre-bound to the correct scope. In a typical setup the widget creates an isolate scope, but the transclusion is not a child, but a sibling of the isolate scope. This makes it possible for the widget to have private state, and the transclusion to be bound to the parent (pre-isolate) scope.
+
+                true - transclude the content of the directive.
+                'element' - transclude the whole element including any directives defined at lower priority.
+            </p>
+            <p>
+                transclude - compile the content of the element and make it available to the directive. Typically used with ngTransclude. The advantage of transclusion is that the linking function receives a transclusion function which is pre-bound to the correct scope. In a typical setup the widget creates an isolate scope, but the transclusion is not a child, but a sibling of the isolate scope. This makes it possible for the widget to have private state, and the transclusion to be bound to the parent (pre-isolate) scope.
+
+                true - transclude the content of the directive.
+                'element' - transclude the whole element including any directives defined at lower priority.
+            </p>
+            <p>
+                transclude - compile the content of the element and make it available to the directive. Typically used with ngTransclude. The advantage of transclusion is that the linking function receives a transclusion function which is pre-bound to the correct scope. In a typical setup the widget creates an isolate scope, but the transclusion is not a child, but a sibling of the isolate scope. This makes it possible for the widget to have private state, and the transclusion to be bound to the parent (pre-isolate) scope.
+
+                true - transclude the content of the directive.
+                'element' - transclude the whole element including any directives defined at lower priority.
+            </p>
+        </bls-splitter-region>
+        <bls-splitter-region>
+        </bls-splitter-region>
+    </bls-splitter>
+* </pre>
+*/
+angular.module("bls_components")
 .directive('blsSplitter', ['$log', 'localStorageService', function ($log, localStorageService) {
     /*--- Jquery UI is required ---*/
     var controller = ['$scope', '$log', function ($scope, $log) {

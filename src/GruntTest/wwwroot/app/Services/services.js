@@ -1,3 +1,9 @@
+/**
+* @ngdoc service
+* @name bls_components.blsTableServices
+* @description
+* blsTableServices service
+*/
 angular.module("bls_components").service('blsTableServices', ['$log', 'localStorageService', function ($log, localStorageService) {
     Array.prototype.swap = function (new_index, old_index) {
         if (new_index >= this.length) {

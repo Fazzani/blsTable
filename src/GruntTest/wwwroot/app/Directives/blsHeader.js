@@ -1,3 +1,15 @@
+/**
+ * @ngdoc directive
+ * @name bls_components.directive:blsHeader
+ * @requires blsTable
+ * @requires blsHeader 
+ * @priority -20
+ * @restrict E
+ * @description
+ * Compile Headers
+ *
+ * **Note:** This is internal directive
+ */
 angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$templateCache', '$timeout', 'localStorageService',
     function ($log, $compile, $templateCache, $timeout, localStorageService) {
         var sortDirectionEnum = { asc: 'asc', desc: 'desc' };

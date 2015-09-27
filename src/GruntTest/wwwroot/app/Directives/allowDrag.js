@@ -1,7 +1,7 @@
 /**
 * @ngdoc directive
 * @name bls_components.directive:allowDrag
-* @requires blsTable 
+* @requires bls_components.directive:blsTable 
 * @restrict A
 * @description
 * allowDrag directive

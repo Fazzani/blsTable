@@ -1,22 +1,16 @@
 ﻿/**
  * @ngdoc directive
-* @name bls_components.directive:blsCol
- * @requires $log 
- * @requires $timeout
+ * @name bls_components.directive:blsCol
+ * @requires bls_components.directive:blsTable
+ * @requires bls_components.directive:blsCols 
  * @priority -1
  * @restrict E
  * @description
- * Resize textarea automatically to the size of its text content.
- *
- * **Note:** ie<9 needs polyfill for window.getComputedStyle
- *
+ * Collect information's column
  * @example
-   <example module="bls_components">
-     <file name="index.html">
-         <textarea ng-model="text"rx-autogrow class="input-block-level"></textarea>
-         <pre>{{text}}</pre>
-     </file>
-   </example>
+ * <pre>
+ * <bls-col resize dragable title="Le nom" sort field-name="name"></bls-col>
+ * </pre>
  */
 angular.module("bls_components").directive('blsCol', ['$log', '$timeout', function ($log, $timeout) {
     var tpl = [];
@@ -62,7 +56,6 @@ angular.module("bls_components").directive('blsCol', ['$log', '$timeout', functi
     };
 
     return {
-        //transclude:true,
         priority: -1,
         require: ['^blsTable', '^blsCols'],
         restrict: 'E',
