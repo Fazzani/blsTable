@@ -8,7 +8,7 @@
  * @description
  * Compile Headers
  *
- * **Note:** This is internal directive
+ * **Note:** This is an internal directive
  */
 angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$templateCache', '$timeout', 'localStorageService',
     function ($log, $compile, $templateCache, $timeout, localStorageService) {

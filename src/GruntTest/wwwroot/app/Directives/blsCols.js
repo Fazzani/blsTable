@@ -7,8 +7,6 @@
  * @restrict E
  * @description
  * Collect all columns
- *
- * **Note:** This is internal directive
  */
 angular.module("bls_components").directive('blsCols', ['$log', function ($log) {
     var link = {

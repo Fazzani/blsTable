@@ -494,8 +494,6 @@ angular.module("bls_components").directive('blsCol', ['$log', '$timeout', functi
  * @restrict E
  * @description
  * Collect all columns
- *
- * **Note:** This is internal directive
  */
 angular.module("bls_components").directive('blsCols', ['$log', function ($log) {
     var link = {
@@ -1214,7 +1212,7 @@ angular.module("bls_components").directive('blsDropDown', [function () {
  * @description
  * Compile Headers
  *
- * **Note:** This is internal directive
+ * **Note:** This is an internal directive
  */
 angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$templateCache', '$timeout', 'localStorageService',
     function ($log, $compile, $templateCache, $timeout, localStorageService) {
@@ -1366,7 +1364,7 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
  * @restrict A
  * @description
  * compile recursive rows
- * **Note:** This is internal directive
+ * **Note:** This is an internal directive
  */
 angular.module("bls_components").directive('blsRowChild', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
     var link = function (scope, element, attrs, ctrls, transclude) {
@@ -1445,7 +1443,7 @@ angular.module("bls_components").directive('blsRowChild', ['$log', '$compile', '
  * @restrict E
  * @description
  * compile recursive rows
- * **Note:** This is internal directive
+ * **Note:** This is an internal directive
  */
 angular.module("bls_components").directive('blsRows', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
     var link = function (scope, element, attrs, ctrls) {
@@ -1838,7 +1836,8 @@ angular.module("bls_components").directive('blsToolBar', [function () {
     };
 }]);
 /**
-* @requires bls_components.directive:draggable
+* @ngdoc directive
+* @name bls_components.directive:draggable
 * @restrict AEC
 * @description
 * add drag capability to the component
@@ -1869,6 +1868,8 @@ angular.module("bls_components").directive('draggable', function () {
     };
 });
 /**
+* @ngdoc directive
+* @name bls_components.directive:blsCol
 * @requires bls_components.directive:droppable
 * @restrict AEC
 * @description

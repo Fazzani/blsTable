@@ -7,7 +7,7 @@
  * @restrict A
  * @description
  * compile recursive rows
- * **Note:** This is internal directive
+ * **Note:** This is an internal directive
  */
 angular.module("bls_components").directive('blsRowChild', ['$log', '$compile', '$templateCache', '$timeout', function ($log, $compile, $templateCache, $timeout) {
     var link = function (scope, element, attrs, ctrls, transclude) {
