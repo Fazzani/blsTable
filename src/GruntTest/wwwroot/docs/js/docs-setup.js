@@ -54,7 +54,7 @@ NG_DOCS={
       "type": "directive",
       "moduleName": "bls_components",
       "shortDescription": "Collect all columns",
-      "keywords": "api bls_components collect columns directive internal"
+      "keywords": "api bls_components collect columns directive"
     },
     {
       "section": "api",
@@ -136,6 +136,24 @@ NG_DOCS={
       "moduleName": "bls_components",
       "shortDescription": "ToolBar for blsTable",
       "keywords": "api bls_components blstable directive hide ng-hide options toolbar"
+    },
+    {
+      "section": "api",
+      "id": "bls_components.directive:draggable",
+      "shortName": "draggable",
+      "type": "directive",
+      "moduleName": "bls_components",
+      "shortDescription": "add drag capability to the component",
+      "keywords": "add aec api bls_components capability component directive drag"
+    },
+    {
+      "section": "api",
+      "id": "bls_components.directive:droppable",
+      "shortName": "droppable",
+      "type": "directive",
+      "moduleName": "bls_components",
+      "shortDescription": "add drop capability to the component",
+      "keywords": "add aec api bls_components capability component directive drop"
     },
     {
       "section": "api",

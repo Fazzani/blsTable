@@ -1869,8 +1869,7 @@ angular.module("bls_components").directive('draggable', function () {
 });
 /**
 * @ngdoc directive
-* @name bls_components.directive:blsCol
-* @requires bls_components.directive:droppable
+* @name bls_components.directive:droppable
 * @restrict AEC
 * @description
 * add drop capability to the component

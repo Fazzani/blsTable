@@ -156,9 +156,8 @@ module.exports = function (grunt) {
             }
         },
         ngdocs: {
-            all: { src: 'wwwroot/app/**/*.js'},
+            all: { src: ['wwwroot/app/Services/*.js', 'wwwroot/app/Directives/*.js'] },
             options: {
-                src:'wwwroot/app/**/*.js',
                 dest: generatedDocsPath,
                 //scripts: ['../app.min.js'],
                 html5Mode: true,
