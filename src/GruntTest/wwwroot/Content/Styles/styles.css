@@ -1,3 +1,6 @@
+input.ng-invalid{
+    border:thin solid red;
+}
 .colLineOnResize {
     position: absolute;
     z-index: 100;
@@ -504,10 +507,15 @@ i.resize {
 
 
 /*-------------------------Splitter Page-----------------------*/
-.ui-resizable {
-    position: relative;
-}
 
+.ui-resizable {
+    display:inline-flex;
+}
+.ui-resizable.last{
+    flex:1;
+    height:initial !important;
+    width:100% !important;
+}
 .ui-resizable-e {
     z-index: 99999;
     width: 4px !important;

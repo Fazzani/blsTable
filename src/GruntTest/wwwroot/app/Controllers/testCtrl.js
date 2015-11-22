@@ -61,6 +61,8 @@
             $log.debug('=> testCtrl :  searchedText changed => ', newValue);
             //$scope.$applyAsync(function () { $scope.options.toolbar.search.searchedText = newValue;})
         });
+        $scope.pastTime = '';
+        $scope.$watch('pastTime', function (n, o) { $log.debug('pastTime %s', $scope.pastTime); });
        
     });
 })(window.angular);

@@ -1,8 +1,8 @@
 ﻿<div class="page-header">
     <h1>blsSplitter example</h1>
 </div>
-<div style="height:100vh;width:100%;background-color:blue;overflow:auto">
-    <bls-splitter>
+<div style="display:flex;width:100%">
+    <bls-splitter style="width:100%">
         <bls-splitter-region>
             <p>
                 How can this be used to make a divider fill the height of the browser?
@@ -28,6 +28,12 @@
             </p>
         </bls-splitter-region>
         <bls-splitter-region>
+            <p>
+                transclude - compile the content of the element and make it available to the directive. Typically used with ngTransclude. The advantage of transclusion is that the linking function receives a transclusion function which is pre-bound to the correct scope. In a typical setup the widget creates an isolate scope, but the transclusion is not a child, but a sibling of the isolate scope. This makes it possible for the widget to have private state, and the transclusion to be bound to the parent (pre-isolate) scope.
+
+                true - transclude the content of the directive.
+                'element' - transclude the whole element including any directives defined at lower priority.
+            </p>
         </bls-splitter-region>
     </bls-splitter>
 </div>
