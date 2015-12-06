@@ -1,47 +1,32 @@
 ﻿/**
  * @ngdoc directive
- * @name bls_components.directive:table
- * @priority 0
- * @restrict E
- * @description
- * tables
- *
- * **Note:** This is an internal directive
- */
-angular.module("bls_components").directive('table', ['$log', 'localStorageService',
-    function ($log, localStorageService) {
-
-        var controller = ['$scope', '$element', '$log', 'localStorageService',
-            function ($scope, $element, $log, localStorageService) {
-                var me = this;
-
-            }
-        ];
-        return {
-            priority: 0,
-            restrict: 'E',
-            controller: controller
-        };
-    }]);
-/**
- * @ngdoc directive
  * @name bls_components.directive:blsResizableColumn
  * @requires table
  * @priority -1
  * @restrict A
  * @description
  * resize column's table
+ * resetResizeColumnEvent broadcast to reset width to inherited value
  */
 angular.module("bls_components").directive('blsResizableColumn', ['$log', '$compile', '$templateCache', '$timeout', 'localStorageService',
     function ($log, $compile, $templateCache, $timeout, localStorageService) {
+        var resizeLineTpl = '<span class="resize-header-table" style="height: 100%;width: 4px;background-color: red;cursor: col-resize;position: absolute;right: 0; top: 0;" draggable="true"></span>';
+
         var link = {
             pre: function (scope, element, attrs, ctrls) {
+                
                 var me = this;
+                    
+                var $table = element.closest('table');
                 //var tableCtrl = ctrls[0];
                 me.resizeColData = null;
                 me.resizePressed = false;
                 // var $resizeLine = $(element[0].nextElementSibling);
                 // $resizeLine.hide();
+                scope.$on('resetResizeColumnEvent', function (e) {
+                    //$log.debug('resetResizeColumnEvent inercepted....');
+                    element.css('width', 'inherit');
+                });
 
                 me.resizeData = {};
                 scope.resizeStart = function (e) {
@@ -56,7 +41,7 @@ angular.module("bls_components").directive('blsResizableColumn', ['$log', '$comp
                     me.resizeData.startX = e.pageX || e.originalEvent.pageX;
                     me.resizeData.startWidth = $targetElm.width();
                     me.resizeData.$targetElm = $targetElm;
-                    me.resizeData.tableWidth = $resizeLine.closest('table').width();
+                    me.resizeData.tableWidth = $table.width();
                     $log.debug(me.resizeData);
 
                     document.addEventListener('mousemove', scope.drag);
@@ -65,16 +50,18 @@ angular.module("bls_components").directive('blsResizableColumn', ['$log', '$comp
                     e.preventDefault();
                 };
 
-                scope.drag = function(e) {
-                    $log.info('in drag function => ', me.resizeData);
-                    var offset = (e.pageX || e.originalEvent.pageX )- me.resizeData.startX;
+                scope.drag = function (e) {
+                        $log.info('in drag function => ', me.resizeData);
 
-                    //$resizeLine.show();
-                    //$resizeLine.css('left', me.resizeData.siblingTarget.offsetLeft);
-                    var newWidth = me.resizeData.startWidth + offset;
-                    //var percentNewWidth = me.resizeData.tableWidth / newWidth;
-                    //$log.debug('new percentNewWidth=> ', percentNewWidth);
                     if (me.resizeData.resizePressed) {
+                        var offset = (e.pageX || e.originalEvent.pageX) - me.resizeData.startX;
+
+                        //$resizeLine.show();
+                        //$resizeLine.css('left', me.resizeData.siblingTarget.offsetLeft);
+                        var newWidth = me.resizeData.startWidth + offset;
+                        //var percentNewWidth = me.resizeData.tableWidth / newWidth;
+                        //$log.debug('new percentNewWidth=> ', percentNewWidth);
+
                         me.resizeData.$targetElm.width(newWidth);
                         //$siblingElm.width(me.resizeData.startWidthSibling - offset);
                         //me.resizeColData = {
@@ -84,11 +71,10 @@ angular.module("bls_components").directive('blsResizableColumn', ['$log', '$comp
                         //    widthSibling: $siblingElm.width()
                         //};
                     }
-                }
+                };
                 scope.resizeEnd = function (e) {
-                    console.log('resize end');
+                    $log.debug('resize end');
                     if (me.resizeData.resizePressed) {
-                        console.log('resize end stopPropagation');
 
                         e.stopPropagation();
                         e.preventDefault();
@@ -108,8 +94,8 @@ angular.module("bls_components").directive('blsResizableColumn', ['$log', '$comp
                         return false;
                     }
                 };
-                
-                var $resizeLine = angular.element('<span class="resize-header-table" style="height: 100%;width: 4px;background-color: red;cursor: col-resize;position: absolute;right: 0; top: 0;" draggable="true"></span>');
+                var $resizeLine = angular.element(resizeLineTpl);
+
                 element.append($resizeLine);
                 $resizeLine.on('dragstart', scope.resizeStart);
                 $log.debug('in blsResizableColumn directive');
@@ -122,7 +108,7 @@ angular.module("bls_components").directive('blsResizableColumn', ['$log', '$comp
         //];
         return {
             priority: -1,
-           // require: ['^?table'],
+            // require: ['^?table'],
             restrict: 'A',
             link: link
         };

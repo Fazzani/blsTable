@@ -1,6 +1,6 @@
 (function (angular) {
     'use strict';
-    app.controller("testCtrl", function ($scope, $http, $filter, $timeout, $log, $q, optionsBlsTable) {
+    app.controller("testCtrl", function ($scope, $http, $filter, $timeout, $log, $q, optionsBlsTable, $rootScope) {
 
         $scope.options = optionsBlsTable.options;
         var root = 'http://localhost:3000';
@@ -69,6 +69,10 @@
             $log.debug('getting data for resizableTableModel');
 
         });
+
+        $scope.resetResizeColumn = function () {
+            $rootScope.$broadcast('resetResizeColumnEvent');
+        };
        
     });
 })(window.angular);
