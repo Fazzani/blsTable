@@ -189,7 +189,7 @@ module.exports = function (grunt) {
     //grunt.registerTask('deployProd', ['s3:prod']);
     grunt.registerTask('newVersionWithoutPublish', ['clean', 'concat', 'cssmin:publish', 'uglify:publish']);
     grunt.registerTask("default", ['clean', 'concat', 'cssmin:publish', 'uglify:publish', 'bump']);
-    grunt.registerTask("publishDev", ['clean', 'concat', 'cssmin:dev', 'uglify:all', 'copy:css', 'jshint']);
+    grunt.registerTask("publishDev", ['clean', 'concat', 'cssmin:dev', 'uglify:all', 'copy:css']);
     grunt.registerTask("publish_new_version_nuget", ['clean', 'concat', 'cssmin:dev', 'uglify:all', 'copy:css', 'bump', 'nuget_pack', 'nuget_publish']);
     grunt.registerTask("nuget_pack", "Create a nuget package", function () {
         //we're running asynchronously so we need to grab

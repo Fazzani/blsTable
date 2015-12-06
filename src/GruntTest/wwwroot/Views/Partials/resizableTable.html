@@ -1,0 +1,22 @@
+<!--<pre>{{model.data|json}}</pre>--> 
+    
+<table class="table">
+    <thead>
+        <tr>
+            <th bls-resizable-column>id</th>
+            <th bls-resizable-column>name</th>
+            <th bls-resizable-column>gender</th>
+            <th bls-resizable-column>email</th>
+            <th bls-resizable-column>company</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="m in model.data">
+            <td ng-bind="m['id']"></td>
+            <td ng-bind="m['name']"></td>
+            <td ng-bind="m['gender']"></td>
+            <td ng-bind="m['email']"></td>
+            <td ng-bind="m['company']"></td>
+        </tr>
+    </tbody>
+</table>

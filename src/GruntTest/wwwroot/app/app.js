@@ -47,9 +47,14 @@ var app = angular.module('app', ['bls_components', 'ui.bootstrap', 'LocalStorage
                 "footer@": { template: '<div class="nav">BLS components</div>' }
             },
             controller: 'testCtrl'
+        }).state('root.resizableTable', {
+            url: "/resizableTable",
+            views: {
+                "header@": { template: "" },
+                "main@": { templateUrl: 'Views/Partials/resizableTable.html', controller: 'testCtrl' },
+                "footer@": { template: '<div class="nav">BLS components</div>' }
+            }
         });
-
-       
 
         $locationProvider.html5Mode(true);
     }
