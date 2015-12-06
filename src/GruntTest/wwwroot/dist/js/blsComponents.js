@@ -1443,14 +1443,14 @@ angular.module("bls_components").directive('table', ['$log', 'localStorageServic
  * @priority -1
  * @restrict A
  * @description
- * resize tables
+ * resize column's table
  */
 angular.module("bls_components").directive('blsResizableColumn', ['$log', '$compile', '$templateCache', '$timeout', 'localStorageService',
     function ($log, $compile, $templateCache, $timeout, localStorageService) {
         var link = {
             pre: function (scope, element, attrs, ctrls) {
                 var me = this;
-                var tableCtrl = ctrls[0];
+                //var tableCtrl = ctrls[0];
                 me.resizeColData = null;
                 me.resizePressed = false;
                 // var $resizeLine = $(element[0].nextElementSibling);
@@ -1466,7 +1466,6 @@ angular.module("bls_components").directive('blsResizableColumn', ['$log', '$comp
                     var $targetElm = $(me.resizeData.target);
                     me.resizePressed = true;
                     me.resizeData.resizePressed = true;
-                    //debugger;
                     me.resizeData.startX = e.pageX || e.originalEvent.pageX;
                     me.resizeData.startWidth = $targetElm.width();
                     me.resizeData.$targetElm = $targetElm;
@@ -1526,8 +1525,6 @@ angular.module("bls_components").directive('blsResizableColumn', ['$log', '$comp
                 var $resizeLine = angular.element('<span class="resize-header-table" style="height: 100%;width: 4px;background-color: red;cursor: col-resize;position: absolute;right: 0; top: 0;" draggable="true"></span>');
                 element.append($resizeLine);
                 $resizeLine.on('dragstart', scope.resizeStart);
-                //$resizeLine.on('dragend', scope.resizeEnd);
-                //$compile(element.contents())(scope);
                 $log.debug('in blsResizableColumn directive');
             }
         };
@@ -1538,7 +1535,7 @@ angular.module("bls_components").directive('blsResizableColumn', ['$log', '$comp
         //];
         return {
             priority: -1,
-            require: ['^?table'],
+           // require: ['^?table'],
             restrict: 'A',
             link: link
         };
