@@ -591,7 +591,7 @@ angular.module("bls_components")
             var _this = this;
 
             // defaults
-            var logEnabled = false;
+            var logEnabled = true;
             var useTranslateService = true;
             var routeEvent = ['$locationChangeStart', '$stateChangeStart'];
             var navigateMessage = 'You will lose unsaved changes if you leave this page';
@@ -715,7 +715,6 @@ angular.module("bls_components")
         this.allForms = function () {
             return allForms;
         };
-
         // Check all registered forms
         // if any one is dirty function will return true
 
@@ -723,7 +722,6 @@ angular.module("bls_components")
             areAllFormsClean = true;
             angular.forEach(allForms, function (item, idx) {
 
-                //debugger;
                 unsavedWarningsConfig.log('Form : ' + item.$name + ' dirty : ' + item.$dirty);
 
                 if (item.modified) {
@@ -732,6 +730,8 @@ angular.module("bls_components")
             });
             return areAllFormsClean; // no dirty forms were found
         }
+
+        this.tearDown = tearDown;
 
         // adds form controller to registered forms array
         // this array will be checked when user navigates away from page
@@ -819,6 +819,7 @@ angular.module("bls_components")
             restrict: 'A',
             controller: ['$scope', '$element', '$attrs', function ($scope, $element, $attrs) {
                 this.isEnabled = function () {
+
                     return ('true' == $attrs.bsModifiable);
                 };
             }]
@@ -826,9 +827,7 @@ angular.module("bls_components")
     }
 
     // Extending Angular.js module.
-    angular.module('blsFormModified')
-      .provider('inputModifiedConfig', configProviderFactory)
-    ;
+    angular.module('blsFormModified').provider('inputModifiedConfig', configProviderFactory);
 
     /**
      * Factory that creates configuration service.
@@ -876,8 +875,7 @@ angular.module("bls_components")
       }])
       .directive('ngForm', ['unsavedWarningSharedService', '$animate', 'inputModifiedConfig', function (unsavedWarningSharedService, $animate, inputModifiedConfig) {
           return formDirectiveFactory(unsavedWarningSharedService, $animate, inputModifiedConfig, true);
-      }])
-    ;
+      }]);
 
     function formDirectiveFactory(unsavedWarningSharedService, $animate, inputModifiedConfig, isNgForm) {
 
@@ -886,6 +884,7 @@ angular.module("bls_components")
 
         return {
             name: 'form',
+            //priority: -999,
             restrict: isNgForm ? 'EAC' : 'E',
             require: ['?form'],
             link: function ($scope, $element, attrs, controllers) {
@@ -901,7 +900,7 @@ angular.module("bls_components")
                 }
                 unsavedWarningSharedService.init(formCtrl);
 
-                formCtrl.modified = false;
+                formCtrl.false = false;
                 formCtrl.reset = reset;
 
                 // Modified models.
@@ -1015,8 +1014,7 @@ angular.module("bls_components")
 
     // Extending Angular.js module.
     angular.module('blsFormModified')
-      .directive('ngModel', ngModelModifiedFactory)
-    ;
+      .directive('ngModel', ngModelModifiedFactory);
 
     /**
      * This directive extends ng-model with modifiable behavior.
@@ -1034,7 +1032,7 @@ angular.module("bls_components")
         var config = inputModifiedConfig;
 
         return {
-            priority: 11,
+            //priority: -1000,
             restrict: 'A',
             require: ['?ngModel', '?^form', '?^bsModifiable'],
             link: function ($scope, $element, attrs, controllers) {
@@ -1081,19 +1079,46 @@ angular.module("bls_components")
                 modelCtrl.masterValue = undefined;
 
                 modelCtrl.reset = reset;
-
-                // Watching for model value changes.
                 $timeout(function () {
-                    // Watching for model value changes.
-                    $scope.$watch(modelPath, onInputValueChanged);
-                }, 1200);
+                // Watching for model value changes.
+                    console.log('modelPath =>', modelPath);
+                $scope.$watch(modelPath, onInputValueChanged);
+                }, 2000);
+                //$timeout(function () {
+                //    // Watching for model value changes.
+                //    console.log('modelPath $watchCollection =>', modelPath);
+                //    $scope.$watchCollection(modelPath, onInputCollectionValueChanged);
+                //}, 2000);
 
                 /**
                  * Sets proper modification state for model controller according to
                  * current/master value.
                  */
-                function onInputValueChanged() {
+                function onInputCollectionValueChanged(n, o) {
+                    console.log('onInputCollectionValueChanged');
+                    if (!masterValueIsSet) {
+                        initializeMasterValue();
+                    }
 
+                    var modified = !compare(modelCtrl.$modelValue, modelCtrl.masterValue);
+
+                    // If modified flag has changed.
+                    if (modelCtrl.modified !== modified) {
+
+                        // Setting new flag.
+                        modelCtrl.modified = modified;
+
+                        // Notifying the form.
+                        if (formCtrl && 'function' === typeof formCtrl.$$notifyModelModifiedStateChanged) {
+                            formCtrl.$$notifyModelModifiedStateChanged(modelCtrl);
+                        }
+
+                        // Re-decorating the element.
+                        updateCssClasses();
+                    }
+                }
+                function onInputValueChanged() {
+                    console.log('onInputValueChanged');
                     if (!masterValueIsSet) {
                         initializeMasterValue();
                     }
@@ -1120,7 +1145,8 @@ angular.module("bls_components")
                  * Initializes master value if required.
                  */
                 function initializeMasterValue() {
-
+                    console.log('in initializeMasterValue => ', modelCtrl.$modelValue);
+                    console.log('in initializeMasterValue =>  modelCtrl.masterValue  ', modelCtrl.masterValue);
                     // Initializing the master value.
                     modelCtrl.masterValue = modelCtrl.$modelValue;
 
@@ -1232,7 +1258,6 @@ angular.module("bls_components")
     }
 
 })(window, angular);
-
 /**
  * @ngdoc directive
  * @name bls_components.directive:blsHeader
@@ -1386,6 +1411,128 @@ angular.module("bls_components").directive('blsHeader', ['$log', '$compile', '$t
         };
     }]);
 
+/**
+ * @ngdoc directive
+ * @name bls_components.directive:blsResizableColumn
+ * @requires table
+ * @priority -1
+ * @restrict A
+ * @description
+ * resize column's table
+ * resetResizeColumnEvent broadcast to reset width to inherited value
+ */
+angular.module("bls_components").directive('blsResizableColumn', ['$log', '$compile', '$templateCache', '$timeout', 'localStorageService',
+    function ($log, $compile, $templateCache, $timeout, localStorageService) {
+        var resizeLineTpl = '<span class="resize-header-table" style="height: 100%;width: 4px;background-color: red;cursor: col-resize;position: absolute;right: 0; top: 0;" draggable="true"></span>';
+
+        var link = {
+            pre: function (scope, element, attrs, ctrls) {
+                
+                var me = this;
+                    
+                var $table = element.closest('table');
+                //var tableCtrl = ctrls[0];
+                me.resizeColData = null;
+                me.resizePressed = false;
+                // var $resizeLine = $(element[0].nextElementSibling);
+                // $resizeLine.hide();
+                scope.$on('resetResizeColumnEvent', function (e) {
+                    //$log.debug('resetResizeColumnEvent inercepted....');
+                    element.css('width', 'inherit');
+                });
+
+                me.resizeData = {};
+                scope.resizeStart = function (e) {
+                    console.log('resize start');
+                    var target = e.target ? e.target : e.srcElement;
+                    //$resizeLine.height($($resizeLine.closest('table')).height());
+                    me.resizeData.target = target.parentNode;
+
+                    var $targetElm = $(me.resizeData.target);
+                    me.resizePressed = true;
+                    me.resizeData.resizePressed = true;
+                    me.resizeData.startX = e.pageX || e.originalEvent.pageX;
+                    me.resizeData.startWidth = $targetElm.width();
+                    me.resizeData.$targetElm = $targetElm;
+                    me.resizeData.tableWidth = $table.width();
+                    $log.debug(me.resizeData);
+
+                    document.addEventListener('mousemove', scope.drag);
+                    document.addEventListener('mouseup', scope.resizeEnd);
+                    e.stopPropagation();
+                    e.preventDefault();
+                };
+
+                scope.drag = function (e) {
+                        $log.info('in drag function => ', me.resizeData);
+
+                    if (me.resizeData.resizePressed) {
+                        var offset = (e.pageX || e.originalEvent.pageX) - me.resizeData.startX;
+
+                        //$resizeLine.show();
+                        //$resizeLine.css('left', me.resizeData.siblingTarget.offsetLeft);
+                        var newWidth = me.resizeData.startWidth + offset;
+                        //var percentNewWidth = me.resizeData.tableWidth / newWidth;
+                        //$log.debug('new percentNewWidth=> ', percentNewWidth);
+
+                        me.resizeData.$targetElm.width(newWidth);
+                        //$siblingElm.width(me.resizeData.startWidthSibling - offset);
+                        //me.resizeColData = {
+                        //    index: me.resizeData.target.cellIndex,
+                        //    width: $targetElm.width(),
+                        //    indexSibling: me.resizeData.siblingTarget.cellIndex,
+                        //    widthSibling: $siblingElm.width()
+                        //};
+                    }
+                };
+                scope.resizeEnd = function (e) {
+                    $log.debug('resize end');
+                    if (me.resizeData.resizePressed) {
+
+                        e.stopPropagation();
+                        e.preventDefault();
+                        e.returnValue = false;
+                        e.cancelBubble = true;
+                        //$resizeLine.hide();
+                        document.removeEventListener('mousemove', scope.drag);
+                        document.removeEventListener('mouseup', scope.resizeEnd);
+
+                        if (me.resizeColData !== null) {
+                            $scope.setColWidth(me.resizeColData.index, me.resizeColData.width);
+                            $scope.setColWidth(me.resizeColData.indexSibling, me.resizeColData.widthSibling);
+                            me.resizeColData = null;
+                        }
+                        me.resizePressed = false;
+                        me.resizeData = {};
+                        return false;
+                    }
+                };
+                var $resizeLine = angular.element(resizeLineTpl);
+
+                element.append($resizeLine);
+                $resizeLine.on('dragstart', scope.resizeStart);
+                $log.debug('in blsResizableColumn directive');
+            }
+        };
+        //var controller = ['$scope', '$filter', '$timeout', '$element', '$log', 'localStorageService', 'blsTableServices',
+        //    function ($scope, $filter, $timeout, $element, $log, localStorageService, blsTableServices) {
+        //        var me = this;
+
+        //];
+        return {
+            priority: -1,
+            // require: ['^?table'],
+            restrict: 'A',
+            link: link
+        };
+    }]);
+
+//    Ràf 
+// - resize line
+// - save columns size on localStorage
+// - init columns size from locaStorage
+// - detect resize window event and resize table (reset sizes or convert it to percent)
+// - enhance resize cursor style (hover)
 /**
  * @ngdoc directive
  * @name bls_components.directive:blsRowChild

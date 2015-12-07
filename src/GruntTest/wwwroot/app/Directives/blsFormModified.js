@@ -11,7 +11,7 @@
             var _this = this;
 
             // defaults
-            var logEnabled = false;
+            var logEnabled = true;
             var useTranslateService = true;
             var routeEvent = ['$locationChangeStart', '$stateChangeStart'];
             var navigateMessage = 'You will lose unsaved changes if you leave this page';
@@ -135,7 +135,6 @@
         this.allForms = function () {
             return allForms;
         };
-
         // Check all registered forms
         // if any one is dirty function will return true
 
@@ -143,7 +142,6 @@
             areAllFormsClean = true;
             angular.forEach(allForms, function (item, idx) {
 
-                //debugger;
                 unsavedWarningsConfig.log('Form : ' + item.$name + ' dirty : ' + item.$dirty);
 
                 if (item.modified) {
@@ -152,6 +150,8 @@
             });
             return areAllFormsClean; // no dirty forms were found
         }
+
+        this.tearDown = tearDown;
 
         // adds form controller to registered forms array
         // this array will be checked when user navigates away from page
@@ -239,6 +239,7 @@
             restrict: 'A',
             controller: ['$scope', '$element', '$attrs', function ($scope, $element, $attrs) {
                 this.isEnabled = function () {
+
                     return ('true' == $attrs.bsModifiable);
                 };
             }]
@@ -246,9 +247,7 @@
     }
 
     // Extending Angular.js module.
-    angular.module('blsFormModified')
-      .provider('inputModifiedConfig', configProviderFactory)
-    ;
+    angular.module('blsFormModified').provider('inputModifiedConfig', configProviderFactory);
 
     /**
      * Factory that creates configuration service.
@@ -296,8 +295,7 @@
       }])
       .directive('ngForm', ['unsavedWarningSharedService', '$animate', 'inputModifiedConfig', function (unsavedWarningSharedService, $animate, inputModifiedConfig) {
           return formDirectiveFactory(unsavedWarningSharedService, $animate, inputModifiedConfig, true);
-      }])
-    ;
+      }]);
 
     function formDirectiveFactory(unsavedWarningSharedService, $animate, inputModifiedConfig, isNgForm) {
 
@@ -306,6 +304,7 @@
 
         return {
             name: 'form',
+            //priority: -999,
             restrict: isNgForm ? 'EAC' : 'E',
             require: ['?form'],
             link: function ($scope, $element, attrs, controllers) {
@@ -321,7 +320,7 @@
                 }
                 unsavedWarningSharedService.init(formCtrl);
 
-                formCtrl.modified = false;
+                formCtrl.false = false;
                 formCtrl.reset = reset;
 
                 // Modified models.
@@ -435,8 +434,7 @@
 
     // Extending Angular.js module.
     angular.module('blsFormModified')
-      .directive('ngModel', ngModelModifiedFactory)
-    ;
+      .directive('ngModel', ngModelModifiedFactory);
 
     /**
      * This directive extends ng-model with modifiable behavior.
@@ -454,7 +452,7 @@
         var config = inputModifiedConfig;
 
         return {
-            priority: 11,
+            //priority: -1000,
             restrict: 'A',
             require: ['?ngModel', '?^form', '?^bsModifiable'],
             link: function ($scope, $element, attrs, controllers) {
@@ -501,19 +499,46 @@
                 modelCtrl.masterValue = undefined;
 
                 modelCtrl.reset = reset;
-
-                // Watching for model value changes.
                 $timeout(function () {
-                    // Watching for model value changes.
-                    $scope.$watch(modelPath, onInputValueChanged);
-                }, 1200);
+                // Watching for model value changes.
+                    console.log('modelPath =>', modelPath);
+                $scope.$watch(modelPath, onInputValueChanged);
+                }, 2000);
+                //$timeout(function () {
+                //    // Watching for model value changes.
+                //    console.log('modelPath $watchCollection =>', modelPath);
+                //    $scope.$watchCollection(modelPath, onInputCollectionValueChanged);
+                //}, 2000);
 
                 /**
                  * Sets proper modification state for model controller according to
                  * current/master value.
                  */
-                function onInputValueChanged() {
+                function onInputCollectionValueChanged(n, o) {
+                    console.log('onInputCollectionValueChanged');
+                    if (!masterValueIsSet) {
+                        initializeMasterValue();
+                    }
 
+                    var modified = !compare(modelCtrl.$modelValue, modelCtrl.masterValue);
+
+                    // If modified flag has changed.
+                    if (modelCtrl.modified !== modified) {
+
+                        // Setting new flag.
+                        modelCtrl.modified = modified;
+
+                        // Notifying the form.
+                        if (formCtrl && 'function' === typeof formCtrl.$$notifyModelModifiedStateChanged) {
+                            formCtrl.$$notifyModelModifiedStateChanged(modelCtrl);
+                        }
+
+                        // Re-decorating the element.
+                        updateCssClasses();
+                    }
+                }
+                function onInputValueChanged() {
+                    console.log('onInputValueChanged');
                     if (!masterValueIsSet) {
                         initializeMasterValue();
                     }
@@ -540,7 +565,8 @@
                  * Initializes master value if required.
                  */
                 function initializeMasterValue() {
-
+                    console.log('in initializeMasterValue => ', modelCtrl.$modelValue);
+                    console.log('in initializeMasterValue =>  modelCtrl.masterValue  ', modelCtrl.masterValue);
                     // Initializing the master value.
                     modelCtrl.masterValue = modelCtrl.$modelValue;
 

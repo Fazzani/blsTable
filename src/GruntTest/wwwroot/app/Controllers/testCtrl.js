@@ -1,6 +1,7 @@
 (function (angular) {
     'use strict';
-    app.controller("testCtrl", function ($scope, $http, $filter, $timeout, $log, $q, optionsBlsTable) {
+    app.controller("testCtrl", function ($scope, $http, $filter, $timeout, $log, $q, optionsBlsTable, $rootScope) {
+
         $scope.options = optionsBlsTable.options;
         var root = 'http://localhost:3000';
         // http://localhost:3000/persons/1/friends
@@ -37,7 +38,6 @@
                 });
                 
             }
-            $log.debug('in query');
             if (angular.isDefined(filters) && angular.isArray(filters)) {
                 $log.debug('    has filters');
                 angular.forEach(filters, function (filter, key) {
@@ -63,6 +63,16 @@
         });
         $scope.pastTime = '';
         $scope.$watch('pastTime', function (n, o) { $log.debug('pastTime %s', $scope.pastTime); });
+
+        $log.debug('getting data for resizableTableModel');
+        $scope.query(1, 20).then(function (res) {
+            $log.debug('getting data for resizableTableModel');
+
+        });
+
+        $scope.resetResizeColumn = function () {
+            $rootScope.$broadcast('resetResizeColumnEvent');
+        };
        
     });
 })(window.angular);
