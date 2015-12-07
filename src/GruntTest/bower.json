@@ -7,19 +7,19 @@
     "dist/js/blsComponents.min.js",
     "dist/styles/styles.css"
   ],
-    "dependencies": {
-        "angular": "1.4.7",
-        "angular-animate": "1.4.7",
-        "angular-bootstrap": "0.14.3",
-        "angular-local-storage": "^0.2.3",
-        "angular-route": "1.4.7",
-        "angular-sanitize": "1.4.7",
-        "angular-ui-router": "^0.2.15",
-        "bootstrap": "3.3.5",
-        "Font-Awesome": "^4.4.0",
-        "jquery": "2.1.4",
-        "jquery-ui": "1.11.4"
-    },
+  "dependencies": {
+    "angular": "1.4.7",
+    "angular-animate": "1.4.7",
+    "angular-bootstrap": "0.14.3",
+    "angular-local-storage": "^0.2.3",
+    "angular-route": "1.4.7",
+    "angular-sanitize": "1.4.7",
+    "angular-ui-router": "^0.2.15",
+    "bootstrap": "3.3.5",
+    "Font-Awesome": "^4.4.0",
+    "jquery-ui": "1.11.4",
+    "jquery": "2.1.4"
+  },
   "devDependencies": {},
   "keywords": [
     "grid",

@@ -15,7 +15,7 @@
             </table>\
             <div style="display:none" id="colsConfig" ng-transclude></div>\
             <div class="footer">\
-                <pagination class="col-md-10 col-xs-8" total-items="totalItems" ng-model="options.pagination.pageIndex" max-size="options.pagination.pager.maxSize" items-per-page="options.pagination.itemsPerPage.selected" class="pagination-sm" boundary-links="true" rotate="false"></pagination>\
+                <uib-pagination class="col-md-10 col-xs-8" total-items="totalItems" ng-model="options.pagination.pageIndex" max-size="options.pagination.pager.maxSize" items-per-page="options.pagination.itemsPerPage.selected" class="pagination-sm" boundary-links="true" rotate="false"></uib-pagination>\
                 <div class="pagerList col-md-2 col-xs-4">\
                     <select class="form-control" id="sel1" ng-model="options.pagination.itemsPerPage.selected" ng-change="updateRecordsCount()" ng-options="c as c for c in options.pagination.itemsPerPage.range" ng-selected="options.pagination.itemsPerPage.selected == c"></select>\
                 </div>\
@@ -1067,8 +1067,6 @@ angular.module("bls_components")
                     return;
                 }
 
-
-
                 // Flag to indicate that master value was initialized.
                 var masterValueIsSet = false;
 
@@ -1085,8 +1083,10 @@ angular.module("bls_components")
                 modelCtrl.reset = reset;
 
                 // Watching for model value changes.
-                $scope.$watch(modelPath, onInputValueChanged);
-
+                $timeout(function () {
+                    // Watching for model value changes.
+                    $scope.$watch(modelPath, onInputValueChanged);
+                }, 1200);
 
                 /**
                  * Sets proper modification state for model controller according to

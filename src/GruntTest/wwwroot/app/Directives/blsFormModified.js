@@ -487,8 +487,6 @@
                     return;
                 }
 
-
-
                 // Flag to indicate that master value was initialized.
                 var masterValueIsSet = false;
 
@@ -505,8 +503,10 @@
                 modelCtrl.reset = reset;
 
                 // Watching for model value changes.
-                $scope.$watch(modelPath, onInputValueChanged);
-
+                $timeout(function () {
+                    // Watching for model value changes.
+                    $scope.$watch(modelPath, onInputValueChanged);
+                }, 1200);
 
                 /**
                  * Sets proper modification state for model controller according to
