@@ -500,9 +500,9 @@
 
                 modelCtrl.reset = reset;
                 $timeout(function () {
-                    // Watching for model value changes.
+                // Watching for model value changes.
                     console.log('modelPath =>', modelPath);
-                    $scope.$watch(modelPath, onInputValueChanged);
+                $scope.$watch(modelPath, onInputValueChanged);
                 }, 2000);
                 //$timeout(function () {
                 //    // Watching for model value changes.
