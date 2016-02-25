@@ -1,7 +1,7 @@
 {
   "name": "BlsTable",
   "description": "Differents bls components.",
-  "version": "0.0.55",
+  "version": "0.0.56",
   "dependencies": {
     "express": "4.11.0"
   },
