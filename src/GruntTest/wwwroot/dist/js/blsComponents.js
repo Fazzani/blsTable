@@ -579,10 +579,8 @@ angular.module("bls_components")
     };
 }]);
 (function (window, angular) {
-    'use strict';
     /*jshint globalstrict: true*/
     /*jshint undef:false */
-
 
     // Registering Angular.js module.
     angular.module('blsFormModified', [])
@@ -591,7 +589,7 @@ angular.module("bls_components")
             var _this = this;
 
             // defaults
-            var logEnabled = true;
+            var logEnabled = false;
             var useTranslateService = true;
             var routeEvent = ['$locationChangeStart', '$stateChangeStart'];
             var navigateMessage = 'You will lose unsaved changes if you leave this page';
@@ -841,7 +839,8 @@ angular.module("bls_components")
         var config = {
             enabledGlobally: true,
             modifiedClassName: 'ng-modified',
-            notModifiedClassName: 'ng-not-modified'
+            notModifiedClassName: 'ng-not-modified',
+            eventForInitWatchingModel: undefined
         };
 
         return {
@@ -851,6 +850,10 @@ angular.module("bls_components")
             },
             disableGlobally: function () {
                 config.enabledGlobally = false;
+                return this;
+            },
+            setEventForInitWatchingModel: function (eventForInitWatchingModel) {// l'event qui d�clenche le watch d'un objet
+                config.eventForInitWatchingModel = eventForInitWatchingModel;
                 return this;
             },
             setModifiedClassName: function (modifiedClassName) {
@@ -884,130 +887,137 @@ angular.module("bls_components")
 
         return {
             name: 'form',
-            //priority: -999,
+            //priority: 402,
             restrict: isNgForm ? 'EAC' : 'E',
             require: ['?form'],
-            link: function ($scope, $element, attrs, controllers) {
+            link: {
+                post: function preLink($scope, $element, attrs, controllers) {
 
-                // Handling controllers.
-                var formCtrl = controllers[0];
-                var parentFormCtrl = (formCtrl.$$parentForm || $element.parent().controller('form'));
+                    // Handling controllers.
+                    var formCtrl = controllers[0];
+                    var parentFormCtrl = (formCtrl.$$parentForm || $element.parent().controller('form'));
 
-                // Form controller is required for this directive to operate.
-                // Parent form is optional.
-                if (!formCtrl) {
-                    return;
-                }
-                unsavedWarningSharedService.init(formCtrl);
+                    // Form controller is required for this directive to operate.
+                    // Parent form is optional.
+                    debugger;
+                    if (!formCtrl || attrs.detectChangments !== "true") {
+                        return;
+                    }
+                    unsavedWarningSharedService.init(formCtrl);
 
-                formCtrl.false = false;
-                formCtrl.reset = reset;
+                    formCtrl.false = false;
+                    formCtrl.reset = reset;
 
-                // Modified models.
-                formCtrl.modifiedCount = 0;
-                formCtrl.modifiedModels = [];
-                formCtrl.$$notifyModelModifiedStateChanged = function (modelCtrl) {
-                    onModifiedStateChanged(modelCtrl, formCtrl.modifiedModels);
-                };
+                    // Modified models.
+                    formCtrl.modifiedCount = 0;
+                    formCtrl.modifiedModels = [];
+                    formCtrl.$$notifyModelModifiedStateChanged = function (modelCtrl) {
+                        onModifiedStateChanged(modelCtrl, formCtrl.modifiedModels);
+                    };
 
-                // Modified child forms.
-                formCtrl.modifiedChildFormsCount = 0;
-                formCtrl.modifiedChildForms = [];
-                formCtrl.$$notifyChildFormModifiedStateChanged = function (childFormCtrl) {
-                    onModifiedStateChanged(childFormCtrl, formCtrl.modifiedChildForms);
-                };
+                    // Modified child forms.
+                    formCtrl.modifiedChildFormsCount = 0;
+                    formCtrl.modifiedChildForms = [];
+                    formCtrl.$$notifyChildFormModifiedStateChanged = function (childFormCtrl) {
+                        onModifiedStateChanged(childFormCtrl, formCtrl.modifiedChildForms);
+                    };
 
 
-                /**
-                 * Resets all form inputs to it's master values.
-                 */
-                function reset() {
+                    /**
+                     * Resets all form inputs to it's master values.
+                     */
+                    function reset() {
 
-                    // Resetting modified models.
-                    angular.forEach(formCtrl.modifiedModels, function (modelCtrl) {
-                        modelCtrl.reset();
-                    });
+                        // Resetting modified models.
+                        angular.forEach(formCtrl.modifiedModels, function (modelCtrl) {
+                            modelCtrl.reset();
+                        });
 
-                    // Resetting modified child forms.
-                    angular.forEach(formCtrl.modifiedChildForms, function (childFormCtrl) {
-                        childFormCtrl.reset();
-                    });
-                }
-
-                /**
-                 * This universal function is called when child model or child form is modified
-                 * by the modified component itself.
-                 * It will update the corresponding tracking list, the number of modified components
-                 * and the form itself if required.
-                 *
-                 * @param ctrl  The modified model or modified form controller
-                 * @param list  The tracking list of modified controllers (models or forms)
-                 */
-                function onModifiedStateChanged(ctrl, list) {
-
-                    var listIndex = list.indexOf(ctrl);
-                    var presentInList = (-1 !== listIndex);
-
-                    var updateRequired = true;
-
-                    if (ctrl.modified && !presentInList) {
-
-                        // Adding model to the internal list of modified models.
-                        list.push(ctrl);
-
-                    } else if (!ctrl.modified && presentInList) {
-
-                        // Removing model from the internal list of modified models.
-                        list.splice(listIndex, 1);
-
-                    } else {
-                        // Edge case when update is not required.
-                        updateRequired = false;
+                        // Resetting modified child forms.
+                        angular.forEach(formCtrl.modifiedChildForms, function (childFormCtrl) {
+                            childFormCtrl.reset();
+                        });
                     }
 
-                    if (updateRequired) {
+                    /**
+                     * This universal function is called when child model or child form is modified
+                     * by the modified component itself.
+                     * It will update the corresponding tracking list, the number of modified components
+                     * and the form itself if required.
+                     *
+                     * @param ctrl  The modified model or modified form controller
+                     * @param list  The tracking list of modified controllers (models or forms)
+                     */
+                    function onModifiedStateChanged(ctrl, list) {
 
-                        updateModifiedState();
+                        var listIndex = list.indexOf(ctrl);
+                        var presentInList = (-1 !== listIndex);
 
-                        // Notifying the parent form if it presents.
-                        if (parentFormCtrl && 'function' === typeof parentFormCtrl.$$notifyChildFormModifiedStateChanged) {
-                            parentFormCtrl.$$notifyChildFormModifiedStateChanged(formCtrl);
+                        var updateRequired = true;
+
+                        if (ctrl.modified && !presentInList) {
+
+                            // Adding model to the internal list of modified models.
+                            list.push(ctrl);
+
+                        } else if (!ctrl.modified && presentInList) {
+
+                            // Removing model from the internal list of modified models.
+                            list.splice(listIndex, 1);
+
+                        } else {
+                            // Edge case when update is not required.
+                            updateRequired = false;
                         }
 
-                        updateCssClasses();
+                        if (updateRequired) {
+
+                            updateModifiedState();
+
+                            // Notifying the parent form if it presents.
+                            if (parentFormCtrl && 'function' === typeof parentFormCtrl.$$notifyChildFormModifiedStateChanged) {
+                                parentFormCtrl.$$notifyChildFormModifiedStateChanged(formCtrl);
+                            }
+
+                            updateCssClasses();
+                        }
+                    }
+
+                    /**
+                     * Updates form modified state.
+                     *
+                     * Form is considered modified when it has at least one
+                     * modified element or child form.
+                     */
+                    function updateModifiedState() {
+
+                        formCtrl.modifiedCount = formCtrl.modifiedModels.length;
+                        formCtrl.modifiedChildFormsCount = formCtrl.modifiedChildForms.length;
+
+                        formCtrl.modified = (formCtrl.modifiedCount + formCtrl.modifiedChildFormsCount) > 0;
 
                     }
 
+                    formCtrl.ForceSetModified = function (newValue) {
+                        formCtrl.modified = newValue;
+                        formCtrl.$commitViewValue();
+
+                        $scope.$broadcast('commitViewValue', formCtrl);
+                    };
+
+                    /**
+                     * Decorates element with proper CSS classes.
+                     */
+                    function updateCssClasses() {
+                        $animate.addClass($element, (formCtrl.modified ? config.modifiedClassName : config.notModifiedClassName));
+                        $animate.removeClass($element, (formCtrl.modified ? config.notModifiedClassName : config.modifiedClassName));
+                    }
+
+                    $scope.$on('$destroy', function () {
+                        unsavedWarningSharedService.removeForm(formCtrl);
+                    });
+
                 }
-
-                /**
-                 * Updates form modified state.
-                 *
-                 * Form is considered modified when it has at least one
-                 * modified element or child form.
-                 */
-                function updateModifiedState() {
-
-                    formCtrl.modifiedCount = formCtrl.modifiedModels.length;
-                    formCtrl.modifiedChildFormsCount = formCtrl.modifiedChildForms.length;
-
-                    formCtrl.modified =
-                      (formCtrl.modifiedCount + formCtrl.modifiedChildFormsCount) > 0
-                    ;
-                }
-
-                /**
-                 * Decorates element with proper CSS classes.
-                 */
-                function updateCssClasses() {
-                    $animate.addClass($element, (formCtrl.modified ? config.modifiedClassName : config.notModifiedClassName));
-                    $animate.removeClass($element, (formCtrl.modified ? config.notModifiedClassName : config.modifiedClassName));
-                }
-
-                $scope.$on('$destroy', function () {
-                    unsavedWarningSharedService.removeForm(formCtrl);
-                });
-
             }
         };
     }
@@ -1026,198 +1036,208 @@ angular.module("bls_components")
      *
      * @returns {object}
      */
-    function ngModelModifiedFactory($animate, inputModifiedConfig, $timeout) {
+    function ngModelModifiedFactory($animate, inputModifiedConfig, $timeout, $rootScope) {
 
         // Shortcut.
         var config = inputModifiedConfig;
 
         return {
-            //priority: -1000,
+            //priority: 401,
             restrict: 'A',
             require: ['?ngModel', '?^form', '?^bsModifiable'],
             link: function ($scope, $element, attrs, controllers) {
-
-                /**
-                 * Path to a model variable inside the scope.
-                 * It can be as simple as: "foo" or as complex as "foo.bar[1].baz.qux".
-                 */
-                var modelPath = attrs.ngModel;
-
-                // Handling controllers.
-                var modelCtrl = controllers[0];
                 var formCtrl = controllers[1];
-                var bsModifiable = controllers[2];
+                //console.log('formCtrl => - ----------------------------------- ', formCtrl);
+                if (angular.isDefined(formCtrl) && formCtrl != null) {
 
-                // Model controller is required for this directive to operate.
-                // Parent form controller is optional.
-                if (!modelCtrl) {
-                    return;
-                }
 
-                // This behavior is applied only when form element or
-                // one of it's parents has a bsModifiable directive present
-                // or when global switch is set.
-                var enabled = (bsModifiable ? bsModifiable.isEnabled() : undefined);
-                if (
-                     (config.enabledGlobally && false == enabled)
-                  || (!config.enabledGlobally && true !== enabled)
-                ) {
-                    return;
-                }
+                    /**
+                     * Path to a model variable inside the scope.
+                     * It can be as simple as: "foo" or as complex as "foo.bar[1].baz.qux".
+                     */
+                    var modelPath = attrs.ngModel;
 
-                // Flag to indicate that master value was initialized.
-                var masterValueIsSet = false;
+                    // Handling controllers.
+                    var modelCtrl = controllers[0];
+                    var bsModifiable = controllers[2];
 
-                // Saving handle to original set-pristine method.
-                var originalSetPristine = modelCtrl.$setPristine;
-
-                // Replacing original set-pristine with our own.
-                modelCtrl.$setPristine = setPristine;
-
-                modelCtrl.modified = false;
-
-                modelCtrl.masterValue = undefined;
-
-                modelCtrl.reset = reset;
-                $timeout(function () {
-                // Watching for model value changes.
-                    console.log('modelPath =>', modelPath);
-                $scope.$watch(modelPath, onInputValueChanged);
-                }, 2000);
-                //$timeout(function () {
-                //    // Watching for model value changes.
-                //    console.log('modelPath $watchCollection =>', modelPath);
-                //    $scope.$watchCollection(modelPath, onInputCollectionValueChanged);
-                //}, 2000);
-
-                /**
-                 * Sets proper modification state for model controller according to
-                 * current/master value.
-                 */
-                function onInputCollectionValueChanged(n, o) {
-                    console.log('onInputCollectionValueChanged');
-                    if (!masterValueIsSet) {
-                        initializeMasterValue();
+                    // Model controller is required for this directive to operate.
+                    // Parent form controller is optional.
+                    if (!modelCtrl) {
+                        return;
                     }
 
-                    var modified = !compare(modelCtrl.$modelValue, modelCtrl.masterValue);
+                    // This behavior is applied only when form element or
+                    // one of it's parents has a bsModifiable directive present
+                    // or when global switch is set.
+                    var enabled = (bsModifiable ? bsModifiable.isEnabled() : undefined);
+                    if (
+                         (config.enabledGlobally && false == enabled)
+                      || (!config.enabledGlobally && true !== enabled)
+                    ) {
+                        return;
+                    }
 
-                    // If modified flag has changed.
-                    if (modelCtrl.modified !== modified) {
+                    // Flag to indicate that master value was initialized.
+                    var masterValueIsSet = false;
 
-                        // Setting new flag.
-                        modelCtrl.modified = modified;
 
-                        // Notifying the form.
-                        if (formCtrl && 'function' === typeof formCtrl.$$notifyModelModifiedStateChanged) {
+
+                    /*-------------------------------------------------------------------------------------   liste des fonctions ---------------------------------------------------------*/
+                    /**
+      * Overloading original set-pristine method.
+      */
+                    var setPristine = function () {
+
+                        stabilizeValue(function () {
+
+                            // Calling overloaded method.
+                            originalSetPristine.apply(this, arguments);
+
+                            // Updating parameters.
+                            modelCtrl.masterValue = modelCtrl.$modelValue;
+                            modelCtrl.modified = false;
+
+                            // Notifying the form.
                             formCtrl.$$notifyModelModifiedStateChanged(modelCtrl);
+
+                            // Re-decorating the element.
+                            updateCssClasses();
+
+                        });
+
+                    };
+                    function onInputCollectionValueChanged(n, o) {
+                        console.log('onInputCollectionValueChanged');
+                        if (!masterValueIsSet) {
+                            initializeMasterValue();
                         }
 
-                        // Re-decorating the element.
-                        updateCssClasses();
+                        var modified = !compare(modelCtrl.$modelValue, modelCtrl.masterValue);
+
+                        // If modified flag has changed.
+                        if (modelCtrl.modified !== modified) {
+
+                            // Setting new flag.
+                            modelCtrl.modified = modified;
+
+                            // Notifying the form.
+                            if (formCtrl && 'function' === typeof formCtrl.$$notifyModelModifiedStateChanged) {
+                                formCtrl.$$notifyModelModifiedStateChanged(modelCtrl);
+                            }
+
+                            // Re-decorating the element.
+                            updateCssClasses();
+                        }
                     }
-                }
-                function onInputValueChanged() {
-                    console.log('onInputValueChanged');
-                    if (!masterValueIsSet) {
-                        initializeMasterValue();
-                    }
-
-                    var modified = !compare(modelCtrl.$modelValue, modelCtrl.masterValue);
-
-                    // If modified flag has changed.
-                    if (modelCtrl.modified !== modified) {
-
-                        // Setting new flag.
-                        modelCtrl.modified = modified;
-
-                        // Notifying the form.
-                        if (formCtrl && 'function' === typeof formCtrl.$$notifyModelModifiedStateChanged) {
-                            formCtrl.$$notifyModelModifiedStateChanged(modelCtrl);
+                    function onInputValueChanged(e) {
+                        //console.log('onInputValueChanged', e);
+                        if (!masterValueIsSet) {
+                            initializeMasterValue();
                         }
 
-                        // Re-decorating the element.
-                        updateCssClasses();
+                        var modified = !compare(modelCtrl.$modelValue, modelCtrl.masterValue);
+
+                        // If modified flag has changed.
+                        if (modelCtrl.modified !== modified) {
+
+                            // Setting new flag.
+                            modelCtrl.modified = modified;
+
+                            // Notifying the form.
+                            if (formCtrl && 'function' === typeof formCtrl.$$notifyModelModifiedStateChanged) {
+                                formCtrl.$$notifyModelModifiedStateChanged(modelCtrl);
+                            }
+                            // Re-decorating the element.
+                            updateCssClasses();
+                        }
                     }
-                }
 
-                /**
-                 * Initializes master value if required.
-                 */
-                function initializeMasterValue() {
-                    console.log('in initializeMasterValue => ', modelCtrl.$modelValue);
-                    console.log('in initializeMasterValue =>  modelCtrl.masterValue  ', modelCtrl.masterValue);
-                    // Initializing the master value.
-                    modelCtrl.masterValue = modelCtrl.$modelValue;
+                    /**
+                     * Initializes master value if required.
+                     */
+                    function initializeMasterValue() {
+                        //console.log('in initializeMasterValue => ', modelCtrl.$modelValue);
+                        //console.log('in initializeMasterValue =>  modelCtrl.masterValue  ', modelCtrl.masterValue);
+                        // Initializing the master value.
+                        modelCtrl.masterValue = angular.copy(modelCtrl.$modelValue);
 
-                    // Initially decorating the element.
-                    updateCssClasses();
-
-                    masterValueIsSet = true;
-                }
-
-                /**
-                 * Decorates element with proper CSS classes.
-                 */
-                function updateCssClasses() {
-                    $animate.addClass($element, (modelCtrl.modified ? config.modifiedClassName : config.notModifiedClassName));
-                    $animate.removeClass($element, (modelCtrl.modified ? config.notModifiedClassName : config.modifiedClassName));
-                }
-
-                /**
-                 * Overloading original set-pristine method.
-                 */
-                function setPristine() {
-
-                    stabilizeValue(function () {
-
-                        // Calling overloaded method.
-                        originalSetPristine.apply(this, arguments);
-
-                        // Updating parameters.
-                        modelCtrl.masterValue = modelCtrl.$modelValue;
-                        modelCtrl.modified = false;
-
-                        // Notifying the form.
-                        formCtrl.$$notifyModelModifiedStateChanged(modelCtrl);
-
-                        // Re-decorating the element.
+                        // Initially decorating the element.
                         updateCssClasses();
 
+                        masterValueIsSet = true;
+                    }
+
+                    /**
+                     * Decorates element with proper CSS classes.
+                     */
+                    function updateCssClasses() {
+                        $animate.addClass($element, (modelCtrl.modified ? config.modifiedClassName : config.notModifiedClassName));
+                        $animate.removeClass($element, (modelCtrl.modified ? config.notModifiedClassName : config.modifiedClassName));
+                    }
+
+
+
+                    /**
+                     * Replaces current input value with a master value.
+                     */
+                    function reset() {
+                        try {
+                            eval('$scope.' + modelPath + ' = modelCtrl.masterValue;');
+                        } catch (exception) {
+                            // Missing specified model. Do nothing.
+                        }
+                    }
+
+                    /**
+                     * Stabilizes model's value.
+                     * This is required for directives such as Angular UI TinyMCE.
+                     */
+                    function stabilizeValue(callback) {
+                        var initialValue = modelCtrl.$modelValue;
+                        modelCtrl.$modelValue = null;
+                        $timeout(function () {
+                            modelCtrl.$modelValue = initialValue;
+                            $timeout(callback, 0);
+                        }, 0);
+                    }
+                    /*----------------------------------------------------------Fin liste des fonctions ----------------------------------------------------------------*/
+
+
+                    // Saving handle to original set-pristine method.
+                    var originalSetPristine = modelCtrl.$setPristine;
+
+                    // Replacing original set-pristine with our own.
+                    modelCtrl.$setPristine = setPristine;
+
+                    modelCtrl.modified = false;
+
+                    modelCtrl.masterValue = undefined;
+
+                    $scope.$on('commitViewValue', function (e) {
+                        masterValueIsSet = false;
                     });
 
-                }
 
-                /**
-                 * Replaces current input value with a master value.
-                 */
-                function reset() {
-                    try {
-                        eval('$scope.' + modelPath + ' = modelCtrl.masterValue;');
-                    } catch (exception) {
-                        // Missing specified model. Do nothing.
+                    // console.log('%c submit form', 'background-color:#777', formCtrl);
+
+                    modelCtrl.reset = reset;
+                    if (angular.isDefined(inputModifiedConfig.eventForInitWatchingModel) && !masterValueIsSet) {
+                        $rootScope.$on(inputModifiedConfig.eventForInitWatchingModel, function () {
+                            //Watching for model value changes.
+                            //console.log('%c modelPath => %s', 'background: #cc0; color: #000;font-size:12px;', modelPath);
+                            $timeout(function () { $scope.$watch(modelPath, onInputValueChanged, true); });
+                        });
                     }
+
+
+
+
                 }
-
-                /**
-                 * Stabilizes model's value.
-                 * This is required for directives such as Angular UI TinyMCE.
-                 */
-                function stabilizeValue(callback) {
-                    var initialValue = modelCtrl.$modelValue;
-                    modelCtrl.$modelValue = null;
-                    $timeout(function () {
-                        modelCtrl.$modelValue = initialValue;
-                        $timeout(callback, 0);
-                    }, 0);
-                }
-
-
-
             }
         };
     }
-    ngModelModifiedFactory.$inject = ['$animate', 'inputModifiedConfig', '$timeout'];
+    ngModelModifiedFactory.$inject = ['$animate', 'inputModifiedConfig', '$timeout', '$rootScope'];
 
     /**
      * Returns true if specified values are equal, false otherwise.

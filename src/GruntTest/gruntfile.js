@@ -191,6 +191,7 @@ module.exports = function (grunt) {
     grunt.registerTask("default", ['clean', 'concat', 'cssmin:publish', 'uglify:publish', 'bump']);
     grunt.registerTask("publishDev", ['clean', 'concat', 'cssmin:dev', 'uglify:all', 'copy:css']);
     grunt.registerTask("publish_new_version_nuget", ['clean', 'concat', 'cssmin:dev', 'uglify:all', 'copy:css', 'bump', 'nuget_pack', 'nuget_publish']);
+    grunt.registerTask("publish_new_version_nuget_VSTS", ['clean', 'concat', 'cssmin:dev', 'uglify:all', 'copy:css', 'nuget_pack', 'nuget_publish_VSTS']);
     grunt.registerTask("nuget_pack", "Create a nuget package", function () {
         //we're running asynchronously so we need to grab
         //a callback
@@ -244,6 +245,40 @@ module.exports = function (grunt) {
                 //specify where we want the package to be created
                 "-src",
                 "https://www.nuget.org"
+            ]
+        }, function (error, result) {
+            //output either result text or error message...
+            if (error) {
+                grunt.log.error(error);
+            } else {
+                grunt.log.write(result);
+            }
+            //...and notify grunt that the async task has
+            //finished
+            done();
+        });
+    });
+
+    //nuget.exe sources Add -Name "BlsComponent" -Source https://businessline.pkgs.visualstudio.com/_packaging/BlsComponent/nuget/v3/index.json
+    //Publish to feed VSTS
+    grunt.registerTask("nuget_publish_VSTS", "publish a nuget package to VSTS Feed", function () {
+        //we're running asynchronously so we need to grab
+        //a callback
+        var done = this.async();
+
+        //invoke nuget.exe
+        //nuget.exe push yourpackage.nupkg -Source https://businessline.pkgs.visualstudio.com/_packaging/BlsComponent/nuget/v3/index.json -ApiKey VSTS
+        //"C:\Nuget\nuget.exe" push "$(TargetDir)BLS.Infrastructure.@(VersionNumber).nupkg" 440bc87f-c8b3-4410-b57b-192c649bcadd -src https://www.nuget.org
+        grunt.util.spawn({
+            cmd: "NuGet.exe",
+            args: [
+                //specify the .nuspec file
+                "push",
+                "dist/blsComponents." + grunt.file.readJSON('package.json').version + ".nupkg",
+                "rhczwfm3qjrhvftcmsqs5ebydvvsk2m3u5fntiv37fyipm57blcq",
+                //specify where we want the package to be created
+                "-src",
+                "https://businessline.pkgs.visualstudio.com/_packaging/BlsComponent/nuget/v3/index.json"
             ]
         }, function (error, result) {
             //output either result text or error message...

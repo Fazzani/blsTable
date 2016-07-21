@@ -31,9 +31,9 @@
         return $http.get(url, requestOptions).then(function (response) {
             $scope.model = response.data;
            
-            $timeout(function () {
-                $scope.myForm.$setPristine();
-            }, 200);
+            //$timeout(function () {
+            //    $scope.myForm.$setPristine();
+            //}, 200);
 
         }, function (errors) {
             $log.error(errors);
