@@ -213,3 +213,4 @@ ModelManifest.xml
 /src/GruntTest/.~dbPersons.json
 lib/
 /src/GruntTest/wwwroot/lib
+*.json
